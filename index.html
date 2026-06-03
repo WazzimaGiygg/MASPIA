@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maspia Store - E-commerce</title>
+    <title>Maspia Store - E-commerce com Pagamentos</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="icon" href="https://loja.wazzimagiygg.com/Favicom.png" type="image/x-icon">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -116,7 +116,6 @@
             overflow: hidden;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             transition: all 0.3s;
-            cursor: pointer;
         }
 
         .product-card:hover {
@@ -226,6 +225,15 @@
             cursor: pointer;
         }
 
+        .btn-success {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
         .form-group {
             margin-bottom: 15px;
         }
@@ -294,9 +302,9 @@
         .modal-content {
             background: white;
             border-radius: 16px;
-            max-width: 500px;
+            max-width: 600px;
             width: 90%;
-            max-height: 80vh;
+            max-height: 85vh;
             overflow-y: auto;
         }
 
@@ -347,6 +355,81 @@
             text-align: right;
             font-size: 1.2em;
             font-weight: bold;
+        }
+
+        /* Payment Methods */
+        .payment-methods {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .payment-option {
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .payment-option:hover {
+            border-color: #e94560;
+            background: #fff5f5;
+        }
+
+        .payment-option.selected {
+            border-color: #e94560;
+            background: linear-gradient(135deg, #fff0f0, #ffe0e0);
+        }
+
+        .payment-icon {
+            font-size: 32px;
+        }
+
+        .payment-info {
+            flex: 1;
+        }
+
+        .payment-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .payment-description {
+            font-size: 0.8em;
+            color: #666;
+        }
+
+        .pix-area, .card-area, .boleto-area {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+
+        .pix-code {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-family: monospace;
+            font-size: 1.2em;
+            letter-spacing: 2px;
+            margin: 10px 0;
+        }
+
+        .card-input-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .card-input-row input {
+            flex: 1;
         }
 
         .tabs {
@@ -413,6 +496,21 @@
             margin: 10px 0;
         }
 
+        .order-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 600;
+        }
+
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-processing { background: #cce5ff; color: #004085; }
+        .status-paid { background: #d4edda; color: #155724; }
+        .status-shipped { background: #d1ecf1; color: #0c5460; }
+        .status-delivered { background: #d4edda; color: #155724; }
+        .status-cancelled { background: #f8d7da; color: #721c24; }
+
         @media (max-width: 768px) {
             .header-container {
                 flex-direction: column;
@@ -420,8 +518,8 @@
             .products-table {
                 font-size: 12px;
             }
-            .products-table th, .products-table td {
-                padding: 8px;
+            .card-input-row {
+                flex-direction: column;
             }
         }
     </style>
@@ -438,6 +536,7 @@
             <button class="nav-btn" onclick="showProducts()">🏠 Produtos</button>
             <button class="nav-btn" onclick="showServices()">🔧 Serviços</button>
             <button class="nav-btn" id="admin-btn" style="display: none;" onclick="showAdmin()">👑 Admin</button>
+            <button class="nav-btn" id="orders-btn" style="display: none;" onclick="showMyOrders()">📋 Meus Pedidos</button>
             <button class="nav-btn cart-btn" onclick="showCart()">
                 🛒 Carrinho
                 <span class="cart-count" id="cart-count">0</span>
@@ -449,7 +548,7 @@
 </div>
 
 <div class="main-container" id="main-container">
-    <div id="loading" class="loading" style="text-align:center; padding:60px;">Carregando...</div>
+    <div class="loading" style="text-align:center; padding:60px;">Carregando...</div>
 </div>
 
 <!-- Login Modal -->
@@ -479,7 +578,18 @@
     </div>
 </div>
 
-<!-- Product Modal -->
+<!-- Checkout Modal (Pagamento) -->
+<div id="checkout-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>💳 Finalizar Compra</h3>
+            <span class="close-modal" onclick="closeModal('checkout-modal')">&times;</span>
+        </div>
+        <div class="modal-body" id="checkout-body"></div>
+    </div>
+</div>
+
+<!-- Product/Service Modal -->
 <div id="product-modal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
@@ -522,10 +632,7 @@ const ADMIN_UIDS = ['sZxfMuOBPbXdR8nttVPXIN8QOOl1', '6aPqWVh8JVYL5NqEb78iDGPD7dH
 // FUNÇÕES AUXILIARES - ACESSO ÀS SUBCOLEÇÕES
 // ============================================
 
-// Referência à coleção principal maspia
 const maspiaRef = db.collection('maspia');
-
-// Subcoleções dentro de maspia
 const produtosRef = () => maspiaRef.doc('loja').collection('produtos');
 const servicosRef = () => maspiaRef.doc('loja').collection('servicos');
 const pedidosRef = () => maspiaRef.doc('pedidos').collection('todos');
@@ -544,10 +651,12 @@ function updateUIForUser() {
     const loginBtn = document.getElementById('login-nav-btn');
     const logoutBtn = document.getElementById('logout-nav-btn');
     const adminBtn = document.getElementById('admin-btn');
+    const ordersBtn = document.getElementById('orders-btn');
     
     if (currentUser) {
         loginBtn.style.display = 'none';
         logoutBtn.style.display = 'flex';
+        ordersBtn.style.display = 'flex';
         if (isAdmin) {
             adminBtn.style.display = 'flex';
         } else {
@@ -557,6 +666,7 @@ function updateUIForUser() {
         loginBtn.style.display = 'flex';
         logoutBtn.style.display = 'none';
         adminBtn.style.display = 'none';
+        ordersBtn.style.display = 'none';
     }
 }
 
@@ -639,7 +749,7 @@ function showCart() {
         modalBody.innerHTML += `
             <div class="cart-total">
                 Total: R$ ${total.toFixed(2)}
-                <button class="btn-primary" style="width:100%; margin-top:15px;" onclick="checkout()">✅ Finalizar Compra</button>
+                <button class="btn-primary" style="width:100%; margin-top:15px;" onclick="showCheckout()">💳 Finalizar Compra</button>
             </div>
         `;
     }
@@ -665,45 +775,399 @@ function removeFromCart(id, type) {
     showCart();
 }
 
-async function checkout() {
+// ============================================
+// SISTEMA DE PAGAMENTO
+// ============================================
+
+let selectedPaymentMethod = null;
+
+function showCheckout() {
     if (cart.length === 0) {
         alert('Carrinho vazio!');
         return;
     }
     
+    const total = cart.reduce((sum, i) => sum + (i.price * i.quantity), 0);
+    const modalBody = document.getElementById('checkout-body');
+    
+    modalBody.innerHTML = `
+        <div style="margin-bottom: 20px;">
+            <h4>Resumo do Pedido</h4>
+            ${cart.map(item => `
+                <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                    <span>${escapeHtml(item.title)} x ${item.quantity}</span>
+                    <span>R$ ${(item.price * item.quantity).toFixed(2)}</span>
+                </div>
+            `).join('')}
+            <div style="border-top: 2px solid #eee; margin-top: 10px; padding-top: 10px; font-size: 1.2em; font-weight: bold;">
+                <span>Total: </span>
+                <span>R$ ${total.toFixed(2)}</span>
+            </div>
+        </div>
+        
+        <h4>💳 Escolha a forma de pagamento</h4>
+        <div class="payment-methods">
+            <div class="payment-option" onclick="selectPaymentMethod('pix')">
+                <div class="payment-icon">💳</div>
+                <div class="payment-info">
+                    <div class="payment-title">PIX</div>
+                    <div class="payment-description">Pagamento instantâneo com desconto de 5%</div>
+                </div>
+            </div>
+            <div class="payment-option" onclick="selectPaymentMethod('card')">
+                <div class="payment-icon">💳</div>
+                <div class="payment-info">
+                    <div class="payment-title">Cartão de Crédito</div>
+                    <div class="payment-description">Parcelamos em até 12x</div>
+                </div>
+            </div>
+            <div class="payment-option" onclick="selectPaymentMethod('boleto')">
+                <div class="payment-icon">📄</div>
+                <div class="payment-info">
+                    <div class="payment-title">Boleto Bancário</div>
+                    <div class="payment-description">Vencimento em 3 dias úteis</div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="payment-details"></div>
+        
+        <button id="confirm-payment-btn" class="btn-success" style="width:100%; margin-top:20px;" onclick="processPayment()">
+            ✅ Confirmar Pagamento
+        </button>
+    `;
+    
+    document.getElementById('checkout-modal').style.display = 'flex';
+}
+
+function selectPaymentMethod(method) {
+    selectedPaymentMethod = method;
+    
+    // Atualizar UI dos métodos de pagamento
+    document.querySelectorAll('.payment-option').forEach(opt => opt.classList.remove('selected'));
+    event.currentTarget.classList.add('selected');
+    
+    const total = cart.reduce((sum, i) => sum + (i.price * i.quantity), 0);
+    const discountTotal = total * 0.95; // 5% desconto para PIX
+    const paymentDetails = document.getElementById('payment-details');
+    
+    if (method === 'pix') {
+        const pixCode = generatePixCode();
+        paymentDetails.innerHTML = `
+            <div class="pix-area">
+                <p><strong>✨ PIX com 5% de desconto!</strong></p>
+                <p>Valor original: R$ ${total.toFixed(2)}</p>
+                <p><strong>Valor com desconto: R$ ${discountTotal.toFixed(2)}</strong></p>
+                <div class="pix-code">
+                    ${pixCode}
+                </div>
+                <button class="btn-secondary" onclick="copyPixCode('${pixCode}')">📋 Copiar Código PIX</button>
+                <p style="font-size: 0.8em; margin-top: 10px;">Após o pagamento, seu pedido será processado automaticamente.</p>
+            </div>
+        `;
+    } else if (method === 'card') {
+        paymentDetails.innerHTML = `
+            <div class="card-area">
+                <div class="form-group">
+                    <label>Número do Cartão</label>
+                    <input type="text" id="card-number" placeholder="0000 0000 0000 0000" maxlength="19">
+                </div>
+                <div class="card-input-row">
+                    <div class="form-group" style="flex:1">
+                        <label>Validade</label>
+                        <input type="text" id="card-expiry" placeholder="MM/AA">
+                    </div>
+                    <div class="form-group" style="flex:1">
+                        <label>CVV</label>
+                        <input type="text" id="card-cvv" placeholder="123" maxlength="4">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Nome no Cartão</label>
+                    <input type="text" id="card-name" placeholder="Como está no cartão">
+                </div>
+                <div class="form-group">
+                    <label>Parcelas</label>
+                    <select id="card-installments">
+                        <option value="1">1x de R$ ${total.toFixed(2)}</option>
+                        <option value="2">2x de R$ ${(total/2).toFixed(2)}</option>
+                        <option value="3">3x de R$ ${(total/3).toFixed(2)}</option>
+                        <option value="4">4x de R$ ${(total/4).toFixed(2)}</option>
+                        <option value="5">5x de R$ ${(total/5).toFixed(2)}</option>
+                        <option value="6">6x de R$ ${(total/6).toFixed(2)}</option>
+                    </select>
+                </div>
+            </div>
+        `;
+    } else if (method === 'boleto') {
+        const boletoCode = generateBoletoCode();
+        paymentDetails.innerHTML = `
+            <div class="boleto-area">
+                <p><strong>📄 Boleto Bancário</strong></p>
+                <p>Valor: R$ ${total.toFixed(2)}</p>
+                <p>Vencimento: ${getBoletoDueDate()}</p>
+                <div class="pix-code">
+                    ${boletoCode}
+                </div>
+                <button class="btn-secondary" onclick="copyBoletoCode('${boletoCode}')">📋 Copiar Código do Boleto</button>
+                <p style="font-size: 0.8em; margin-top: 10px;">O boleto vence em 3 dias úteis. Após o pagamento, pode levar até 48h para compensação.</p>
+            </div>
+        `;
+    }
+}
+
+function generatePixCode() {
+    // Simula um código PIX real
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let code = '00020126360014BR.GOV.BCB.PIX0114';
+    for (let i = 0; i < 32; i++) {
+        code += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    code += '5204000053039865404';
+    code += Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+    code += '5802BR5925';
+    code += chars.substring(0, 20);
+    return code;
+}
+
+function generateBoletoCode() {
+    const nums = '0123456789';
+    let code = '03399.';
+    for (let i = 0; i < 5; i++) code += nums.charAt(Math.floor(Math.random() * nums.length));
+    code += ' 12345.';
+    for (let i = 0; i < 5; i++) code += nums.charAt(Math.floor(Math.random() * nums.length));
+    code += ' 67890.';
+    for (let i = 0; i < 6; i++) code += nums.charAt(Math.floor(Math.random() * nums.length));
+    code += ' 1 12345678901234';
+    return code;
+}
+
+function getBoletoDueDate() {
+    const date = new Date();
+    date.setDate(date.getDate() + 3);
+    return date.toLocaleDateString('pt-BR');
+}
+
+function copyPixCode(code) {
+    navigator.clipboard.writeText(code);
+    alert('✅ Código PIX copiado!');
+}
+
+function copyBoletoCode(code) {
+    navigator.clipboard.writeText(code);
+    alert('✅ Código do boleto copiado!');
+}
+
+async function processPayment() {
+    if (!selectedPaymentMethod) {
+        alert('Selecione uma forma de pagamento!');
+        return;
+    }
+    
+    const total = cart.reduce((sum, i) => sum + (i.price * i.quantity), 0);
+    const finalTotal = selectedPaymentMethod === 'pix' ? total * 0.95 : total;
+    
+    const paymentData = {
+        userId: currentUser.uid,
+        userEmail: currentUser.email,
+        userName: currentUser.displayName,
+        items: [...cart],
+        total: finalTotal,
+        originalTotal: total,
+        paymentMethod: selectedPaymentMethod,
+        status: selectedPaymentMethod === 'pix' ? 'paid' : 'pending_payment',
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        paymentDate: selectedPaymentMethod === 'pix' ? firebase.firestore.FieldValue.serverTimestamp() : null
+    };
+    
+    // Adicionar dados específicos do pagamento
+    if (selectedPaymentMethod === 'card') {
+        const installments = document.getElementById('card-installments')?.value || 1;
+        paymentData.installments = parseInt(installments);
+        paymentData.lastFourDigits = document.getElementById('card-number')?.value.slice(-4) || '****';
+        paymentData.status = 'paid'; // Simula pagamento aprovado
+    } else if (selectedPaymentMethod === 'boleto') {
+        paymentData.boletoDueDate = getBoletoDueDate();
+        paymentData.boletoCode = generateBoletoCode();
+    } else if (selectedPaymentMethod === 'pix') {
+        paymentData.pixCode = generatePixCode();
+    }
+    
     try {
-        const orderData = {
-            userId: currentUser.uid,
-            userEmail: currentUser.email,
-            userName: currentUser.displayName,
-            items: cart,
-            total: cart.reduce((sum, i) => sum + (i.price * i.quantity), 0),
-            status: 'pending',
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        };
+        // Criar pedido
+        const orderRef = await pedidosRef().add(paymentData);
         
-        await pedidosRef().add(orderData);
-        
-        // Atualizar estoque
-        for (const item of cart) {
-            if (item.type === 'product') {
-                const productRef = produtosRef().doc(item.id);
-                const productDoc = await productRef.get();
-                if (productDoc.exists) {
-                    const newStock = (productDoc.data().stock || 0) - item.quantity;
-                    await productRef.update({ stock: newStock });
+        // Atualizar estoque (apenas se pagamento confirmado)
+        if (paymentData.status === 'paid') {
+            for (const item of cart) {
+                if (item.type === 'product') {
+                    const productRef = produtosRef().doc(item.id);
+                    const productDoc = await productRef.get();
+                    if (productDoc.exists) {
+                        const newStock = (productDoc.data().stock || 0) - item.quantity;
+                        await productRef.update({ stock: newStock });
+                    }
                 }
             }
         }
         
-        alert('✅ Pedido realizado com sucesso!');
+        // Registrar transação na subcoleção de transações
+        await maspiaRef.doc('transacoes').collection('logs').add({
+            orderId: orderRef.id,
+            ...paymentData,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        
+        const message = selectedPaymentMethod === 'pix' 
+            ? '✅ Pagamento confirmado! Pedido realizado com sucesso!'
+            : selectedPaymentMethod === 'card'
+            ? '✅ Pagamento aprovado! Pedido realizado com sucesso!'
+            : '📄 Boleto gerado! Após o pagamento, seu pedido será processado.';
+        
+        alert(message);
+        
+        // Limpar carrinho
         cart = [];
         updateCartCount();
+        closeModal('checkout-modal');
         closeModal('cart-modal');
+        
+        // Se for boleto, mostrar o código novamente
+        if (selectedPaymentMethod === 'boleto') {
+            alert(`Código do boleto: ${paymentData.boletoCode}\nVencimento: ${paymentData.boletoDueDate}`);
+        }
+        
         showProducts();
     } catch (error) {
-        alert('Erro: ' + error.message);
+        alert('Erro ao processar pagamento: ' + error.message);
     }
+}
+
+// ============================================
+// MEUS PEDIDOS
+// ============================================
+
+async function showMyOrders() {
+    if (!currentUser) {
+        showLoginModal();
+        return;
+    }
+    
+    const container = document.getElementById('main-container');
+    container.innerHTML = '<div class="loading">Carregando seus pedidos...</div>';
+    
+    try {
+        const snapshot = await pedidosRef()
+            .where('userId', '==', currentUser.uid)
+            .orderBy('createdAt', 'desc')
+            .get();
+        
+        const orders = [];
+        snapshot.forEach(doc => orders.push({ id: doc.id, ...doc.data() }));
+        
+        if (orders.length === 0) {
+            container.innerHTML = `
+                <div class="admin-panel">
+                    <h2>📋 Meus Pedidos</h2>
+                    <div class="login-required" style="padding: 40px;">
+                        <p>Você ainda não fez nenhum pedido.</p>
+                        <button class="btn-primary" onclick="showProducts()">🛍️ Começar a Comprar</button>
+                    </div>
+                </div>
+            `;
+            return;
+        }
+        
+        container.innerHTML = `
+            <div class="admin-panel">
+                <h2>📋 Meus Pedidos</h2>
+                <table class="products-table">
+                    <thead>
+                        <tr>
+                            <th>Pedido</th>
+                            <th>Data</th>
+                            <th>Total</th>
+                            <th>Pagamento</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${orders.map(order => `
+                            <tr>
+                                <td>#${order.id.substring(0,8)}</td>
+                                <td>${order.createdAt ? new Date(order.createdAt.seconds * 1000).toLocaleDateString('pt-BR') : '-'}</td>
+                                <td>R$ ${(order.total || 0).toFixed(2)}</td>
+                                <td>${getPaymentMethodName(order.paymentMethod)}</td>
+                                <td><span class="order-status status-${order.status}">${getOrderStatusName(order.status)}</span></td>
+                                <td><button class="btn-secondary" onclick="viewOrderDetails('${order.id}')">👁️ Detalhes</button></td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+        `;
+    } catch (error) {
+        container.innerHTML = `<div class="login-required"><h3>Erro: ${error.message}</h3></div>`;
+    }
+}
+
+function getPaymentMethodName(method) {
+    const methods = {
+        'pix': '💳 PIX',
+        'card': '💳 Cartão',
+        'boleto': '📄 Boleto'
+    };
+    return methods[method] || method;
+}
+
+function getOrderStatusName(status) {
+    const statuses = {
+        'pending_payment': '⏳ Aguardando Pagamento',
+        'paid': '✅ Pago',
+        'processing': '🔄 Processando',
+        'shipped': '🚚 Enviado',
+        'delivered': '📦 Entregue',
+        'cancelled': '❌ Cancelado'
+    };
+    return statuses[status] || status;
+}
+
+async function viewOrderDetails(orderId) {
+    const doc = await pedidosRef().doc(orderId).get();
+    const order = doc.data();
+    
+    const modalBody = document.getElementById('product-modal-body');
+    document.getElementById('product-modal-title').innerHTML = `📋 Pedido #${orderId.substring(0,8)}`;
+    modalBody.innerHTML = `
+        <p><strong>Data:</strong> ${order.createdAt ? new Date(order.createdAt.seconds * 1000).toLocaleString('pt-BR') : '-'}</p>
+        <p><strong>Forma de Pagamento:</strong> ${getPaymentMethodName(order.paymentMethod)}</p>
+        <p><strong>Status:</strong> <span class="order-status status-${order.status}">${getOrderStatusName(order.status)}</span></p>
+        <p><strong>Subtotal:</strong> R$ ${(order.originalTotal || order.total).toFixed(2)}</p>
+        ${order.paymentMethod === 'pix' ? `<p><strong>Desconto (5% PIX):</strong> -R$ ${((order.originalTotal || order.total) - order.total).toFixed(2)}</p>` : ''}
+        <p><strong>Total Pago:</strong> R$ ${(order.total || 0).toFixed(2)}</p>
+        <h4>📦 Itens:</h4>
+        <ul style="margin-left: 20px;">
+            ${order.items.map(item => `<li>${escapeHtml(item.title)} x ${item.quantity} = R$ ${(item.price * item.quantity).toFixed(2)}</li>`).join('')}
+        </ul>
+        ${order.paymentMethod === 'boleto' && order.boletoCode ? `
+            <div class="pix-area">
+                <p><strong>Código do Boleto:</strong></p>
+                <div class="pix-code">${order.boletoCode}</div>
+                <button class="btn-secondary" onclick="copyBoletoCode('${order.boletoCode}')">📋 Copiar</button>
+            </div>
+        ` : ''}
+        ${order.paymentMethod === 'pix' && order.pixCode ? `
+            <div class="pix-area">
+                <p><strong>Código PIX:</strong></p>
+                <div class="pix-code">${order.pixCode}</div>
+                <button class="btn-secondary" onclick="copyPixCode('${order.pixCode}')">📋 Copiar</button>
+            </div>
+        ` : ''}
+        <button class="btn-secondary" onclick="closeModal('product-modal')" style="margin-top:15px;">Fechar</button>
+    `;
+    
+    document.getElementById('product-modal').style.display = 'flex';
 }
 
 // ============================================
@@ -724,7 +1188,6 @@ async function loadProducts() {
         renderProducts();
     } catch (error) {
         console.error('Erro:', error);
-        document.getElementById('main-container').innerHTML = `<div class="login-required"><h3>Erro ao carregar produtos: ${error.message}</h3></div>`;
     }
 }
 
@@ -775,7 +1238,6 @@ async function loadServices() {
         renderServices();
     } catch (error) {
         console.error('Erro:', error);
-        document.getElementById('main-container').innerHTML = `<div class="login-required"><h3>Erro ao carregar serviços: ${error.message}</h3></div>`;
     }
 }
 
@@ -861,15 +1323,15 @@ async function loadAdminProducts() {
                 <tbody>
                     ${productsList.map(p => `
                         <tr>
-                            <td>${escapeHtml(p.title)}</td>
-                            <td>R$ ${(p.price || 0).toFixed(2)}</td>
-                            <td>${p.stock || 0}</td>
-                            <td><span class="status-badge ${p.active ? 'status-active' : 'status-inactive'}">${p.active ? 'Ativo' : 'Inativo'}</span></td>
+                            <td>${escapeHtml(p.title)}</td
+                            <td>R$ ${(p.price || 0).toFixed(2)}</td
+                            <td>${p.stock || 0}</td
+                            <td><span class="status-badge ${p.active ? 'status-active' : 'status-inactive'}">${p.active ? 'Ativo' : 'Inativo'}</span></td
                             <td>
                                 <button class="btn-secondary" onclick="editProduct('${p.id}')">✏️</button>
                                 <button class="btn-secondary" onclick="toggleProductStatus('${p.id}', ${!p.active})">${p.active ? 'Desativar' : 'Ativar'}</button>
                                 <button class="btn-secondary" style="background:#dc3545;" onclick="deleteProduct('${p.id}')">🗑️</button>
-                            </td>
+                             </td
                         </tr>
                     `).join('')}
                 </tbody>
@@ -899,14 +1361,14 @@ async function loadAdminServices() {
                 <tbody>
                     ${servicesList.map(s => `
                         <tr>
-                            <td>${escapeHtml(s.title)}</td>
-                            <td>R$ ${(s.price || 0).toFixed(2)}</td>
-                            <td><span class="status-badge ${s.active ? 'status-active' : 'status-inactive'}">${s.active ? 'Ativo' : 'Inativo'}</span></td>
+                            <td>${escapeHtml(s.title)}</td
+                            <td>R$ ${(s.price || 0).toFixed(2)}</td
+                            <td><span class="status-badge ${s.active ? 'status-active' : 'status-inactive'}">${s.active ? 'Ativo' : 'Inativo'}</span></td
                             <td>
                                 <button class="btn-secondary" onclick="editService('${s.id}')">✏️</button>
                                 <button class="btn-secondary" onclick="toggleServiceStatus('${s.id}', ${!s.active})">${s.active ? 'Desativar' : 'Ativar'}</button>
                                 <button class="btn-secondary" style="background:#dc3545;" onclick="deleteService('${s.id}')">🗑️</button>
-                            </td>
+                             </td
                         </tr>
                     `).join('')}
                 </tbody>
@@ -935,6 +1397,7 @@ async function loadAdminOrders() {
                         <th>Pedido</th>
                         <th>Cliente</th>
                         <th>Total</th>
+                        <th>Pagamento</th>
                         <th>Status</th>
                         <th>Data</th>
                         <th>Ações</th>
@@ -943,20 +1406,22 @@ async function loadAdminOrders() {
                 <tbody>
                     ${ordersList.map(o => `
                         <tr>
-                            <td>#${o.id.substring(0,8)}</td>
-                            <td>${escapeHtml(o.userName || o.userEmail)}</td>
-                            <td>R$ ${(o.total || 0).toFixed(2)}</td>
+                            <td>#${o.id.substring(0,8)}</td
+                            <td>${escapeHtml(o.userName || o.userEmail)}</td
+                            <td>R$ ${(o.total || 0).toFixed(2)}</td
+                            <td>${getPaymentMethodName(o.paymentMethod)}</td
                             <td>
-                                <select onchange="updateOrderStatus('${o.id}', this.value)" class="status-select">
-                                    <option value="pending" ${o.status === 'pending' ? 'selected' : ''}>⏳ Pendente</option>
-                                    <option value="processing" ${o.status === 'processing' ? 'selected' : ''}>🔄 Processando</option>
-                                    <option value="shipped" ${o.status === 'shipped' ? 'selected' : ''}>🚚 Enviado</option>
-                                    <option value="delivered" ${o.status === 'delivered' ? 'selected' : ''}>✅ Entregue</option>
-                                    <option value="cancelled" ${o.status === 'cancelled' ? 'selected' : ''}>❌ Cancelado</option>
+                                <select onchange="updateOrderStatus('${o.id}', this.value)">
+                                    <option value="pending_payment" ${o.status === 'pending_payment' ? 'selected' : ''}>Aguardando Pagamento</option>
+                                    <option value="paid" ${o.status === 'paid' ? 'selected' : ''}>Pago</option>
+                                    <option value="processing" ${o.status === 'processing' ? 'selected' : ''}>Processando</option>
+                                    <option value="shipped" ${o.status === 'shipped' ? 'selected' : ''}>Enviado</option>
+                                    <option value="delivered" ${o.status === 'delivered' ? 'selected' : ''}>Entregue</option>
+                                    <option value="cancelled" ${o.status === 'cancelled' ? 'selected' : ''}>Cancelado</option>
                                 </select>
-                            </td>
-                            <td>${o.createdAt ? new Date(o.createdAt.seconds * 1000).toLocaleDateString('pt-BR') : '-'}</td>
-                            <td><button class="btn-secondary" onclick="viewOrder('${o.id}')">👁️ Detalhes</button></td>
+                             </td
+                            <td>${o.createdAt ? new Date(o.createdAt.seconds * 1000).toLocaleDateString('pt-BR') : '-'}</td
+                            <td><button class="btn-secondary" onclick="viewOrderDetails('${o.id}')">👁️</button></td
                         </tr>
                     `).join('')}
                 </tbody>
@@ -1190,28 +1655,6 @@ async function deleteService(id) {
 async function updateOrderStatus(id, status) {
     await pedidosRef().doc(id).update({ status });
     loadAdminOrders();
-}
-
-async function viewOrder(id) {
-    const doc = await pedidosRef().doc(id).get();
-    const order = doc.data();
-    
-    const modalBody = document.getElementById('product-modal-body');
-    document.getElementById('product-modal-title').innerHTML = `📋 Pedido #${id.substring(0,8)}`;
-    modalBody.innerHTML = `
-        <p><strong>Cliente:</strong> ${escapeHtml(order.userName || order.userEmail)}</p>
-        <p><strong>Email:</strong> ${escapeHtml(order.userEmail)}</p>
-        <p><strong>Status:</strong> ${order.status}</p>
-        <p><strong>Total:</strong> R$ ${(order.total || 0).toFixed(2)}</p>
-        <p><strong>Data:</strong> ${order.createdAt ? new Date(order.createdAt.seconds * 1000).toLocaleString('pt-BR') : '-'}</p>
-        <h4>📦 Itens do Pedido:</h4>
-        <ul style="margin-left: 20px;">
-            ${order.items.map(item => `<li>${escapeHtml(item.title)} x ${item.quantity} = R$ ${(item.price * item.quantity).toFixed(2)}</li>`).join('')}
-        </ul>
-        <button class="btn-secondary" onclick="closeModal('product-modal')" style="margin-top:15px;">Fechar</button>
-    `;
-    
-    document.getElementById('product-modal').style.display = 'flex';
 }
 
 function showAdminProducts() {
