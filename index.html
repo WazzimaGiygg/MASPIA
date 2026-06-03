@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maspia Store - E-commerce com Pagamentos</title>
+    <title>WazzimaGiygg - Apoie nosso projeto</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="icon" href="https://loja.wazzimagiygg.com/Favicom.png" type="image/x-icon">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <style>
         * {
@@ -16,18 +15,19 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: #f5f5f5;
-            color: #333;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
         }
 
         .header {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            color: white;
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
             padding: 20px 40px;
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
         .header-container {
@@ -41,18 +41,16 @@
         }
 
         .logo {
-            font-size: 1.8em;
+            font-size: 1.5em;
             font-weight: 700;
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .logo span {
-            background: linear-gradient(135deg, #e94560, #ff6b6b);
-            padding: 5px 12px;
-            border-radius: 10px;
-            font-size: 0.7em;
+        .logo img {
+            height: 40px;
+            width: auto;
         }
 
         .nav-links {
@@ -75,123 +73,384 @@
             gap: 8px;
         }
 
-        .nav-btn:hover, .nav-btn.active {
+        .nav-btn:hover {
             background: linear-gradient(135deg, #e94560, #ff6b6b);
-        }
-
-        .cart-btn {
-            position: relative;
-        }
-
-        .cart-count {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            background: #e94560;
-            color: white;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            transform: translateY(-2px);
         }
 
         .main-container {
-            max-width: 1400px;
-            margin: 30px auto;
+            max-width: 1200px;
+            margin: 40px auto;
             padding: 0 20px;
         }
 
-        .products-grid {
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .hero h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #fff, #e94560);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.2em;
+            color: rgba(255,255,255,0.8);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 50px;
         }
 
-        .product-card {
-            background: white;
+        .stat-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
             border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            transition: all 0.3s;
-        }
-
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-        }
-
-        .product-image {
-            height: 200px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 60px;
-        }
-
-        .product-info {
             padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.2);
         }
 
-        .product-title {
-            font-size: 1.1em;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .product-price {
-            font-size: 1.3em;
+        .stat-number {
+            font-size: 2.5em;
             font-weight: 700;
             color: #e94560;
-            margin: 10px 0;
         }
 
-        .product-stock {
-            font-size: 0.8em;
-            color: #666;
+        .section-title {
+            font-size: 1.8em;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        /* Goals Grid */
+        .goals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .goal-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            transition: all 0.3s;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .goal-card:hover {
+            transform: translateY(-5px);
+            border-color: #e94560;
+        }
+
+        .goal-icon {
+            font-size: 48px;
             margin-bottom: 15px;
         }
 
-        .stock-low {
-            color: #ff9800;
+        .goal-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 10px;
         }
 
-        .stock-out {
-            color: #f44336;
+        .goal-description {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9em;
+            margin-bottom: 15px;
         }
 
-        .btn-add-cart {
+        .progress-bar {
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            height: 10px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #e94560, #ff6b6b);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .goal-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85em;
+            margin-bottom: 15px;
+        }
+
+        .btn-donate-goal {
             width: 100%;
-            padding: 10px;
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            color: white;
+            padding: 12px;
+            background: linear-gradient(135deg, #e94560, #ff6b6b);
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
+        }
+
+        .btn-donate-goal:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 20px rgba(233,69,96,0.4);
+        }
+
+        /* Free Donation */
+        .free-donation {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .free-donation h2 {
+            margin-bottom: 20px;
+        }
+
+        .donation-amounts {
             display: flex;
-            align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
         }
 
-        .btn-add-cart:hover:not(:disabled) {
+        .amount-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 12px 25px;
+            border-radius: 50px;
+            color: white;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .amount-btn:hover, .amount-btn.active {
             background: linear-gradient(135deg, #e94560, #ff6b6b);
+            transform: scale(1.05);
         }
 
-        .btn-add-cart:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+        .custom-donation {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 20px 0;
         }
 
+        .custom-donation input {
+            padding: 15px 20px;
+            border-radius: 50px;
+            border: none;
+            width: 200px;
+            font-size: 1em;
+        }
+
+        .btn-donate {
+            background: linear-gradient(135deg, #e94560, #ff6b6b);
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            color: white;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-donate:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(233,69,96,0.4);
+        }
+
+        /* Recent Donations */
+        .recent-donations {
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 30px;
+        }
+
+        .donation-list {
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .donation-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .donor-name {
+            font-weight: 600;
+        }
+
+        .donor-message {
+            font-size: 0.85em;
+            color: rgba(255,255,255,0.6);
+        }
+
+        .donation-amount {
+            color: #e94560;
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #1a1a2e;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background: #1a1a2e;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .close-modal {
+            cursor: pointer;
+            font-size: 24px;
+            color: #999;
+        }
+
+        .close-modal:hover {
+            color: #e94560;
+        }
+
+        /* PIX Area */
+        .pix-area {
+            text-align: center;
+        }
+
+        .pix-key-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 15px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .pix-key-card:hover {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.02);
+        }
+
+        .pix-key-card.selected {
+            border: 2px solid #e94560;
+            background: rgba(233,69,96,0.2);
+        }
+
+        .pix-key-code {
+            font-family: monospace;
+            font-size: 1em;
+            word-break: break-all;
+            background: rgba(0,0,0,0.3);
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+
+        .invoice-area {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+        }
+
+        .invoice-field {
+            margin-bottom: 15px;
+        }
+
+        .invoice-field label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.85em;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .invoice-field input, .invoice-field select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            background: rgba(255,255,255,0.9);
+        }
+
+        .btn-confirm {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        .btn-confirm:hover {
+            transform: scale(1.02);
+        }
+
+        /* Admin Panel */
         .admin-panel {
-            background: white;
-            border-radius: 16px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
             padding: 25px;
-            margin-bottom: 30px;
         }
 
         .admin-header {
@@ -205,32 +464,28 @@
 
         .btn-primary {
             background: linear-gradient(135deg, #e94560, #ff6b6b);
-            color: white;
             border: none;
-            padding: 12px 24px;
+            padding: 10px 20px;
             border-radius: 8px;
+            color: white;
             cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 500;
         }
 
         .btn-secondary {
             background: #6c757d;
-            color: white;
             border: none;
             padding: 8px 16px;
             border-radius: 6px;
+            color: white;
             cursor: pointer;
         }
 
-        .btn-success {
-            background: #28a745;
-            color: white;
+        .btn-danger {
+            background: #dc3545;
             border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
+            padding: 8px 16px;
+            border-radius: 6px;
+            color: white;
             cursor: pointer;
         }
 
@@ -240,286 +495,61 @@
 
         .form-group label {
             display: block;
-            font-weight: 500;
             margin-bottom: 5px;
         }
 
-        .form-group input, .form-group select, .form-group textarea {
+        .form-group input, .form-group textarea {
             width: 100%;
             padding: 10px;
-            border: 1px solid #ddd;
             border-radius: 8px;
-            font-family: inherit;
+            border: none;
         }
 
-        .products-table {
+        .goals-table {
             width: 100%;
             border-collapse: collapse;
-            overflow-x: auto;
-            display: block;
         }
 
-        .products-table th, .products-table td {
+        .goals-table th, .goals-table td {
             padding: 12px;
             text-align: left;
-            border-bottom: 1px solid #eee;
-        }
-
-        .products-table th {
-            background: #f8f9fa;
-            font-weight: 600;
-        }
-
-        .status-badge {
-            padding: 4px 8px;
-            border-radius: 20px;
-            font-size: 0.75em;
-        }
-
-        .status-active {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .status-inactive {
-            background: #f8d7da;
-            color: #721c24;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.7);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 16px;
-            max-width: 600px;
-            width: 90%;
-            max-height: 85vh;
-            overflow-y: auto;
-        }
-
-        .modal-header {
-            padding: 20px;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .modal-body {
-            padding: 20px;
-        }
-
-        .cart-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .cart-item-info h4 {
-            font-size: 0.9em;
-            margin-bottom: 5px;
-        }
-
-        .cart-item-qty {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .cart-item-qty button {
-            width: 25px;
-            height: 25px;
-            border: 1px solid #ddd;
-            background: white;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .cart-total {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 2px solid #eee;
-            text-align: right;
-            font-size: 1.2em;
-            font-weight: bold;
-        }
-
-        /* Payment Methods */
-        .payment-methods {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin: 20px 0;
-        }
-
-        .payment-option {
-            border: 2px solid #e0e0e0;
-            border-radius: 12px;
-            padding: 15px;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .payment-option:hover {
-            border-color: #e94560;
-            background: #fff5f5;
-        }
-
-        .payment-option.selected {
-            border-color: #e94560;
-            background: linear-gradient(135deg, #fff0f0, #ffe0e0);
-        }
-
-        .payment-icon {
-            font-size: 32px;
-        }
-
-        .payment-info {
-            flex: 1;
-        }
-
-        .payment-title {
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-
-        .payment-description {
-            font-size: 0.8em;
-            color: #666;
-        }
-
-        .pix-area, .card-area, .boleto-area {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 12px;
-        }
-
-        .pix-code {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            font-family: monospace;
-            font-size: 1.2em;
-            letter-spacing: 2px;
-            margin: 10px 0;
-        }
-
-        .card-input-row {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        .card-input-row input {
-            flex: 1;
-        }
-
-        .tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 10px;
-        }
-
-        .tab {
-            padding: 10px 20px;
-            cursor: pointer;
-            border-radius: 8px;
-            transition: all 0.3s;
-        }
-
-        .tab.active {
-            background: linear-gradient(135deg, #e94560, #ff6b6b);
-            color: white;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
         .login-required {
             text-align: center;
             padding: 60px;
-            background: white;
-            border-radius: 16px;
         }
 
         .login-btn {
             background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
             border: none;
             padding: 12px 30px;
             border-radius: 30px;
+            color: white;
             cursor: pointer;
             margin-top: 20px;
         }
 
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
-            margin-top: 20px;
-        }
-
-        .service-card {
-            background: white;
-            border-radius: 16px;
-            padding: 20px;
+        .footer {
             text-align: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 30px;
+            color: rgba(255,255,255,0.5);
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 50px;
         }
-
-        .service-icon {
-            font-size: 48px;
-            margin-bottom: 15px;
-        }
-
-        .service-price {
-            font-size: 1.3em;
-            font-weight: bold;
-            color: #e94560;
-            margin: 10px 0;
-        }
-
-        .order-status {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.75em;
-            font-weight: 600;
-        }
-
-        .status-pending { background: #fff3cd; color: #856404; }
-        .status-processing { background: #cce5ff; color: #004085; }
-        .status-paid { background: #d4edda; color: #155724; }
-        .status-shipped { background: #d1ecf1; color: #0c5460; }
-        .status-delivered { background: #d4edda; color: #155724; }
-        .status-cancelled { background: #f8d7da; color: #721c24; }
 
         @media (max-width: 768px) {
-            .header-container {
-                flex-direction: column;
+            .hero h1 {
+                font-size: 2em;
             }
-            .products-table {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .goals-table {
                 font-size: 12px;
-            }
-            .card-input-row {
-                flex-direction: column;
+                display: block;
+                overflow-x: auto;
             }
         }
     </style>
@@ -529,18 +559,14 @@
 <div class="header">
     <div class="header-container">
         <div class="logo">
-            🛍️ Maspia Store
-            <span>E-com</span>
+            <img src="https://wazzimagiygg.com/favicom.png" alt="WazzimaGiygg" style="height: 40px;">
+            <span>WazzimaGiygg</span>
         </div>
         <div class="nav-links">
-            <button class="nav-btn" onclick="showProducts()">🏠 Produtos</button>
-            <button class="nav-btn" onclick="showServices()">🔧 Serviços</button>
+            <button class="nav-btn" onclick="showHome()">🏠 Início</button>
+            <button class="nav-btn" onclick="showGoals()">🎯 Metas</button>
             <button class="nav-btn" id="admin-btn" style="display: none;" onclick="showAdmin()">👑 Admin</button>
-            <button class="nav-btn" id="orders-btn" style="display: none;" onclick="showMyOrders()">📋 Meus Pedidos</button>
-            <button class="nav-btn cart-btn" onclick="showCart()">
-                🛒 Carrinho
-                <span class="cart-count" id="cart-count">0</span>
-            </button>
+            <button class="nav-btn" onclick="showMyDonations()">📋 Minhas Doações</button>
             <button class="nav-btn" id="login-nav-btn" onclick="showLoginModal()">🔑 Entrar</button>
             <button class="nav-btn" id="logout-nav-btn" style="display: none;" onclick="logout()">🚪 Sair</button>
         </div>
@@ -548,18 +574,24 @@
 </div>
 
 <div class="main-container" id="main-container">
-    <div class="loading" style="text-align:center; padding:60px;">Carregando...</div>
+    <div style="text-align:center; padding:60px;">Carregando...</div>
+</div>
+
+<div class="footer">
+    <p>💝 WazzimaGiygg - Seu apoio mantém nossos serviços no ar!</p>
+    <p>📄 Todas as doações geram comprovante eletrônico com valor de doação.</p>
+    <p>🔒 Ambiente seguro - Seus dados estão protegidos</p>
 </div>
 
 <!-- Login Modal -->
 <div id="login-modal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h3>🔐 Entrar na Loja</h3>
+            <h3>🔐 Entrar</h3>
             <span class="close-modal" onclick="closeModal('login-modal')">&times;</span>
         </div>
         <div class="modal-body">
-            <p>Faça login para comprar produtos e serviços</p>
+            <p>Faça login para apoiar o projeto WazzimaGiygg</p>
             <button id="google-login-btn" class="btn-primary" style="width:100%; margin-top:20px;">
                 🔑 Entrar com Google
             </button>
@@ -567,36 +599,25 @@
     </div>
 </div>
 
-<!-- Cart Modal -->
-<div id="cart-modal" class="modal">
+<!-- Donation Modal -->
+<div id="donation-modal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h3>🛒 Meu Carrinho</h3>
-            <span class="close-modal" onclick="closeModal('cart-modal')">&times;</span>
+            <h3 id="donation-modal-title">💝 Fazer Doação</h3>
+            <span class="close-modal" onclick="closeModal('donation-modal')">&times;</span>
         </div>
-        <div class="modal-body" id="cart-items"></div>
+        <div class="modal-body" id="donation-modal-body"></div>
     </div>
 </div>
 
-<!-- Checkout Modal (Pagamento) -->
-<div id="checkout-modal" class="modal">
+<!-- Invoice Modal -->
+<div id="invoice-modal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h3>💳 Finalizar Compra</h3>
-            <span class="close-modal" onclick="closeModal('checkout-modal')">&times;</span>
+            <h3>📄 Comprovante de Doação</h3>
+            <span class="close-modal" onclick="closeModal('invoice-modal')">&times;</span>
         </div>
-        <div class="modal-body" id="checkout-body"></div>
-    </div>
-</div>
-
-<!-- Product/Service Modal -->
-<div id="product-modal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3 id="product-modal-title">Produto</h3>
-            <span class="close-modal" onclick="closeModal('product-modal')">&times;</span>
-        </div>
-        <div class="modal-body" id="product-modal-body"></div>
+        <div class="modal-body" id="invoice-body"></div>
     </div>
 </div>
 
@@ -621,28 +642,35 @@ const auth = firebase.auth();
 
 let currentUser = null;
 let isAdmin = false;
-let cart = [];
-let products = [];
-let services = [];
+let goals = [];
+let recentDonations = [];
+let selectedAmount = 10;
+let selectedGoal = null;
 
-// Admin UIDs
 const ADMIN_UIDS = ['sZxfMuOBPbXdR8nttVPXIN8QOOl1', '6aPqWVh8JVYL5NqEb78iDGPD7dH3'];
 
-// ============================================
-// FUNÇÕES AUXILIARES - ACESSO ÀS SUBCOLEÇÕES
-// ============================================
+// Referências Firestore
+const wazzmaRef = db.collection('wazzmagiygg');
+const donationsRef = () => wazzmaRef.doc('doacoes').collection('registros');
+const goalsRef = () => wazzmaRef.doc('metas').collection('itens');
+const pixKeysRef = () => wazzmaRef.doc('configuracoes').collection('pix_keys');
 
-const maspiaRef = db.collection('maspia');
-const produtosRef = () => maspiaRef.doc('loja').collection('produtos');
-const servicosRef = () => maspiaRef.doc('loja').collection('servicos');
-const pedidosRef = () => maspiaRef.doc('pedidos').collection('todos');
-const usuariosLojaRef = () => maspiaRef.doc('usuarios').collection('perfis');
+// Chaves PIX da organização (fixas para demonstração)
+const storePixKeys = [
+    { type: 'cnpj', key: '12.345.678/0001-90', description: 'CNPJ WazzimaGiygg' },
+    { type: 'email', key: 'financeiro@wazzimagiygg.com', description: 'E-mail Financeiro' },
+    { type: 'random', key: 'wazzima.pix@juntos', description: 'Chave Aleatória' }
+];
+
+// ============================================
+// FUNÇÕES DE AUTENTICAÇÃO
+// ============================================
 
 async function checkIsAdmin(user) {
     if (!user) return false;
     if (ADMIN_UIDS.includes(user.uid)) return true;
     try {
-        const userDoc = await usuariosLojaRef().doc(user.uid).get();
+        const userDoc = await db.collection('users').doc(user.uid).get();
         return userDoc.exists && userDoc.data().isAdmin === true;
     } catch { return false; }
 }
@@ -651,12 +679,10 @@ function updateUIForUser() {
     const loginBtn = document.getElementById('login-nav-btn');
     const logoutBtn = document.getElementById('logout-nav-btn');
     const adminBtn = document.getElementById('admin-btn');
-    const ordersBtn = document.getElementById('orders-btn');
     
     if (currentUser) {
         loginBtn.style.display = 'none';
         logoutBtn.style.display = 'flex';
-        ordersBtn.style.display = 'flex';
         if (isAdmin) {
             adminBtn.style.display = 'flex';
         } else {
@@ -666,7 +692,6 @@ function updateUIForUser() {
         loginBtn.style.display = 'flex';
         logoutBtn.style.display = 'none';
         adminBtn.style.display = 'none';
-        ordersBtn.style.display = 'none';
     }
 }
 
@@ -681,1026 +706,676 @@ async function loginWithGoogle() {
 
 async function logout() {
     await auth.signOut();
-    cart = [];
-    updateCartCount();
     currentUser = null;
     isAdmin = false;
     updateUIForUser();
-    showProducts();
+    showHome();
 }
 
 // ============================================
-// CARRINHO
+// FUNÇÕES PRINCIPAIS
 // ============================================
 
-function addToCart(item, type) {
-    if (!currentUser) {
-        showLoginModal();
-        return;
+async function loadGoals() {
+    try {
+        const snapshot = await goalsRef().orderBy('createdAt', 'desc').get();
+        goals = [];
+        snapshot.forEach(doc => {
+            goals.push({ id: doc.id, ...doc.data() });
+        });
+    } catch (error) {
+        console.error('Erro ao carregar metas:', error);
     }
-    
-    const existing = cart.find(i => i.id === item.id && i.type === type);
-    if (existing) {
-        existing.quantity++;
-    } else {
-        cart.push({ ...item, quantity: 1, type });
-    }
-    updateCartCount();
-    alert(`✅ ${item.title} adicionado ao carrinho!`);
 }
 
-function updateCartCount() {
-    const count = cart.reduce((sum, i) => sum + i.quantity, 0);
-    document.getElementById('cart-count').textContent = count;
+async function loadRecentDonations() {
+    try {
+        const snapshot = await donationsRef().orderBy('createdAt', 'desc').limit(20).get();
+        recentDonations = [];
+        snapshot.forEach(doc => {
+            recentDonations.push({ id: doc.id, ...doc.data() });
+        });
+    } catch (error) {
+        console.error('Erro ao carregar doações:', error);
+    }
 }
 
-function showCart() {
-    if (!currentUser) {
-        showLoginModal();
-        return;
-    }
-    
-    const modalBody = document.getElementById('cart-items');
-    
-    if (cart.length === 0) {
-        modalBody.innerHTML = '<p style="text-align:center;">Seu carrinho está vazio</p>';
-    } else {
+async function loadTotalDonations() {
+    try {
+        const snapshot = await donationsRef().get();
         let total = 0;
-        modalBody.innerHTML = cart.map(item => {
-            const itemTotal = item.price * item.quantity;
-            total += itemTotal;
+        snapshot.forEach(doc => {
+            total += (doc.data().amount || 0);
+        });
+        return total;
+    } catch (error) {
+        return 0;
+    }
+}
+
+// ============================================
+// TELAS PRINCIPAIS
+// ============================================
+
+async function showHome() {
+    await loadGoals();
+    await loadRecentDonations();
+    const totalDonations = await loadTotalDonations();
+    
+    const container = document.getElementById('main-container');
+    container.innerHTML = `
+        <div class="hero">
+            <h1>💝 Ajude a manter o WazzimaGiygg no ar!</h1>
+            <p>Sua contribuição mantém nossos serviços gratuitos e acessíveis para todos</p>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">${totalDonations.toLocaleString('pt-BR')}</div>
+                <div>Total Arrecadado</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">${recentDonations.length}</div>
+                <div>Doações Realizadas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">${goals.length}</div>
+                <div>Metas Ativas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">🎯</div>
+                <div>Metas Alcançadas</div>
+            </div>
+        </div>
+        
+        <div class="free-donation">
+            <h2>🎁 Faça uma Doação</h2>
+            <p>Escolha um valor ou doe o quanto quiser</p>
+            <div class="donation-amounts">
+                <button class="amount-btn" onclick="selectDonationAmount(10)">R$ 10</button>
+                <button class="amount-btn" onclick="selectDonationAmount(20)">R$ 20</button>
+                <button class="amount-btn" onclick="selectDonationAmount(50)">R$ 50</button>
+                <button class="amount-btn" onclick="selectDonationAmount(100)">R$ 100</button>
+            </div>
+            <div class="custom-donation">
+                <input type="number" id="custom-amount" placeholder="Outro valor" min="1">
+                <button class="btn-donate" onclick="startDonation()">💝 Doar Agora</button>
+            </div>
+        </div>
+        
+        <h2 class="section-title">🎯 Metas de Arrecadação</h2>
+        <div class="goals-grid" id="goals-grid"></div>
+        
+        <div class="recent-donations">
+            <h3>📋 Últimas Doações</h3>
+            <div class="donation-list" id="donation-list"></div>
+        </div>
+    `;
+    
+    // Renderizar metas
+    const goalsGrid = document.getElementById('goals-grid');
+    if (goals.length === 0) {
+        goalsGrid.innerHTML = '<p style="text-align:center; grid-column:1/-1;">Nenhuma meta cadastrada ainda.</p>';
+    } else {
+        goalsGrid.innerHTML = goals.map(goal => {
+            const progress = (goal.current / goal.target) * 100;
             return `
-                <div class="cart-item">
-                    <div class="cart-item-info">
-                        <h4>${escapeHtml(item.title)}</h4>
-                        <p>R$ ${item.price.toFixed(2)} ${item.type === 'service' ? '(Serviço)' : ''}</p>
+                <div class="goal-card">
+                    <div class="goal-icon">${goal.icon || '🎯'}</div>
+                    <div class="goal-title">${escapeHtml(goal.title)}</div>
+                    <div class="goal-description">${escapeHtml(goal.description || '')}</div>
+                    <div class="goal-stats">
+                        <span>R$ ${(goal.current || 0).toLocaleString('pt-BR')}</span>
+                        <span>R$ ${(goal.target || 0).toLocaleString('pt-BR')}</span>
                     </div>
-                    <div class="cart-item-qty">
-                        <button onclick="updateQuantity('${item.id}', '${item.type}', -1)">-</button>
-                        <span>${item.quantity}</span>
-                        <button onclick="updateQuantity('${item.id}', '${item.type}', 1)">+</button>
-                        <button onclick="removeFromCart('${item.id}', '${item.type}')" style="background:#f44336; color:white;">🗑️</button>
-                    </div>
-                    <div>R$ ${itemTotal.toFixed(2)}</div>
+                    <div class="progress-bar"><div class="progress-fill" style="width: ${Math.min(progress, 100)}%"></div></div>
+                    <button class="btn-donate-goal" onclick="startDonationForGoal('${goal.id}')">🎯 Doar para esta meta</button>
                 </div>
             `;
         }).join('');
-        
-        modalBody.innerHTML += `
-            <div class="cart-total">
-                Total: R$ ${total.toFixed(2)}
-                <button class="btn-primary" style="width:100%; margin-top:15px;" onclick="showCheckout()">💳 Finalizar Compra</button>
-            </div>
-        `;
     }
     
-    document.getElementById('cart-modal').style.display = 'flex';
-}
-
-function updateQuantity(id, type, delta) {
-    const item = cart.find(i => i.id === id && i.type === type);
-    if (item) {
-        item.quantity += delta;
-        if (item.quantity <= 0) {
-            cart = cart.filter(i => !(i.id === id && i.type === type));
-        }
-        updateCartCount();
-        showCart();
+    // Renderizar últimas doações
+    const donationList = document.getElementById('donation-list');
+    if (recentDonations.length === 0) {
+        donationList.innerHTML = '<p style="text-align:center;">Seja o primeiro a doar! 💝</p>';
+    } else {
+        donationList.innerHTML = recentDonations.map(donation => `
+            <div class="donation-item">
+                <div>
+                    <div class="donor-name">${escapeHtml(donation.donorName || 'Anônimo')}</div>
+                    <div class="donor-message">${escapeHtml(donation.message || '💝 Apoiando o projeto')}</div>
+                </div>
+                <div class="donation-amount">R$ ${(donation.amount || 0).toLocaleString('pt-BR')}</div>
+            </div>
+        `).join('');
     }
 }
 
-function removeFromCart(id, type) {
-    cart = cart.filter(i => !(i.id === id && i.type === type));
-    updateCartCount();
-    showCart();
-}
-
-// ============================================
-// SISTEMA DE PAGAMENTO
-// ============================================
-
-let selectedPaymentMethod = null;
-
-function showCheckout() {
-    if (cart.length === 0) {
-        alert('Carrinho vazio!');
+function showGoals() {
+    const container = document.getElementById('main-container');
+    if (goals.length === 0) {
+        container.innerHTML = `
+            <div class="hero">
+                <h1>🎯 Metas de Arrecadação</h1>
+                <p>Ajude-nos a alcançar nossas metas!</p>
+            </div>
+            <div style="text-align:center; padding:60px;">
+                <p>Nenhuma meta cadastrada no momento.</p>
+                <button class="btn-primary" onclick="showHome()">← Voltar</button>
+            </div>
+        `;
         return;
     }
     
-    const total = cart.reduce((sum, i) => sum + (i.price * i.quantity), 0);
-    const modalBody = document.getElementById('checkout-body');
+    container.innerHTML = `
+        <div class="hero">
+            <h1>🎯 Metas de Arrecadação</h1>
+            <p>Contribua com as metas que mais fazem sentido para você</p>
+        </div>
+        <div class="goals-grid">
+            ${goals.map(goal => {
+                const progress = (goal.current / goal.target) * 100;
+                return `
+                    <div class="goal-card">
+                        <div class="goal-icon">${goal.icon || '🎯'}</div>
+                        <div class="goal-title">${escapeHtml(goal.title)}</div>
+                        <div class="goal-description">${escapeHtml(goal.description || '')}</div>
+                        <div class="goal-stats">
+                            <span>R$ ${(goal.current || 0).toLocaleString('pt-BR')}</span>
+                            <span>R$ ${(goal.target || 0).toLocaleString('pt-BR')}</span>
+                        </div>
+                        <div class="progress-bar"><div class="progress-fill" style="width: ${Math.min(progress, 100)}%"></div></div>
+                        <button class="btn-donate-goal" onclick="startDonationForGoal('${goal.id}')">🎯 Doar para esta meta</button>
+                    </div>
+                `;
+            }).join('')}
+        </div>
+        <div style="text-align:center; margin-top:30px;">
+            <button class="btn-secondary" onclick="showHome()">← Voltar para Início</button>
+        </div>
+    `;
+}
+
+async function showMyDonations() {
+    if (!currentUser) {
+        showLoginModal();
+        return;
+    }
+    
+    try {
+        const snapshot = await donationsRef()
+            .where('donorId', '==', currentUser.uid)
+            .orderBy('createdAt', 'desc')
+            .get();
+        
+        const myDonations = [];
+        snapshot.forEach(doc => myDonations.push({ id: doc.id, ...doc.data() }));
+        
+        const container = document.getElementById('main-container');
+        if (myDonations.length === 0) {
+            container.innerHTML = `
+                <div class="hero">
+                    <h1>📋 Minhas Doações</h1>
+                    <p>Você ainda não realizou nenhuma doação.</p>
+                </div>
+                <div style="text-align:center;">
+                    <button class="btn-primary" onclick="showHome()">💝 Fazer minha primeira doação</button>
+                </div>
+            `;
+        } else {
+            let totalDonated = myDonations.reduce((sum, d) => sum + (d.amount || 0), 0);
+            container.innerHTML = `
+                <div class="hero">
+                    <h1>📋 Minhas Doações</h1>
+                    <p>Você já contribuiu com <strong>R$ ${totalDonated.toLocaleString('pt-BR')}</strong> para o projeto</p>
+                </div>
+                <div class="recent-donations">
+                    <h3>Histórico de Doações</h3>
+                    <div class="donation-list">
+                        ${myDonations.map(d => `
+                            <div class="donation-item">
+                                <div>
+                                    <div class="donor-name">${formatDate(d.createdAt)}</div>
+                                    <div class="donor-message">${escapeHtml(d.message || 'Doação realizada')}</div>
+                                </div>
+                                <div class="donation-amount">R$ ${(d.amount || 0).toLocaleString('pt-BR')}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div style="text-align:center; margin-top:20px;">
+                        <button class="btn-primary" onclick="showHome()">💝 Fazer nova doação</button>
+                    </div>
+                </div>
+            `;
+        }
+    } catch (error) {
+        alert('Erro: ' + error.message);
+    }
+}
+
+// ============================================
+// SISTEMA DE DOAÇÃO E PIX
+// ============================================
+
+function selectDonationAmount(amount) {
+    selectedAmount = amount;
+    selectedGoal = null;
+    document.querySelectorAll('.amount-btn').forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+}
+
+function startDonation() {
+    const customAmount = document.getElementById('custom-amount')?.value;
+    if (customAmount && parseFloat(customAmount) > 0) {
+        selectedAmount = parseFloat(customAmount);
+        selectedGoal = null;
+    } else if (!selectedAmount) {
+        selectedAmount = 10;
+    }
+    openDonationModal();
+}
+
+function startDonationForGoal(goalId) {
+    const goal = goals.find(g => g.id === goalId);
+    if (goal) {
+        selectedGoal = goal;
+        selectedAmount = null;
+        openDonationModal();
+    }
+}
+
+function openDonationModal() {
+    if (!currentUser) {
+        showLoginModal();
+        return;
+    }
+    
+    const modalBody = document.getElementById('donation-modal-body');
+    const title = document.getElementById('donation-modal-title');
+    
+    if (selectedGoal) {
+        title.innerHTML = `🎯 Doar para: ${escapeHtml(selectedGoal.title)}`;
+    } else {
+        title.innerHTML = `💝 Doação de R$ ${selectedAmount.toFixed(2)}`;
+    }
     
     modalBody.innerHTML = `
-        <div style="margin-bottom: 20px;">
-            <h4>Resumo do Pedido</h4>
-            ${cart.map(item => `
-                <div style="display: flex; justify-content: space-between; margin: 10px 0;">
-                    <span>${escapeHtml(item.title)} x ${item.quantity}</span>
-                    <span>R$ ${(item.price * item.quantity).toFixed(2)}</span>
+        <div class="pix-area">
+            <h4>Escolha a chave PIX para doação:</h4>
+            ${storePixKeys.map(key => `
+                <div class="pix-key-card" onclick="selectPixKey('${key.key}', '${key.type}')" data-key="${key.key}">
+                    <strong>${getPixTypeName(key.type)}</strong><br>
+                    <code>${escapeHtml(key.key)}</code><br>
+                    <small>${escapeHtml(key.description)}</small>
                 </div>
             `).join('')}
-            <div style="border-top: 2px solid #eee; margin-top: 10px; padding-top: 10px; font-size: 1.2em; font-weight: bold;">
-                <span>Total: </span>
-                <span>R$ ${total.toFixed(2)}</span>
+            <div id="selected-pix-display" style="margin-top: 20px;"></div>
+            
+            <div class="invoice-area">
+                <h4>📄 Dados para o comprovante (opcional):</h4>
+                <div class="invoice-field">
+                    <label>Nome completo (para o comprovante)</label>
+                    <input type="text" id="donor-name" placeholder="Como gostaria de ser identificado" value="${escapeHtml(currentUser.displayName || '')}">
+                </div>
+                <div class="invoice-field">
+                    <label>Mensagem (opcional)</label>
+                    <textarea id="donor-message" rows="2" placeholder="Deixe uma mensagem de apoio..."></textarea>
+                </div>
+                <div class="invoice-field">
+                    <label>CPF/CNPJ (para emissão de recibo)</label>
+                    <input type="text" id="donor-document" placeholder="Opcional">
+                </div>
             </div>
+            
+            <button id="generate-payment-btn" class="btn-primary" style="width:100%; margin-top:20px;" disabled>
+                ✅ Confirmar e Gerar Pagamento
+            </button>
         </div>
-        
-        <h4>💳 Escolha a forma de pagamento</h4>
-        <div class="payment-methods">
-            <div class="payment-option" onclick="selectPaymentMethod('pix')">
-                <div class="payment-icon">💳</div>
-                <div class="payment-info">
-                    <div class="payment-title">PIX</div>
-                    <div class="payment-description">Pagamento instantâneo com desconto de 5%</div>
-                </div>
-            </div>
-            <div class="payment-option" onclick="selectPaymentMethod('card')">
-                <div class="payment-icon">💳</div>
-                <div class="payment-info">
-                    <div class="payment-title">Cartão de Crédito</div>
-                    <div class="payment-description">Parcelamos em até 12x</div>
-                </div>
-            </div>
-            <div class="payment-option" onclick="selectPaymentMethod('boleto')">
-                <div class="payment-icon">📄</div>
-                <div class="payment-info">
-                    <div class="payment-title">Boleto Bancário</div>
-                    <div class="payment-description">Vencimento em 3 dias úteis</div>
-                </div>
-            </div>
-        </div>
-        
-        <div id="payment-details"></div>
-        
-        <button id="confirm-payment-btn" class="btn-success" style="width:100%; margin-top:20px;" onclick="processPayment()">
-            ✅ Confirmar Pagamento
-        </button>
     `;
     
-    document.getElementById('checkout-modal').style.display = 'flex';
+    document.getElementById('donation-modal').style.display = 'flex';
+    
+    window.selectedPixKey = null;
 }
 
-function selectPaymentMethod(method) {
-    selectedPaymentMethod = method;
+function getPixTypeName(type) {
+    const types = {
+        'cnpj': '🏢 CNPJ',
+        'cpf': '📄 CPF',
+        'email': '📧 E-mail',
+        'phone': '📱 Telefone',
+        'random': '🎲 Chave Aleatória'
+    };
+    return types[type] || type;
+}
+
+function selectPixKey(key, type) {
+    window.selectedPixKey = { key, type };
     
-    // Atualizar UI dos métodos de pagamento
-    document.querySelectorAll('.payment-option').forEach(opt => opt.classList.remove('selected'));
-    event.currentTarget.classList.add('selected');
+    document.querySelectorAll('.pix-key-card').forEach(card => {
+        card.classList.remove('selected');
+        if (card.getAttribute('data-key') === key) {
+            card.classList.add('selected');
+        }
+    });
     
-    const total = cart.reduce((sum, i) => sum + (i.price * i.quantity), 0);
-    const discountTotal = total * 0.95; // 5% desconto para PIX
-    const paymentDetails = document.getElementById('payment-details');
+    const display = document.getElementById('selected-pix-display');
+    display.innerHTML = `
+        <div style="background: rgba(40,167,69,0.2); border-radius: 12px; padding: 15px;">
+            <p>✅ Chave PIX selecionada:</p>
+            <div class="pix-key-code">${escapeHtml(key)}</div>
+            <p style="font-size: 0.85em;">⚠️ Após o pagamento, clique em "Já Paguei" para concluir</p>
+        </div>
+    `;
     
-    if (method === 'pix') {
-        const pixCode = generatePixCode();
-        paymentDetails.innerHTML = `
-            <div class="pix-area">
-                <p><strong>✨ PIX com 5% de desconto!</strong></p>
-                <p>Valor original: R$ ${total.toFixed(2)}</p>
-                <p><strong>Valor com desconto: R$ ${discountTotal.toFixed(2)}</strong></p>
-                <div class="pix-code">
-                    ${pixCode}
-                </div>
-                <button class="btn-secondary" onclick="copyPixCode('${pixCode}')">📋 Copiar Código PIX</button>
-                <p style="font-size: 0.8em; margin-top: 10px;">Após o pagamento, seu pedido será processado automaticamente.</p>
-            </div>
-        `;
-    } else if (method === 'card') {
-        paymentDetails.innerHTML = `
-            <div class="card-area">
-                <div class="form-group">
-                    <label>Número do Cartão</label>
-                    <input type="text" id="card-number" placeholder="0000 0000 0000 0000" maxlength="19">
-                </div>
-                <div class="card-input-row">
-                    <div class="form-group" style="flex:1">
-                        <label>Validade</label>
-                        <input type="text" id="card-expiry" placeholder="MM/AA">
-                    </div>
-                    <div class="form-group" style="flex:1">
-                        <label>CVV</label>
-                        <input type="text" id="card-cvv" placeholder="123" maxlength="4">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Nome no Cartão</label>
-                    <input type="text" id="card-name" placeholder="Como está no cartão">
-                </div>
-                <div class="form-group">
-                    <label>Parcelas</label>
-                    <select id="card-installments">
-                        <option value="1">1x de R$ ${total.toFixed(2)}</option>
-                        <option value="2">2x de R$ ${(total/2).toFixed(2)}</option>
-                        <option value="3">3x de R$ ${(total/3).toFixed(2)}</option>
-                        <option value="4">4x de R$ ${(total/4).toFixed(2)}</option>
-                        <option value="5">5x de R$ ${(total/5).toFixed(2)}</option>
-                        <option value="6">6x de R$ ${(total/6).toFixed(2)}</option>
-                    </select>
-                </div>
-            </div>
-        `;
-    } else if (method === 'boleto') {
-        const boletoCode = generateBoletoCode();
-        paymentDetails.innerHTML = `
-            <div class="boleto-area">
-                <p><strong>📄 Boleto Bancário</strong></p>
-                <p>Valor: R$ ${total.toFixed(2)}</p>
-                <p>Vencimento: ${getBoletoDueDate()}</p>
-                <div class="pix-code">
-                    ${boletoCode}
-                </div>
-                <button class="btn-secondary" onclick="copyBoletoCode('${boletoCode}')">📋 Copiar Código do Boleto</button>
-                <p style="font-size: 0.8em; margin-top: 10px;">O boleto vence em 3 dias úteis. Após o pagamento, pode levar até 48h para compensação.</p>
-            </div>
-        `;
+    const confirmBtn = document.getElementById('generate-payment-btn');
+    confirmBtn.disabled = false;
+    confirmBtn.innerHTML = '💳 Gerar Pagamento PIX';
+    confirmBtn.onclick = () => generatePixPayment();
+}
+
+function generatePixPayment() {
+    if (!window.selectedPixKey) {
+        alert('Selecione uma chave PIX primeiro!');
+        return;
     }
-}
-
-function generatePixCode() {
-    // Simula um código PIX real
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let code = '00020126360014BR.GOV.BCB.PIX0114';
-    for (let i = 0; i < 32; i++) {
-        code += chars.charAt(Math.floor(Math.random() * chars.length));
+    
+    const amount = selectedGoal ? null : selectedAmount;
+    const goalId = selectedGoal ? selectedGoal.id : null;
+    const donorName = document.getElementById('donor-name')?.value || 'Anônimo';
+    const donorMessage = document.getElementById('donor-message')?.value || '';
+    const donorDocument = document.getElementById('donor-document')?.value || '';
+    
+    // Se for para uma meta, o valor é o que falta para completar ou o valor sugerido
+    let finalAmount = amount;
+    if (selectedGoal) {
+        const remaining = selectedGoal.target - (selectedGoal.current || 0);
+        finalAmount = Math.min(remaining, 50); // Sugere R$50 ou o que falta
     }
-    code += '5204000053039865404';
-    code += Math.floor(Math.random() * 1000).toString().padStart(3, '0');
-    code += '5802BR5925';
-    code += chars.substring(0, 20);
-    return code;
+    
+    if (!finalAmount || finalAmount <= 0) {
+        alert('Digite um valor válido para a doação');
+        return;
+    }
+    
+    // Gerar código PIX simulado
+    const pixCode = generatePixCode(finalAmount, window.selectedPixKey.key);
+    
+    const modalBody = document.getElementById('donation-modal-body');
+    modalBody.innerHTML = `
+        <div class="pix-area">
+            <h3>💳 Pagamento PIX</h3>
+            <p>Valor: <strong>R$ ${finalAmount.toFixed(2)}</strong></p>
+            <p>Chave PIX: <strong>${escapeHtml(window.selectedPixKey.key)}</strong></p>
+            
+            <div class="pix-key-code">
+                ${pixCode}
+            </div>
+            
+            <button class="btn-secondary" onclick="copyPixCode('${pixCode}')">📋 Copiar Código PIX</button>
+            
+            <div style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 12px;">
+                <p>📌 Após realizar o pagamento, clique no botão abaixo para confirmar sua doação e gerar o comprovante.</p>
+                <button class="btn-success" style="margin-top: 15px;" onclick="confirmDonation(${finalAmount}, '${goalId}', '${escapeHtml(donorName)}', '${escapeHtml(donorMessage)}', '${escapeHtml(donorDocument)}')">
+                    ✅ Já Paguei - Confirmar Doação
+                </button>
+            </div>
+        </div>
+    `;
 }
 
-function generateBoletoCode() {
-    const nums = '0123456789';
-    let code = '03399.';
-    for (let i = 0; i < 5; i++) code += nums.charAt(Math.floor(Math.random() * nums.length));
-    code += ' 12345.';
-    for (let i = 0; i < 5; i++) code += nums.charAt(Math.floor(Math.random() * nums.length));
-    code += ' 67890.';
-    for (let i = 0; i < 6; i++) code += nums.charAt(Math.floor(Math.random() * nums.length));
-    code += ' 1 12345678901234';
-    return code;
-}
-
-function getBoletoDueDate() {
-    const date = new Date();
-    date.setDate(date.getDate() + 3);
-    return date.toLocaleDateString('pt-BR');
+function generatePixCode(amount, pixKey) {
+    // Simula um código PIX válido (QR Code em produção)
+    const timestamp = Date.now();
+    const randomId = Math.random().toString(36).substring(2, 15);
+    return `00020126360014BR.GOV.BCB.PIX0114${pixKey.replace(/[^a-zA-Z0-9]/g, '')}5204000053039865404${Math.floor(amount).toString()}5802BR5925DOACAO WAZZIMA${timestamp}${randomId}`;
 }
 
 function copyPixCode(code) {
     navigator.clipboard.writeText(code);
-    alert('✅ Código PIX copiado!');
+    alert('✅ Código PIX copiado! Faça o pagamento no seu aplicativo bancário.');
 }
 
-function copyBoletoCode(code) {
-    navigator.clipboard.writeText(code);
-    alert('✅ Código do boleto copiado!');
-}
-
-async function processPayment() {
-    if (!selectedPaymentMethod) {
-        alert('Selecione uma forma de pagamento!');
+async function confirmDonation(amount, goalId, donorName, donorMessage, donorDocument) {
+    if (!currentUser) {
+        alert('Faça login novamente para continuar');
         return;
     }
     
-    const total = cart.reduce((sum, i) => sum + (i.price * i.quantity), 0);
-    const finalTotal = selectedPaymentMethod === 'pix' ? total * 0.95 : total;
-    
-    const paymentData = {
-        userId: currentUser.uid,
-        userEmail: currentUser.email,
-        userName: currentUser.displayName,
-        items: [...cart],
-        total: finalTotal,
-        originalTotal: total,
-        paymentMethod: selectedPaymentMethod,
-        status: selectedPaymentMethod === 'pix' ? 'paid' : 'pending_payment',
-        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        paymentDate: selectedPaymentMethod === 'pix' ? firebase.firestore.FieldValue.serverTimestamp() : null
-    };
-    
-    // Adicionar dados específicos do pagamento
-    if (selectedPaymentMethod === 'card') {
-        const installments = document.getElementById('card-installments')?.value || 1;
-        paymentData.installments = parseInt(installments);
-        paymentData.lastFourDigits = document.getElementById('card-number')?.value.slice(-4) || '****';
-        paymentData.status = 'paid'; // Simula pagamento aprovado
-    } else if (selectedPaymentMethod === 'boleto') {
-        paymentData.boletoDueDate = getBoletoDueDate();
-        paymentData.boletoCode = generateBoletoCode();
-    } else if (selectedPaymentMethod === 'pix') {
-        paymentData.pixCode = generatePixCode();
-    }
-    
     try {
-        // Criar pedido
-        const orderRef = await pedidosRef().add(paymentData);
+        const donationData = {
+            donorId: currentUser.uid,
+            donorEmail: currentUser.email,
+            donorName: donorName || currentUser.displayName || 'Anônimo',
+            donorDocument: donorDocument || '',
+            message: donorMessage || '',
+            amount: amount,
+            goalId: goalId || null,
+            status: 'completed',
+            paymentMethod: 'pix',
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
         
-        // Atualizar estoque (apenas se pagamento confirmado)
-        if (paymentData.status === 'paid') {
-            for (const item of cart) {
-                if (item.type === 'product') {
-                    const productRef = produtosRef().doc(item.id);
-                    const productDoc = await productRef.get();
-                    if (productDoc.exists) {
-                        const newStock = (productDoc.data().stock || 0) - item.quantity;
-                        await productRef.update({ stock: newStock });
-                    }
-                }
+        const docRef = await donationsRef().add(donationData);
+        
+        // Atualizar meta se houver
+        if (goalId) {
+            const goalRef = goalsRef().doc(goalId);
+            const goalDoc = await goalRef.get();
+            if (goalDoc.exists) {
+                const newCurrent = (goalDoc.data().current || 0) + amount;
+                await goalRef.update({ current: newCurrent });
             }
         }
         
-        // Registrar transação na subcoleção de transações
-        await maspiaRef.doc('transacoes').collection('logs').add({
-            orderId: orderRef.id,
-            ...paymentData,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        });
+        closeModal('donation-modal');
         
-        const message = selectedPaymentMethod === 'pix' 
-            ? '✅ Pagamento confirmado! Pedido realizado com sucesso!'
-            : selectedPaymentMethod === 'card'
-            ? '✅ Pagamento aprovado! Pedido realizado com sucesso!'
-            : '📄 Boleto gerado! Após o pagamento, seu pedido será processado.';
+        // Gerar comprovante/recibo
+        showInvoice(docRef.id, donationData);
         
-        alert(message);
+        await loadGoals();
+        await loadRecentDonations();
         
-        // Limpar carrinho
-        cart = [];
-        updateCartCount();
-        closeModal('checkout-modal');
-        closeModal('cart-modal');
-        
-        // Se for boleto, mostrar o código novamente
-        if (selectedPaymentMethod === 'boleto') {
-            alert(`Código do boleto: ${paymentData.boletoCode}\nVencimento: ${paymentData.boletoDueDate}`);
-        }
-        
-        showProducts();
     } catch (error) {
-        alert('Erro ao processar pagamento: ' + error.message);
+        alert('Erro ao registrar doação: ' + error.message);
     }
 }
 
-// ============================================
-// MEUS PEDIDOS
-// ============================================
-
-async function showMyOrders() {
-    if (!currentUser) {
-        showLoginModal();
-        return;
-    }
+function showInvoice(donationId, donationData) {
+    const invoiceNumber = `WZM-${donationId.substring(0, 8).toUpperCase()}`;
+    const date = new Date().toLocaleString('pt-BR');
     
-    const container = document.getElementById('main-container');
-    container.innerHTML = '<div class="loading">Carregando seus pedidos...</div>';
-    
-    try {
-        const snapshot = await pedidosRef()
-            .where('userId', '==', currentUser.uid)
-            .orderBy('createdAt', 'desc')
-            .get();
-        
-        const orders = [];
-        snapshot.forEach(doc => orders.push({ id: doc.id, ...doc.data() }));
-        
-        if (orders.length === 0) {
-            container.innerHTML = `
-                <div class="admin-panel">
-                    <h2>📋 Meus Pedidos</h2>
-                    <div class="login-required" style="padding: 40px;">
-                        <p>Você ainda não fez nenhum pedido.</p>
-                        <button class="btn-primary" onclick="showProducts()">🛍️ Começar a Comprar</button>
-                    </div>
-                </div>
-            `;
-            return;
-        }
-        
-        container.innerHTML = `
-            <div class="admin-panel">
-                <h2>📋 Meus Pedidos</h2>
-                <table class="products-table">
-                    <thead>
-                        <tr>
-                            <th>Pedido</th>
-                            <th>Data</th>
-                            <th>Total</th>
-                            <th>Pagamento</th>
-                            <th>Status</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${orders.map(order => `
-                            <tr>
-                                <td>#${order.id.substring(0,8)}</td>
-                                <td>${order.createdAt ? new Date(order.createdAt.seconds * 1000).toLocaleDateString('pt-BR') : '-'}</td>
-                                <td>R$ ${(order.total || 0).toFixed(2)}</td>
-                                <td>${getPaymentMethodName(order.paymentMethod)}</td>
-                                <td><span class="order-status status-${order.status}">${getOrderStatusName(order.status)}</span></td>
-                                <td><button class="btn-secondary" onclick="viewOrderDetails('${order.id}')">👁️ Detalhes</button></td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-            </div>
-        `;
-    } catch (error) {
-        container.innerHTML = `<div class="login-required"><h3>Erro: ${error.message}</h3></div>`;
-    }
-}
-
-function getPaymentMethodName(method) {
-    const methods = {
-        'pix': '💳 PIX',
-        'card': '💳 Cartão',
-        'boleto': '📄 Boleto'
-    };
-    return methods[method] || method;
-}
-
-function getOrderStatusName(status) {
-    const statuses = {
-        'pending_payment': '⏳ Aguardando Pagamento',
-        'paid': '✅ Pago',
-        'processing': '🔄 Processando',
-        'shipped': '🚚 Enviado',
-        'delivered': '📦 Entregue',
-        'cancelled': '❌ Cancelado'
-    };
-    return statuses[status] || status;
-}
-
-async function viewOrderDetails(orderId) {
-    const doc = await pedidosRef().doc(orderId).get();
-    const order = doc.data();
-    
-    const modalBody = document.getElementById('product-modal-body');
-    document.getElementById('product-modal-title').innerHTML = `📋 Pedido #${orderId.substring(0,8)}`;
+    const modalBody = document.getElementById('invoice-body');
     modalBody.innerHTML = `
-        <p><strong>Data:</strong> ${order.createdAt ? new Date(order.createdAt.seconds * 1000).toLocaleString('pt-BR') : '-'}</p>
-        <p><strong>Forma de Pagamento:</strong> ${getPaymentMethodName(order.paymentMethod)}</p>
-        <p><strong>Status:</strong> <span class="order-status status-${order.status}">${getOrderStatusName(order.status)}</span></p>
-        <p><strong>Subtotal:</strong> R$ ${(order.originalTotal || order.total).toFixed(2)}</p>
-        ${order.paymentMethod === 'pix' ? `<p><strong>Desconto (5% PIX):</strong> -R$ ${((order.originalTotal || order.total) - order.total).toFixed(2)}</p>` : ''}
-        <p><strong>Total Pago:</strong> R$ ${(order.total || 0).toFixed(2)}</p>
-        <h4>📦 Itens:</h4>
-        <ul style="margin-left: 20px;">
-            ${order.items.map(item => `<li>${escapeHtml(item.title)} x ${item.quantity} = R$ ${(item.price * item.quantity).toFixed(2)}</li>`).join('')}
-        </ul>
-        ${order.paymentMethod === 'boleto' && order.boletoCode ? `
-            <div class="pix-area">
-                <p><strong>Código do Boleto:</strong></p>
-                <div class="pix-code">${order.boletoCode}</div>
-                <button class="btn-secondary" onclick="copyBoletoCode('${order.boletoCode}')">📋 Copiar</button>
+        <div style="text-align: center;">
+            <h2>📄 COMPROVANTE DE DOAÇÃO</h2>
+            <p style="color: #e94560;">WazzimaGiygg</p>
+            <hr style="margin: 15px 0; border-color: rgba(255,255,255,0.1);">
+            
+            <div style="text-align: left;">
+                <p><strong>Nº do Comprovante:</strong> ${invoiceNumber}</p>
+                <p><strong>Data:</strong> ${date}</p>
+                <p><strong>Doador:</strong> ${escapeHtml(donationData.donorName)}</p>
+                <p><strong>E-mail:</strong> ${escapeHtml(donationData.donorEmail)}</p>
+                ${donationData.donorDocument ? `<p><strong>CPF/CNPJ:</strong> ${escapeHtml(donationData.donorDocument)}</p>` : ''}
             </div>
-        ` : ''}
-        ${order.paymentMethod === 'pix' && order.pixCode ? `
-            <div class="pix-area">
-                <p><strong>Código PIX:</strong></p>
-                <div class="pix-code">${order.pixCode}</div>
-                <button class="btn-secondary" onclick="copyPixCode('${order.pixCode}')">📋 Copiar</button>
+            
+            <hr style="margin: 15px 0; border-color: rgba(255,255,255,0.1);">
+            
+            <div style="text-align: center;">
+                <h3>Valor da Doação</h3>
+                <p style="font-size: 2em; color: #e94560;">R$ ${donationData.amount.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</p>
             </div>
-        ` : ''}
-        <button class="btn-secondary" onclick="closeModal('product-modal')" style="margin-top:15px;">Fechar</button>
-    `;
-    
-    document.getElementById('product-modal').style.display = 'flex';
-}
-
-// ============================================
-// PRODUTOS
-// ============================================
-
-async function loadProducts() {
-    try {
-        const snapshot = await produtosRef()
-            .where('active', '==', true)
-            .orderBy('createdAt', 'desc')
-            .get();
-        
-        products = [];
-        snapshot.forEach(doc => {
-            products.push({ id: doc.id, ...doc.data() });
-        });
-        renderProducts();
-    } catch (error) {
-        console.error('Erro:', error);
-    }
-}
-
-function renderProducts() {
-    const container = document.getElementById('main-container');
-    
-    if (products.length === 0) {
-        container.innerHTML = '<div class="login-required"><h3>📦 Nenhum produto disponível</h3></div>';
-        return;
-    }
-    
-    container.innerHTML = `
-        <div class="products-grid">
-            ${products.map(product => `
-                <div class="product-card">
-                    <div class="product-image">${product.icon || '📦'}</div>
-                    <div class="product-info">
-                        <div class="product-title">${escapeHtml(product.title)}</div>
-                        <div class="product-price">R$ ${(product.price || 0).toFixed(2)}</div>
-                        <div class="product-stock ${product.stock <= 5 ? 'stock-low' : ''} ${product.stock <= 0 ? 'stock-out' : ''}">
-                            ${product.stock > 0 ? `📦 Estoque: ${product.stock} unidades` : '❌ Indisponível'}
-                        </div>
-                        <button class="btn-add-cart" onclick="addToCart({id:'${product.id}', title:'${escapeHtml(product.title)}', price:${product.price}}, 'product')" ${product.stock <= 0 ? 'disabled' : ''}>
-                            🛒 ${product.stock > 0 ? 'Adicionar ao Carrinho' : 'Indisponível'}
-                        </button>
-                    </div>
-                </div>
-            `).join('')}
+            
+            <hr style="margin: 15px 0; border-color: rgba(255,255,255,0.1);">
+            
+            <div style="text-align: left;">
+                <p><strong>Forma de Pagamento:</strong> PIX</p>
+                <p><strong>Status:</strong> ✅ Confirmado</p>
+                <p><strong>Destinação:</strong> ${donationData.goalId ? 'Meta específica' : 'Fundo geral WazzimaGiygg'}</p>
+                ${donationData.message ? `<p><strong>Mensagem:</strong> "${escapeHtml(donationData.message)}"</p>` : ''}
+            </div>
+            
+            <hr style="margin: 15px 0; border-color: rgba(255,255,255,0.1);">
+            
+            <p style="font-size: 0.85em; text-align: center;">
+                Este comprovante é válido como recibo de doação.<br>
+                WazzimaGiygg - CNPJ em processo de regularização<br>
+                Todas as doações são voluntárias e não geram obrigações fiscais para o doador.
+            </p>
+            
+            <div style="margin-top: 20px;">
+                <button class="btn-secondary" onclick="window.print()">🖨️ Imprimir Comprovante</button>
+                <button class="btn-primary" onclick="closeModal('invoice-modal'); showHome();">✅ Fechar</button>
+            </div>
         </div>
     `;
-}
-
-// ============================================
-// SERVIÇOS
-// ============================================
-
-async function loadServices() {
-    try {
-        const snapshot = await servicosRef()
-            .where('active', '==', true)
-            .orderBy('createdAt', 'desc')
-            .get();
-        
-        services = [];
-        snapshot.forEach(doc => {
-            services.push({ id: doc.id, ...doc.data() });
-        });
-        renderServices();
-    } catch (error) {
-        console.error('Erro:', error);
-    }
-}
-
-function renderServices() {
-    const container = document.getElementById('main-container');
     
-    if (services.length === 0) {
-        container.innerHTML = '<div class="login-required"><h3>🔧 Nenhum serviço disponível</h3></div>';
-        return;
-    }
-    
-    container.innerHTML = `
-        <div class="services-grid">
-            ${services.map(service => `
-                <div class="service-card">
-                    <div class="service-icon">${service.icon || '🔧'}</div>
-                    <h3>${escapeHtml(service.title)}</h3>
-                    <p>${escapeHtml(service.description || '')}</p>
-                    <div class="service-price">R$ ${(service.price || 0).toFixed(2)}</div>
-                    <button class="btn-add-cart" onclick="addToCart({id:'${service.id}', title:'${escapeHtml(service.title)}', price:${service.price}}, 'service')">
-                        🛒 Contratar Serviço
-                    </button>
-                </div>
-            `).join('')}
-        </div>
-    `;
+    document.getElementById('invoice-modal').style.display = 'flex';
 }
 
 // ============================================
 // ADMIN
 // ============================================
 
-function showAdmin() {
+async function showAdmin() {
     if (!isAdmin) {
         alert('Acesso restrito a administradores');
         return;
     }
     
+    await loadGoals();
+    
     const container = document.getElementById('main-container');
     container.innerHTML = `
         <div class="admin-panel">
             <div class="admin-header">
-                <h2>👑 Painel Administrativo - Maspia Store</h2>
+                <h2>👑 Painel Administrativo - Doações</h2>
                 <div>
-                    <button class="btn-primary" onclick="showAddProductForm()">➕ Adicionar Produto</button>
-                    <button class="btn-primary" onclick="showAddServiceForm()">🔧 Adicionar Serviço</button>
-                    <button class="btn-secondary" onclick="loadAdminData()">🔄 Atualizar</button>
+                    <button class="btn-primary" onclick="showAddGoalForm()">➕ Adicionar Meta</button>
+                    <button class="btn-secondary" onclick="showAdminStats()">📊 Estatísticas</button>
                 </div>
             </div>
             
-            <div class="tabs">
-                <div class="tab active" onclick="showAdminProducts()">📦 Produtos</div>
-                <div class="tab" onclick="showAdminServices()">🔧 Serviços</div>
-                <div class="tab" onclick="showAdminOrders()">📋 Pedidos</div>
-            </div>
-            
-            <div id="admin-content">
-                <div class="loading">Carregando...</div>
-            </div>
+            <h3>🎯 Metas de Arrecadação</h3>
+            <table class="goals-table">
+                <thead>
+                    <tr><th>Meta</th><th>Progresso</th><th>Arrecadado</th><th>Meta</th><th>Ações</th></tr>
+                </thead>
+                <tbody id="admin-goals-list"></tbody>
+            </table>
         </div>
     `;
     
-    loadAdminProducts();
-}
-
-async function loadAdminProducts() {
-    try {
-        const snapshot = await produtosRef().orderBy('createdAt', 'desc').get();
-        const productsList = [];
-        snapshot.forEach(doc => productsList.push({ id: doc.id, ...doc.data() }));
-        
-        document.getElementById('admin-content').innerHTML = `
-            <table class="products-table">
-                <thead>
-                    <tr>
-                        <th>Produto</th>
-                        <th>Preço</th>
-                        <th>Estoque</th>
-                        <th>Status</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${productsList.map(p => `
-                        <tr>
-                            <td>${escapeHtml(p.title)}</td
-                            <td>R$ ${(p.price || 0).toFixed(2)}</td
-                            <td>${p.stock || 0}</td
-                            <td><span class="status-badge ${p.active ? 'status-active' : 'status-inactive'}">${p.active ? 'Ativo' : 'Inativo'}</span></td
-                            <td>
-                                <button class="btn-secondary" onclick="editProduct('${p.id}')">✏️</button>
-                                <button class="btn-secondary" onclick="toggleProductStatus('${p.id}', ${!p.active})">${p.active ? 'Desativar' : 'Ativar'}</button>
-                                <button class="btn-secondary" style="background:#dc3545;" onclick="deleteProduct('${p.id}')">🗑️</button>
-                             </td
-                        </tr>
-                    `).join('')}
-                </tbody>
-            </table>
-        `;
-    } catch (error) {
-        document.getElementById('admin-content').innerHTML = `<p>Erro: ${error.message}</p>`;
+    const tbody = document.getElementById('admin-goals-list');
+    if (goals.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Nenhuma meta cadastrada</td></tr>';
+    } else {
+        tbody.innerHTML = goals.map(goal => `
+            <tr>
+                <td>${escapeHtml(goal.title)}</td>
+                <td><div class="progress-bar" style="width:100px;"><div class="progress-fill" style="width: ${(goal.current/goal.target)*100}%"></div></div></td>
+                <td>R$ ${(goal.current || 0).toLocaleString('pt-BR')}</td>
+                <td>R$ ${(goal.target || 0).toLocaleString('pt-BR')}</td>
+                <td><button class="btn-danger" onclick="deleteGoal('${goal.id}')">🗑️</button></td>
+            </tr>
+        `).join('');
     }
 }
 
-async function loadAdminServices() {
-    try {
-        const snapshot = await servicosRef().orderBy('createdAt', 'desc').get();
-        const servicesList = [];
-        snapshot.forEach(doc => servicesList.push({ id: doc.id, ...doc.data() }));
-        
-        document.getElementById('admin-content').innerHTML = `
-            <table class="products-table">
-                <thead>
-                    <tr>
-                        <th>Serviço</th>
-                        <th>Preço</th>
-                        <th>Status</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${servicesList.map(s => `
-                        <tr>
-                            <td>${escapeHtml(s.title)}</td
-                            <td>R$ ${(s.price || 0).toFixed(2)}</td
-                            <td><span class="status-badge ${s.active ? 'status-active' : 'status-inactive'}">${s.active ? 'Ativo' : 'Inativo'}</span></td
-                            <td>
-                                <button class="btn-secondary" onclick="editService('${s.id}')">✏️</button>
-                                <button class="btn-secondary" onclick="toggleServiceStatus('${s.id}', ${!s.active})">${s.active ? 'Desativar' : 'Ativar'}</button>
-                                <button class="btn-secondary" style="background:#dc3545;" onclick="deleteService('${s.id}')">🗑️</button>
-                             </td
-                        </tr>
-                    `).join('')}
-                </tbody>
-            </table>
-        `;
-    } catch (error) {
-        document.getElementById('admin-content').innerHTML = `<p>Erro: ${error.message}</p>`;
-    }
-}
-
-async function loadAdminOrders() {
-    try {
-        const snapshot = await pedidosRef().orderBy('createdAt', 'desc').get();
-        const ordersList = [];
-        snapshot.forEach(doc => ordersList.push({ id: doc.id, ...doc.data() }));
-        
-        if (ordersList.length === 0) {
-            document.getElementById('admin-content').innerHTML = '<p style="text-align:center; padding:40px;">Nenhum pedido realizado ainda</p>';
-            return;
-        }
-        
-        document.getElementById('admin-content').innerHTML = `
-            <table class="products-table">
-                <thead>
-                    <tr>
-                        <th>Pedido</th>
-                        <th>Cliente</th>
-                        <th>Total</th>
-                        <th>Pagamento</th>
-                        <th>Status</th>
-                        <th>Data</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${ordersList.map(o => `
-                        <tr>
-                            <td>#${o.id.substring(0,8)}</td
-                            <td>${escapeHtml(o.userName || o.userEmail)}</td
-                            <td>R$ ${(o.total || 0).toFixed(2)}</td
-                            <td>${getPaymentMethodName(o.paymentMethod)}</td
-                            <td>
-                                <select onchange="updateOrderStatus('${o.id}', this.value)">
-                                    <option value="pending_payment" ${o.status === 'pending_payment' ? 'selected' : ''}>Aguardando Pagamento</option>
-                                    <option value="paid" ${o.status === 'paid' ? 'selected' : ''}>Pago</option>
-                                    <option value="processing" ${o.status === 'processing' ? 'selected' : ''}>Processando</option>
-                                    <option value="shipped" ${o.status === 'shipped' ? 'selected' : ''}>Enviado</option>
-                                    <option value="delivered" ${o.status === 'delivered' ? 'selected' : ''}>Entregue</option>
-                                    <option value="cancelled" ${o.status === 'cancelled' ? 'selected' : ''}>Cancelado</option>
-                                </select>
-                             </td
-                            <td>${o.createdAt ? new Date(o.createdAt.seconds * 1000).toLocaleDateString('pt-BR') : '-'}</td
-                            <td><button class="btn-secondary" onclick="viewOrderDetails('${o.id}')">👁️</button></td
-                        </tr>
-                    `).join('')}
-                </tbody>
-            </table>
-        `;
-    } catch (error) {
-        document.getElementById('admin-content').innerHTML = `<p>Erro: ${error.message}</p>`;
-    }
-}
-
-function showAddProductForm() {
-    const modalBody = document.getElementById('product-modal-body');
-    document.getElementById('product-modal-title').innerHTML = '➕ Adicionar Produto';
+function showAddGoalForm() {
+    const modalBody = document.getElementById('donation-modal-body');
+    document.getElementById('donation-modal-title').innerHTML = '🎯 Adicionar Meta';
     modalBody.innerHTML = `
-        <form id="add-product-form">
+        <form id="add-goal-form">
             <div class="form-group">
-                <label>Título *</label>
-                <input type="text" id="prod-title" required>
-            </div>
-            <div class="form-group">
-                <label>Preço (R$) *</label>
-                <input type="number" step="0.01" id="prod-price" required>
-            </div>
-            <div class="form-group">
-                <label>Estoque *</label>
-                <input type="number" id="prod-stock" value="0" required>
-            </div>
-            <div class="form-group">
-                <label>Ícone (emoji)</label>
-                <input type="text" id="prod-icon" placeholder="📦">
+                <label>Título da Meta</label>
+                <input type="text" id="goal-title" required>
             </div>
             <div class="form-group">
                 <label>Descrição</label>
-                <textarea id="prod-description" rows="3"></textarea>
+                <textarea id="goal-description" rows="3"></textarea>
             </div>
-            <button type="submit" class="btn-primary" style="width:100%">✨ Adicionar Produto</button>
+            <div class="form-group">
+                <label>Valor da Meta (R$)</label>
+                <input type="number" step="0.01" id="goal-target" required>
+            </div>
+            <div class="form-group">
+                <label>Ícone (emoji)</label>
+                <input type="text" id="goal-icon" placeholder="🎯">
+            </div>
+            <button type="submit" class="btn-primary" style="width:100%">✨ Criar Meta</button>
         </form>
     `;
     
-    document.getElementById('add-product-form').onsubmit = async (e) => {
+    document.getElementById('add-goal-form').onsubmit = async (e) => {
         e.preventDefault();
-        const productData = {
-            title: document.getElementById('prod-title').value,
-            price: parseFloat(document.getElementById('prod-price').value),
-            stock: parseInt(document.getElementById('prod-stock').value),
-            icon: document.getElementById('prod-icon').value || '📦',
-            description: document.getElementById('prod-description').value,
+        const goalData = {
+            title: document.getElementById('goal-title').value,
+            description: document.getElementById('goal-description').value,
+            target: parseFloat(document.getElementById('goal-target').value),
+            icon: document.getElementById('goal-icon').value || '🎯',
+            current: 0,
             active: true,
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         };
         
         try {
-            await produtosRef().add(productData);
-            alert('✅ Produto adicionado!');
-            closeModal('product-modal');
-            loadAdminProducts();
+            await goalsRef().add(goalData);
+            alert('✅ Meta criada com sucesso!');
+            closeModal('donation-modal');
+            showAdmin();
         } catch (error) {
             alert('Erro: ' + error.message);
         }
     };
     
-    document.getElementById('product-modal').style.display = 'flex';
+    document.getElementById('donation-modal').style.display = 'flex';
 }
 
-function showAddServiceForm() {
-    const modalBody = document.getElementById('product-modal-body');
-    document.getElementById('product-modal-title').innerHTML = '🔧 Adicionar Serviço';
-    modalBody.innerHTML = `
-        <form id="add-service-form">
-            <div class="form-group">
-                <label>Título *</label>
-                <input type="text" id="serv-title" required>
-            </div>
-            <div class="form-group">
-                <label>Preço (R$) *</label>
-                <input type="number" step="0.01" id="serv-price" required>
-            </div>
-            <div class="form-group">
-                <label>Ícone (emoji)</label>
-                <input type="text" id="serv-icon" placeholder="🔧">
-            </div>
-            <div class="form-group">
-                <label>Descrição</label>
-                <textarea id="serv-description" rows="3"></textarea>
-            </div>
-            <button type="submit" class="btn-primary" style="width:100%">✨ Adicionar Serviço</button>
-        </form>
-    `;
-    
-    document.getElementById('add-service-form').onsubmit = async (e) => {
-        e.preventDefault();
-        const serviceData = {
-            title: document.getElementById('serv-title').value,
-            price: parseFloat(document.getElementById('serv-price').value),
-            icon: document.getElementById('serv-icon').value || '🔧',
-            description: document.getElementById('serv-description').value,
-            active: true,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        };
-        
-        try {
-            await servicosRef().add(serviceData);
-            alert('✅ Serviço adicionado!');
-            closeModal('product-modal');
-            loadAdminServices();
-        } catch (error) {
-            alert('Erro: ' + error.message);
-        }
-    };
-    
-    document.getElementById('product-modal').style.display = 'flex';
-}
-
-async function editProduct(id) {
-    const doc = await produtosRef().doc(id).get();
-    const p = doc.data();
-    
-    const modalBody = document.getElementById('product-modal-body');
-    document.getElementById('product-modal-title').innerHTML = '✏️ Editar Produto';
-    modalBody.innerHTML = `
-        <form id="edit-product-form">
-            <div class="form-group">
-                <label>Título</label>
-                <input type="text" id="prod-title" value="${escapeHtml(p.title)}" required>
-            </div>
-            <div class="form-group">
-                <label>Preço (R$)</label>
-                <input type="number" step="0.01" id="prod-price" value="${p.price}" required>
-            </div>
-            <div class="form-group">
-                <label>Estoque</label>
-                <input type="number" id="prod-stock" value="${p.stock || 0}" required>
-            </div>
-            <div class="form-group">
-                <label>Ícone</label>
-                <input type="text" id="prod-icon" value="${escapeHtml(p.icon || '📦')}">
-            </div>
-            <div class="form-group">
-                <label>Descrição</label>
-                <textarea id="prod-description" rows="3">${escapeHtml(p.description || '')}</textarea>
-            </div>
-            <button type="submit" class="btn-primary" style="width:100%">💾 Salvar</button>
-        </form>
-    `;
-    
-    document.getElementById('edit-product-form').onsubmit = async (e) => {
-        e.preventDefault();
-        await produtosRef().doc(id).update({
-            title: document.getElementById('prod-title').value,
-            price: parseFloat(document.getElementById('prod-price').value),
-            stock: parseInt(document.getElementById('prod-stock').value),
-            icon: document.getElementById('prod-icon').value,
-            description: document.getElementById('prod-description').value
-        });
-        alert('✅ Produto atualizado!');
-        closeModal('product-modal');
-        loadAdminProducts();
-    };
-    
-    document.getElementById('product-modal').style.display = 'flex';
-}
-
-async function editService(id) {
-    const doc = await servicosRef().doc(id).get();
-    const s = doc.data();
-    
-    const modalBody = document.getElementById('product-modal-body');
-    document.getElementById('product-modal-title').innerHTML = '✏️ Editar Serviço';
-    modalBody.innerHTML = `
-        <form id="edit-service-form">
-            <div class="form-group">
-                <label>Título</label>
-                <input type="text" id="serv-title" value="${escapeHtml(s.title)}" required>
-            </div>
-            <div class="form-group">
-                <label>Preço (R$)</label>
-                <input type="number" step="0.01" id="serv-price" value="${s.price}" required>
-            </div>
-            <div class="form-group">
-                <label>Ícone</label>
-                <input type="text" id="serv-icon" value="${escapeHtml(s.icon || '🔧')}">
-            </div>
-            <div class="form-group">
-                <label>Descrição</label>
-                <textarea id="serv-description" rows="3">${escapeHtml(s.description || '')}</textarea>
-            </div>
-            <button type="submit" class="btn-primary" style="width:100%">💾 Salvar</button>
-        </form>
-    `;
-    
-    document.getElementById('edit-service-form').onsubmit = async (e) => {
-        e.preventDefault();
-        await servicosRef().doc(id).update({
-            title: document.getElementById('serv-title').value,
-            price: parseFloat(document.getElementById('serv-price').value),
-            icon: document.getElementById('serv-icon').value,
-            description: document.getElementById('serv-description').value
-        });
-        alert('✅ Serviço atualizado!');
-        closeModal('product-modal');
-        loadAdminServices();
-    };
-    
-    document.getElementById('product-modal').style.display = 'flex';
-}
-
-async function toggleProductStatus(id, active) {
-    await produtosRef().doc(id).update({ active });
-    loadAdminProducts();
-}
-
-async function toggleServiceStatus(id, active) {
-    await servicosRef().doc(id).update({ active });
-    loadAdminServices();
-}
-
-async function deleteProduct(id) {
-    if (confirm('Tem certeza que deseja excluir este produto permanentemente?')) {
-        await produtosRef().doc(id).delete();
-        loadAdminProducts();
+async function deleteGoal(goalId) {
+    if (confirm('Tem certeza que deseja excluir esta meta?')) {
+        await goalsRef().doc(goalId).delete();
+        showAdmin();
     }
 }
 
-async function deleteService(id) {
-    if (confirm('Tem certeza que deseja excluir este serviço permanentemente?')) {
-        await servicosRef().doc(id).delete();
-        loadAdminServices();
-    }
-}
-
-async function updateOrderStatus(id, status) {
-    await pedidosRef().doc(id).update({ status });
-    loadAdminOrders();
-}
-
-function showAdminProducts() {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    event.target.classList.add('active');
-    loadAdminProducts();
-}
-
-function showAdminServices() {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    event.target.classList.add('active');
-    loadAdminServices();
-}
-
-function showAdminOrders() {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    event.target.classList.add('active');
-    loadAdminOrders();
+async function showAdminStats() {
+    const totalDonations = await loadTotalDonations();
+    const snapshot = await donationsRef().get();
+    const donationCount = snapshot.size;
+    
+    const modalBody = document.getElementById('donation-modal-body');
+    document.getElementById('donation-modal-title').innerHTML = '📊 Estatísticas';
+    modalBody.innerHTML = `
+        <div style="text-align:center;">
+            <div style="background:rgba(255,255,255,0.1); border-radius:16px; padding:20px; margin:10px 0;">
+                <h3>💰 Total Arrecadado</h3>
+                <p style="font-size:2em; color:#e94560;">R$ ${totalDonations.toLocaleString('pt-BR')}</p>
+            </div>
+            <div style="background:rgba(255,255,255,0.1); border-radius:16px; padding:20px; margin:10px 0;">
+                <h3>📋 Total de Doações</h3>
+                <p style="font-size:2em;">${donationCount}</p>
+            </div>
+            <div style="background:rgba(255,255,255,0.1); border-radius:16px; padding:20px; margin:10px 0;">
+                <h3>🎯 Metas Ativas</h3>
+                <p style="font-size:2em;">${goals.length}</p>
+            </div>
+            <button class="btn-secondary" onclick="closeModal('donation-modal')">Fechar</button>
+        </div>
+    `;
+    document.getElementById('donation-modal').style.display = 'flex';
 }
 
 // ============================================
-// NAVEGAÇÃO
+// UTILIDADES
 // ============================================
 
-function showProducts() {
-    if (!currentUser) {
-        showLoginModal();
-        return;
-    }
-    loadProducts();
-}
-
-function showServices() {
-    if (!currentUser) {
-        showLoginModal();
-        return;
-    }
-    loadServices();
-}
-
-function showLoginModal() {
-    document.getElementById('login-modal').style.display = 'flex';
-}
-
-function closeModal(modalId) {
-    document.getElementById(modalId).style.display = 'none';
+function formatDate(timestamp) {
+    if (!timestamp) return 'Data desconhecida';
+    if (timestamp.toDate) timestamp = timestamp.toDate();
+    return timestamp.toLocaleDateString('pt-BR');
 }
 
 function escapeHtml(text) {
@@ -1710,18 +1385,12 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-function loadAdminData() {
-    const activeTab = document.querySelector('.tab.active');
-    if (activeTab) {
-        const tabText = activeTab.innerText;
-        if (tabText.includes('Produtos')) {
-            loadAdminProducts();
-        } else if (tabText.includes('Serviços')) {
-            loadAdminServices();
-        } else {
-            loadAdminOrders();
-        }
-    }
+function showLoginModal() {
+    document.getElementById('login-modal').style.display = 'flex';
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
 }
 
 // ============================================
@@ -1735,17 +1404,1453 @@ auth.onAuthStateChanged(async (user) => {
         currentUser = user;
         isAdmin = await checkIsAdmin(user);
         updateUIForUser();
-        showProducts();
+        await loadGoals();
+        await loadRecentDonations();
+        showHome();
     } else {
         currentUser = null;
         isAdmin = false;
         updateUIForUser();
         const container = document.getElementById('main-container');
         container.innerHTML = `
+            <div class="hero">
+                <h1>💝 Ajude a manter o WazzimaGiygg no ar!</h1>
+                <p>Sua contribuição mantém nossos serviços gratuitos e acessíveis para todos</p>
+            </div>
             <div class="login-required">
-                <span style="font-size:64px;">🛍️</span>
-                <h3>Bem-vindo à Maspia Store</h3>
-                <p>Faça login para visualizar produtos e serviços</p>
+                <span style="font-size:64px;">🔐</span>
+                <h3>Faça login para apoiar o projeto</h3>
+                <p>O WazzimaGiygg é mantido por doações da comunidade</p>
+                <button class="login-btn" onclick="showLoginModal()">🔑 Entrar com Google</button>
+            </div>
+        `;
+    }
+});
+</script>
+</body>
+</html><!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WazzimaGiygg - Apoie nosso projeto</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        .header {
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+            padding: 20px 40px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 1.5em;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo img {
+            height: 40px;
+            width: auto;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn:hover {
+            background: linear-gradient(135deg, #e94560, #ff6b6b);
+            transform: translateY(-2px);
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .hero h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #fff, #e94560);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.2em;
+            color: rgba(255,255,255,0.8);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 50px;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #e94560;
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        /* Goals Grid */
+        .goals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .goal-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            transition: all 0.3s;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .goal-card:hover {
+            transform: translateY(-5px);
+            border-color: #e94560;
+        }
+
+        .goal-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .goal-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .goal-description {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+
+        .progress-bar {
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            height: 10px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #e94560, #ff6b6b);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .goal-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85em;
+            margin-bottom: 15px;
+        }
+
+        .btn-donate-goal {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #e94560, #ff6b6b);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-donate-goal:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 20px rgba(233,69,96,0.4);
+        }
+
+        /* Free Donation */
+        .free-donation {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .free-donation h2 {
+            margin-bottom: 20px;
+        }
+
+        .donation-amounts {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .amount-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 12px 25px;
+            border-radius: 50px;
+            color: white;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .amount-btn:hover, .amount-btn.active {
+            background: linear-gradient(135deg, #e94560, #ff6b6b);
+            transform: scale(1.05);
+        }
+
+        .custom-donation {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .custom-donation input {
+            padding: 15px 20px;
+            border-radius: 50px;
+            border: none;
+            width: 200px;
+            font-size: 1em;
+        }
+
+        .btn-donate {
+            background: linear-gradient(135deg, #e94560, #ff6b6b);
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            color: white;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-donate:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(233,69,96,0.4);
+        }
+
+        /* Recent Donations */
+        .recent-donations {
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 30px;
+        }
+
+        .donation-list {
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .donation-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .donor-name {
+            font-weight: 600;
+        }
+
+        .donor-message {
+            font-size: 0.85em;
+            color: rgba(255,255,255,0.6);
+        }
+
+        .donation-amount {
+            color: #e94560;
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #1a1a2e;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background: #1a1a2e;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .close-modal {
+            cursor: pointer;
+            font-size: 24px;
+            color: #999;
+        }
+
+        .close-modal:hover {
+            color: #e94560;
+        }
+
+        /* PIX Area */
+        .pix-area {
+            text-align: center;
+        }
+
+        .pix-key-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 15px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .pix-key-card:hover {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.02);
+        }
+
+        .pix-key-card.selected {
+            border: 2px solid #e94560;
+            background: rgba(233,69,96,0.2);
+        }
+
+        .pix-key-code {
+            font-family: monospace;
+            font-size: 1em;
+            word-break: break-all;
+            background: rgba(0,0,0,0.3);
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+
+        .invoice-area {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+        }
+
+        .invoice-field {
+            margin-bottom: 15px;
+        }
+
+        .invoice-field label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.85em;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .invoice-field input, .invoice-field select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            background: rgba(255,255,255,0.9);
+        }
+
+        .btn-confirm {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        .btn-confirm:hover {
+            transform: scale(1.02);
+        }
+
+        /* Admin Panel */
+        .admin-panel {
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 25px;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #e94560, #ff6b6b);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+        }
+
+        .goals-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .goals-table th, .goals-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .login-required {
+            text-align: center;
+            padding: 60px;
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            color: white;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: rgba(255,255,255,0.5);
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 50px;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2em;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .goals-table {
+                font-size: 12px;
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="header-container">
+        <div class="logo">
+            <img src="https://wazzimagiygg.com/favicom.png" alt="WazzimaGiygg" style="height: 40px;">
+            <span>WazzimaGiygg</span>
+        </div>
+        <div class="nav-links">
+            <button class="nav-btn" onclick="showHome()">🏠 Início</button>
+            <button class="nav-btn" onclick="showGoals()">🎯 Metas</button>
+            <button class="nav-btn" id="admin-btn" style="display: none;" onclick="showAdmin()">👑 Admin</button>
+            <button class="nav-btn" onclick="showMyDonations()">📋 Minhas Doações</button>
+            <button class="nav-btn" id="login-nav-btn" onclick="showLoginModal()">🔑 Entrar</button>
+            <button class="nav-btn" id="logout-nav-btn" style="display: none;" onclick="logout()">🚪 Sair</button>
+        </div>
+    </div>
+</div>
+
+<div class="main-container" id="main-container">
+    <div style="text-align:center; padding:60px;">Carregando...</div>
+</div>
+
+<div class="footer">
+    <p>💝 WazzimaGiygg - Seu apoio mantém nossos serviços no ar!</p>
+    <p>📄 Todas as doações geram comprovante eletrônico com valor de doação.</p>
+    <p>🔒 Ambiente seguro - Seus dados estão protegidos</p>
+</div>
+
+<!-- Login Modal -->
+<div id="login-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>🔐 Entrar</h3>
+            <span class="close-modal" onclick="closeModal('login-modal')">&times;</span>
+        </div>
+        <div class="modal-body">
+            <p>Faça login para apoiar o projeto WazzimaGiygg</p>
+            <button id="google-login-btn" class="btn-primary" style="width:100%; margin-top:20px;">
+                🔑 Entrar com Google
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Donation Modal -->
+<div id="donation-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="donation-modal-title">💝 Fazer Doação</h3>
+            <span class="close-modal" onclick="closeModal('donation-modal')">&times;</span>
+        </div>
+        <div class="modal-body" id="donation-modal-body"></div>
+    </div>
+</div>
+
+<!-- Invoice Modal -->
+<div id="invoice-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>📄 Comprovante de Doação</h3>
+            <span class="close-modal" onclick="closeModal('invoice-modal')">&times;</span>
+        </div>
+        <div class="modal-body" id="invoice-body"></div>
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+<script>
+// Firebase Config
+const firebaseConfig = {
+    apiKey: "AIzaSyB9GkSqTIZ0kbVsba_WOdQeVAETrF9qna0",
+    authDomain: "wzzm-ce3fc.firebaseapp.com",
+    projectId: "wzzm-ce3fc",
+    storageBucket: "wzzm-ce3fc.appspot.com",
+    messagingSenderId: "249427877153",
+    appId: "1:249427877153:web:0e4297294794a5aadeb260"
+};
+
+if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const auth = firebase.auth();
+
+let currentUser = null;
+let isAdmin = false;
+let goals = [];
+let recentDonations = [];
+let selectedAmount = 10;
+let selectedGoal = null;
+
+const ADMIN_UIDS = ['sZxfMuOBPbXdR8nttVPXIN8QOOl1', '6aPqWVh8JVYL5NqEb78iDGPD7dH3'];
+
+// Referências Firestore
+const wazzmaRef = db.collection('wazzmagiygg');
+const donationsRef = () => wazzmaRef.doc('doacoes').collection('registros');
+const goalsRef = () => wazzmaRef.doc('metas').collection('itens');
+const pixKeysRef = () => wazzmaRef.doc('configuracoes').collection('pix_keys');
+
+// Chaves PIX da organização (fixas para demonstração)
+const storePixKeys = [
+    { type: 'cnpj', key: '12.345.678/0001-90', description: 'CNPJ WazzimaGiygg' },
+    { type: 'email', key: 'financeiro@wazzimagiygg.com', description: 'E-mail Financeiro' },
+    { type: 'random', key: 'wazzima.pix@juntos', description: 'Chave Aleatória' }
+];
+
+// ============================================
+// FUNÇÕES DE AUTENTICAÇÃO
+// ============================================
+
+async function checkIsAdmin(user) {
+    if (!user) return false;
+    if (ADMIN_UIDS.includes(user.uid)) return true;
+    try {
+        const userDoc = await db.collection('users').doc(user.uid).get();
+        return userDoc.exists && userDoc.data().isAdmin === true;
+    } catch { return false; }
+}
+
+function updateUIForUser() {
+    const loginBtn = document.getElementById('login-nav-btn');
+    const logoutBtn = document.getElementById('logout-nav-btn');
+    const adminBtn = document.getElementById('admin-btn');
+    
+    if (currentUser) {
+        loginBtn.style.display = 'none';
+        logoutBtn.style.display = 'flex';
+        if (isAdmin) {
+            adminBtn.style.display = 'flex';
+        } else {
+            adminBtn.style.display = 'none';
+        }
+    } else {
+        loginBtn.style.display = 'flex';
+        logoutBtn.style.display = 'none';
+        adminBtn.style.display = 'none';
+    }
+}
+
+async function loginWithGoogle() {
+    try {
+        await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+        closeModal('login-modal');
+    } catch (error) {
+        alert('Erro: ' + error.message);
+    }
+}
+
+async function logout() {
+    await auth.signOut();
+    currentUser = null;
+    isAdmin = false;
+    updateUIForUser();
+    showHome();
+}
+
+// ============================================
+// FUNÇÕES PRINCIPAIS
+// ============================================
+
+async function loadGoals() {
+    try {
+        const snapshot = await goalsRef().orderBy('createdAt', 'desc').get();
+        goals = [];
+        snapshot.forEach(doc => {
+            goals.push({ id: doc.id, ...doc.data() });
+        });
+    } catch (error) {
+        console.error('Erro ao carregar metas:', error);
+    }
+}
+
+async function loadRecentDonations() {
+    try {
+        const snapshot = await donationsRef().orderBy('createdAt', 'desc').limit(20).get();
+        recentDonations = [];
+        snapshot.forEach(doc => {
+            recentDonations.push({ id: doc.id, ...doc.data() });
+        });
+    } catch (error) {
+        console.error('Erro ao carregar doações:', error);
+    }
+}
+
+async function loadTotalDonations() {
+    try {
+        const snapshot = await donationsRef().get();
+        let total = 0;
+        snapshot.forEach(doc => {
+            total += (doc.data().amount || 0);
+        });
+        return total;
+    } catch (error) {
+        return 0;
+    }
+}
+
+// ============================================
+// TELAS PRINCIPAIS
+// ============================================
+
+async function showHome() {
+    await loadGoals();
+    await loadRecentDonations();
+    const totalDonations = await loadTotalDonations();
+    
+    const container = document.getElementById('main-container');
+    container.innerHTML = `
+        <div class="hero">
+            <h1>💝 Ajude a manter o WazzimaGiygg no ar!</h1>
+            <p>Sua contribuição mantém nossos serviços gratuitos e acessíveis para todos</p>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">${totalDonations.toLocaleString('pt-BR')}</div>
+                <div>Total Arrecadado</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">${recentDonations.length}</div>
+                <div>Doações Realizadas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">${goals.length}</div>
+                <div>Metas Ativas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">🎯</div>
+                <div>Metas Alcançadas</div>
+            </div>
+        </div>
+        
+        <div class="free-donation">
+            <h2>🎁 Faça uma Doação</h2>
+            <p>Escolha um valor ou doe o quanto quiser</p>
+            <div class="donation-amounts">
+                <button class="amount-btn" onclick="selectDonationAmount(10)">R$ 10</button>
+                <button class="amount-btn" onclick="selectDonationAmount(20)">R$ 20</button>
+                <button class="amount-btn" onclick="selectDonationAmount(50)">R$ 50</button>
+                <button class="amount-btn" onclick="selectDonationAmount(100)">R$ 100</button>
+            </div>
+            <div class="custom-donation">
+                <input type="number" id="custom-amount" placeholder="Outro valor" min="1">
+                <button class="btn-donate" onclick="startDonation()">💝 Doar Agora</button>
+            </div>
+        </div>
+        
+        <h2 class="section-title">🎯 Metas de Arrecadação</h2>
+        <div class="goals-grid" id="goals-grid"></div>
+        
+        <div class="recent-donations">
+            <h3>📋 Últimas Doações</h3>
+            <div class="donation-list" id="donation-list"></div>
+        </div>
+    `;
+    
+    // Renderizar metas
+    const goalsGrid = document.getElementById('goals-grid');
+    if (goals.length === 0) {
+        goalsGrid.innerHTML = '<p style="text-align:center; grid-column:1/-1;">Nenhuma meta cadastrada ainda.</p>';
+    } else {
+        goalsGrid.innerHTML = goals.map(goal => {
+            const progress = (goal.current / goal.target) * 100;
+            return `
+                <div class="goal-card">
+                    <div class="goal-icon">${goal.icon || '🎯'}</div>
+                    <div class="goal-title">${escapeHtml(goal.title)}</div>
+                    <div class="goal-description">${escapeHtml(goal.description || '')}</div>
+                    <div class="goal-stats">
+                        <span>R$ ${(goal.current || 0).toLocaleString('pt-BR')}</span>
+                        <span>R$ ${(goal.target || 0).toLocaleString('pt-BR')}</span>
+                    </div>
+                    <div class="progress-bar"><div class="progress-fill" style="width: ${Math.min(progress, 100)}%"></div></div>
+                    <button class="btn-donate-goal" onclick="startDonationForGoal('${goal.id}')">🎯 Doar para esta meta</button>
+                </div>
+            `;
+        }).join('');
+    }
+    
+    // Renderizar últimas doações
+    const donationList = document.getElementById('donation-list');
+    if (recentDonations.length === 0) {
+        donationList.innerHTML = '<p style="text-align:center;">Seja o primeiro a doar! 💝</p>';
+    } else {
+        donationList.innerHTML = recentDonations.map(donation => `
+            <div class="donation-item">
+                <div>
+                    <div class="donor-name">${escapeHtml(donation.donorName || 'Anônimo')}</div>
+                    <div class="donor-message">${escapeHtml(donation.message || '💝 Apoiando o projeto')}</div>
+                </div>
+                <div class="donation-amount">R$ ${(donation.amount || 0).toLocaleString('pt-BR')}</div>
+            </div>
+        `).join('');
+    }
+}
+
+function showGoals() {
+    const container = document.getElementById('main-container');
+    if (goals.length === 0) {
+        container.innerHTML = `
+            <div class="hero">
+                <h1>🎯 Metas de Arrecadação</h1>
+                <p>Ajude-nos a alcançar nossas metas!</p>
+            </div>
+            <div style="text-align:center; padding:60px;">
+                <p>Nenhuma meta cadastrada no momento.</p>
+                <button class="btn-primary" onclick="showHome()">← Voltar</button>
+            </div>
+        `;
+        return;
+    }
+    
+    container.innerHTML = `
+        <div class="hero">
+            <h1>🎯 Metas de Arrecadação</h1>
+            <p>Contribua com as metas que mais fazem sentido para você</p>
+        </div>
+        <div class="goals-grid">
+            ${goals.map(goal => {
+                const progress = (goal.current / goal.target) * 100;
+                return `
+                    <div class="goal-card">
+                        <div class="goal-icon">${goal.icon || '🎯'}</div>
+                        <div class="goal-title">${escapeHtml(goal.title)}</div>
+                        <div class="goal-description">${escapeHtml(goal.description || '')}</div>
+                        <div class="goal-stats">
+                            <span>R$ ${(goal.current || 0).toLocaleString('pt-BR')}</span>
+                            <span>R$ ${(goal.target || 0).toLocaleString('pt-BR')}</span>
+                        </div>
+                        <div class="progress-bar"><div class="progress-fill" style="width: ${Math.min(progress, 100)}%"></div></div>
+                        <button class="btn-donate-goal" onclick="startDonationForGoal('${goal.id}')">🎯 Doar para esta meta</button>
+                    </div>
+                `;
+            }).join('')}
+        </div>
+        <div style="text-align:center; margin-top:30px;">
+            <button class="btn-secondary" onclick="showHome()">← Voltar para Início</button>
+        </div>
+    `;
+}
+
+async function showMyDonations() {
+    if (!currentUser) {
+        showLoginModal();
+        return;
+    }
+    
+    try {
+        const snapshot = await donationsRef()
+            .where('donorId', '==', currentUser.uid)
+            .orderBy('createdAt', 'desc')
+            .get();
+        
+        const myDonations = [];
+        snapshot.forEach(doc => myDonations.push({ id: doc.id, ...doc.data() }));
+        
+        const container = document.getElementById('main-container');
+        if (myDonations.length === 0) {
+            container.innerHTML = `
+                <div class="hero">
+                    <h1>📋 Minhas Doações</h1>
+                    <p>Você ainda não realizou nenhuma doação.</p>
+                </div>
+                <div style="text-align:center;">
+                    <button class="btn-primary" onclick="showHome()">💝 Fazer minha primeira doação</button>
+                </div>
+            `;
+        } else {
+            let totalDonated = myDonations.reduce((sum, d) => sum + (d.amount || 0), 0);
+            container.innerHTML = `
+                <div class="hero">
+                    <h1>📋 Minhas Doações</h1>
+                    <p>Você já contribuiu com <strong>R$ ${totalDonated.toLocaleString('pt-BR')}</strong> para o projeto</p>
+                </div>
+                <div class="recent-donations">
+                    <h3>Histórico de Doações</h3>
+                    <div class="donation-list">
+                        ${myDonations.map(d => `
+                            <div class="donation-item">
+                                <div>
+                                    <div class="donor-name">${formatDate(d.createdAt)}</div>
+                                    <div class="donor-message">${escapeHtml(d.message || 'Doação realizada')}</div>
+                                </div>
+                                <div class="donation-amount">R$ ${(d.amount || 0).toLocaleString('pt-BR')}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div style="text-align:center; margin-top:20px;">
+                        <button class="btn-primary" onclick="showHome()">💝 Fazer nova doação</button>
+                    </div>
+                </div>
+            `;
+        }
+    } catch (error) {
+        alert('Erro: ' + error.message);
+    }
+}
+
+// ============================================
+// SISTEMA DE DOAÇÃO E PIX
+// ============================================
+
+function selectDonationAmount(amount) {
+    selectedAmount = amount;
+    selectedGoal = null;
+    document.querySelectorAll('.amount-btn').forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+}
+
+function startDonation() {
+    const customAmount = document.getElementById('custom-amount')?.value;
+    if (customAmount && parseFloat(customAmount) > 0) {
+        selectedAmount = parseFloat(customAmount);
+        selectedGoal = null;
+    } else if (!selectedAmount) {
+        selectedAmount = 10;
+    }
+    openDonationModal();
+}
+
+function startDonationForGoal(goalId) {
+    const goal = goals.find(g => g.id === goalId);
+    if (goal) {
+        selectedGoal = goal;
+        selectedAmount = null;
+        openDonationModal();
+    }
+}
+
+function openDonationModal() {
+    if (!currentUser) {
+        showLoginModal();
+        return;
+    }
+    
+    const modalBody = document.getElementById('donation-modal-body');
+    const title = document.getElementById('donation-modal-title');
+    
+    if (selectedGoal) {
+        title.innerHTML = `🎯 Doar para: ${escapeHtml(selectedGoal.title)}`;
+    } else {
+        title.innerHTML = `💝 Doação de R$ ${selectedAmount.toFixed(2)}`;
+    }
+    
+    modalBody.innerHTML = `
+        <div class="pix-area">
+            <h4>Escolha a chave PIX para doação:</h4>
+            ${storePixKeys.map(key => `
+                <div class="pix-key-card" onclick="selectPixKey('${key.key}', '${key.type}')" data-key="${key.key}">
+                    <strong>${getPixTypeName(key.type)}</strong><br>
+                    <code>${escapeHtml(key.key)}</code><br>
+                    <small>${escapeHtml(key.description)}</small>
+                </div>
+            `).join('')}
+            <div id="selected-pix-display" style="margin-top: 20px;"></div>
+            
+            <div class="invoice-area">
+                <h4>📄 Dados para o comprovante (opcional):</h4>
+                <div class="invoice-field">
+                    <label>Nome completo (para o comprovante)</label>
+                    <input type="text" id="donor-name" placeholder="Como gostaria de ser identificado" value="${escapeHtml(currentUser.displayName || '')}">
+                </div>
+                <div class="invoice-field">
+                    <label>Mensagem (opcional)</label>
+                    <textarea id="donor-message" rows="2" placeholder="Deixe uma mensagem de apoio..."></textarea>
+                </div>
+                <div class="invoice-field">
+                    <label>CPF/CNPJ (para emissão de recibo)</label>
+                    <input type="text" id="donor-document" placeholder="Opcional">
+                </div>
+            </div>
+            
+            <button id="generate-payment-btn" class="btn-primary" style="width:100%; margin-top:20px;" disabled>
+                ✅ Confirmar e Gerar Pagamento
+            </button>
+        </div>
+    `;
+    
+    document.getElementById('donation-modal').style.display = 'flex';
+    
+    window.selectedPixKey = null;
+}
+
+function getPixTypeName(type) {
+    const types = {
+        'cnpj': '🏢 CNPJ',
+        'cpf': '📄 CPF',
+        'email': '📧 E-mail',
+        'phone': '📱 Telefone',
+        'random': '🎲 Chave Aleatória'
+    };
+    return types[type] || type;
+}
+
+function selectPixKey(key, type) {
+    window.selectedPixKey = { key, type };
+    
+    document.querySelectorAll('.pix-key-card').forEach(card => {
+        card.classList.remove('selected');
+        if (card.getAttribute('data-key') === key) {
+            card.classList.add('selected');
+        }
+    });
+    
+    const display = document.getElementById('selected-pix-display');
+    display.innerHTML = `
+        <div style="background: rgba(40,167,69,0.2); border-radius: 12px; padding: 15px;">
+            <p>✅ Chave PIX selecionada:</p>
+            <div class="pix-key-code">${escapeHtml(key)}</div>
+            <p style="font-size: 0.85em;">⚠️ Após o pagamento, clique em "Já Paguei" para concluir</p>
+        </div>
+    `;
+    
+    const confirmBtn = document.getElementById('generate-payment-btn');
+    confirmBtn.disabled = false;
+    confirmBtn.innerHTML = '💳 Gerar Pagamento PIX';
+    confirmBtn.onclick = () => generatePixPayment();
+}
+
+function generatePixPayment() {
+    if (!window.selectedPixKey) {
+        alert('Selecione uma chave PIX primeiro!');
+        return;
+    }
+    
+    const amount = selectedGoal ? null : selectedAmount;
+    const goalId = selectedGoal ? selectedGoal.id : null;
+    const donorName = document.getElementById('donor-name')?.value || 'Anônimo';
+    const donorMessage = document.getElementById('donor-message')?.value || '';
+    const donorDocument = document.getElementById('donor-document')?.value || '';
+    
+    // Se for para uma meta, o valor é o que falta para completar ou o valor sugerido
+    let finalAmount = amount;
+    if (selectedGoal) {
+        const remaining = selectedGoal.target - (selectedGoal.current || 0);
+        finalAmount = Math.min(remaining, 50); // Sugere R$50 ou o que falta
+    }
+    
+    if (!finalAmount || finalAmount <= 0) {
+        alert('Digite um valor válido para a doação');
+        return;
+    }
+    
+    // Gerar código PIX simulado
+    const pixCode = generatePixCode(finalAmount, window.selectedPixKey.key);
+    
+    const modalBody = document.getElementById('donation-modal-body');
+    modalBody.innerHTML = `
+        <div class="pix-area">
+            <h3>💳 Pagamento PIX</h3>
+            <p>Valor: <strong>R$ ${finalAmount.toFixed(2)}</strong></p>
+            <p>Chave PIX: <strong>${escapeHtml(window.selectedPixKey.key)}</strong></p>
+            
+            <div class="pix-key-code">
+                ${pixCode}
+            </div>
+            
+            <button class="btn-secondary" onclick="copyPixCode('${pixCode}')">📋 Copiar Código PIX</button>
+            
+            <div style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 12px;">
+                <p>📌 Após realizar o pagamento, clique no botão abaixo para confirmar sua doação e gerar o comprovante.</p>
+                <button class="btn-success" style="margin-top: 15px;" onclick="confirmDonation(${finalAmount}, '${goalId}', '${escapeHtml(donorName)}', '${escapeHtml(donorMessage)}', '${escapeHtml(donorDocument)}')">
+                    ✅ Já Paguei - Confirmar Doação
+                </button>
+            </div>
+        </div>
+    `;
+}
+
+function generatePixCode(amount, pixKey) {
+    // Simula um código PIX válido (QR Code em produção)
+    const timestamp = Date.now();
+    const randomId = Math.random().toString(36).substring(2, 15);
+    return `00020126360014BR.GOV.BCB.PIX0114${pixKey.replace(/[^a-zA-Z0-9]/g, '')}5204000053039865404${Math.floor(amount).toString()}5802BR5925DOACAO WAZZIMA${timestamp}${randomId}`;
+}
+
+function copyPixCode(code) {
+    navigator.clipboard.writeText(code);
+    alert('✅ Código PIX copiado! Faça o pagamento no seu aplicativo bancário.');
+}
+
+async function confirmDonation(amount, goalId, donorName, donorMessage, donorDocument) {
+    if (!currentUser) {
+        alert('Faça login novamente para continuar');
+        return;
+    }
+    
+    try {
+        const donationData = {
+            donorId: currentUser.uid,
+            donorEmail: currentUser.email,
+            donorName: donorName || currentUser.displayName || 'Anônimo',
+            donorDocument: donorDocument || '',
+            message: donorMessage || '',
+            amount: amount,
+            goalId: goalId || null,
+            status: 'completed',
+            paymentMethod: 'pix',
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
+        
+        const docRef = await donationsRef().add(donationData);
+        
+        // Atualizar meta se houver
+        if (goalId) {
+            const goalRef = goalsRef().doc(goalId);
+            const goalDoc = await goalRef.get();
+            if (goalDoc.exists) {
+                const newCurrent = (goalDoc.data().current || 0) + amount;
+                await goalRef.update({ current: newCurrent });
+            }
+        }
+        
+        closeModal('donation-modal');
+        
+        // Gerar comprovante/recibo
+        showInvoice(docRef.id, donationData);
+        
+        await loadGoals();
+        await loadRecentDonations();
+        
+    } catch (error) {
+        alert('Erro ao registrar doação: ' + error.message);
+    }
+}
+
+function showInvoice(donationId, donationData) {
+    const invoiceNumber = `WZM-${donationId.substring(0, 8).toUpperCase()}`;
+    const date = new Date().toLocaleString('pt-BR');
+    
+    const modalBody = document.getElementById('invoice-body');
+    modalBody.innerHTML = `
+        <div style="text-align: center;">
+            <h2>📄 COMPROVANTE DE DOAÇÃO</h2>
+            <p style="color: #e94560;">WazzimaGiygg</p>
+            <hr style="margin: 15px 0; border-color: rgba(255,255,255,0.1);">
+            
+            <div style="text-align: left;">
+                <p><strong>Nº do Comprovante:</strong> ${invoiceNumber}</p>
+                <p><strong>Data:</strong> ${date}</p>
+                <p><strong>Doador:</strong> ${escapeHtml(donationData.donorName)}</p>
+                <p><strong>E-mail:</strong> ${escapeHtml(donationData.donorEmail)}</p>
+                ${donationData.donorDocument ? `<p><strong>CPF/CNPJ:</strong> ${escapeHtml(donationData.donorDocument)}</p>` : ''}
+            </div>
+            
+            <hr style="margin: 15px 0; border-color: rgba(255,255,255,0.1);">
+            
+            <div style="text-align: center;">
+                <h3>Valor da Doação</h3>
+                <p style="font-size: 2em; color: #e94560;">R$ ${donationData.amount.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</p>
+            </div>
+            
+            <hr style="margin: 15px 0; border-color: rgba(255,255,255,0.1);">
+            
+            <div style="text-align: left;">
+                <p><strong>Forma de Pagamento:</strong> PIX</p>
+                <p><strong>Status:</strong> ✅ Confirmado</p>
+                <p><strong>Destinação:</strong> ${donationData.goalId ? 'Meta específica' : 'Fundo geral WazzimaGiygg'}</p>
+                ${donationData.message ? `<p><strong>Mensagem:</strong> "${escapeHtml(donationData.message)}"</p>` : ''}
+            </div>
+            
+            <hr style="margin: 15px 0; border-color: rgba(255,255,255,0.1);">
+            
+            <p style="font-size: 0.85em; text-align: center;">
+                Este comprovante é válido como recibo de doação.<br>
+                WazzimaGiygg - CNPJ em processo de regularização<br>
+                Todas as doações são voluntárias e não geram obrigações fiscais para o doador.
+            </p>
+            
+            <div style="margin-top: 20px;">
+                <button class="btn-secondary" onclick="window.print()">🖨️ Imprimir Comprovante</button>
+                <button class="btn-primary" onclick="closeModal('invoice-modal'); showHome();">✅ Fechar</button>
+            </div>
+        </div>
+    `;
+    
+    document.getElementById('invoice-modal').style.display = 'flex';
+}
+
+// ============================================
+// ADMIN
+// ============================================
+
+async function showAdmin() {
+    if (!isAdmin) {
+        alert('Acesso restrito a administradores');
+        return;
+    }
+    
+    await loadGoals();
+    
+    const container = document.getElementById('main-container');
+    container.innerHTML = `
+        <div class="admin-panel">
+            <div class="admin-header">
+                <h2>👑 Painel Administrativo - Doações</h2>
+                <div>
+                    <button class="btn-primary" onclick="showAddGoalForm()">➕ Adicionar Meta</button>
+                    <button class="btn-secondary" onclick="showAdminStats()">📊 Estatísticas</button>
+                </div>
+            </div>
+            
+            <h3>🎯 Metas de Arrecadação</h3>
+            <table class="goals-table">
+                <thead>
+                    <tr><th>Meta</th><th>Progresso</th><th>Arrecadado</th><th>Meta</th><th>Ações</th></tr>
+                </thead>
+                <tbody id="admin-goals-list"></tbody>
+            </table>
+        </div>
+    `;
+    
+    const tbody = document.getElementById('admin-goals-list');
+    if (goals.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Nenhuma meta cadastrada</td></tr>';
+    } else {
+        tbody.innerHTML = goals.map(goal => `
+            <tr>
+                <td>${escapeHtml(goal.title)}</td>
+                <td><div class="progress-bar" style="width:100px;"><div class="progress-fill" style="width: ${(goal.current/goal.target)*100}%"></div></div></td>
+                <td>R$ ${(goal.current || 0).toLocaleString('pt-BR')}</td>
+                <td>R$ ${(goal.target || 0).toLocaleString('pt-BR')}</td>
+                <td><button class="btn-danger" onclick="deleteGoal('${goal.id}')">🗑️</button></td>
+            </tr>
+        `).join('');
+    }
+}
+
+function showAddGoalForm() {
+    const modalBody = document.getElementById('donation-modal-body');
+    document.getElementById('donation-modal-title').innerHTML = '🎯 Adicionar Meta';
+    modalBody.innerHTML = `
+        <form id="add-goal-form">
+            <div class="form-group">
+                <label>Título da Meta</label>
+                <input type="text" id="goal-title" required>
+            </div>
+            <div class="form-group">
+                <label>Descrição</label>
+                <textarea id="goal-description" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Valor da Meta (R$)</label>
+                <input type="number" step="0.01" id="goal-target" required>
+            </div>
+            <div class="form-group">
+                <label>Ícone (emoji)</label>
+                <input type="text" id="goal-icon" placeholder="🎯">
+            </div>
+            <button type="submit" class="btn-primary" style="width:100%">✨ Criar Meta</button>
+        </form>
+    `;
+    
+    document.getElementById('add-goal-form').onsubmit = async (e) => {
+        e.preventDefault();
+        const goalData = {
+            title: document.getElementById('goal-title').value,
+            description: document.getElementById('goal-description').value,
+            target: parseFloat(document.getElementById('goal-target').value),
+            icon: document.getElementById('goal-icon').value || '🎯',
+            current: 0,
+            active: true,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
+        
+        try {
+            await goalsRef().add(goalData);
+            alert('✅ Meta criada com sucesso!');
+            closeModal('donation-modal');
+            showAdmin();
+        } catch (error) {
+            alert('Erro: ' + error.message);
+        }
+    };
+    
+    document.getElementById('donation-modal').style.display = 'flex';
+}
+
+async function deleteGoal(goalId) {
+    if (confirm('Tem certeza que deseja excluir esta meta?')) {
+        await goalsRef().doc(goalId).delete();
+        showAdmin();
+    }
+}
+
+async function showAdminStats() {
+    const totalDonations = await loadTotalDonations();
+    const snapshot = await donationsRef().get();
+    const donationCount = snapshot.size;
+    
+    const modalBody = document.getElementById('donation-modal-body');
+    document.getElementById('donation-modal-title').innerHTML = '📊 Estatísticas';
+    modalBody.innerHTML = `
+        <div style="text-align:center;">
+            <div style="background:rgba(255,255,255,0.1); border-radius:16px; padding:20px; margin:10px 0;">
+                <h3>💰 Total Arrecadado</h3>
+                <p style="font-size:2em; color:#e94560;">R$ ${totalDonations.toLocaleString('pt-BR')}</p>
+            </div>
+            <div style="background:rgba(255,255,255,0.1); border-radius:16px; padding:20px; margin:10px 0;">
+                <h3>📋 Total de Doações</h3>
+                <p style="font-size:2em;">${donationCount}</p>
+            </div>
+            <div style="background:rgba(255,255,255,0.1); border-radius:16px; padding:20px; margin:10px 0;">
+                <h3>🎯 Metas Ativas</h3>
+                <p style="font-size:2em;">${goals.length}</p>
+            </div>
+            <button class="btn-secondary" onclick="closeModal('donation-modal')">Fechar</button>
+        </div>
+    `;
+    document.getElementById('donation-modal').style.display = 'flex';
+}
+
+// ============================================
+// UTILIDADES
+// ============================================
+
+function formatDate(timestamp) {
+    if (!timestamp) return 'Data desconhecida';
+    if (timestamp.toDate) timestamp = timestamp.toDate();
+    return timestamp.toLocaleDateString('pt-BR');
+}
+
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+function showLoginModal() {
+    document.getElementById('login-modal').style.display = 'flex';
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+}
+
+// ============================================
+// INICIALIZAÇÃO
+// ============================================
+
+document.getElementById('google-login-btn')?.addEventListener('click', loginWithGoogle);
+
+auth.onAuthStateChanged(async (user) => {
+    if (user) {
+        currentUser = user;
+        isAdmin = await checkIsAdmin(user);
+        updateUIForUser();
+        await loadGoals();
+        await loadRecentDonations();
+        showHome();
+    } else {
+        currentUser = null;
+        isAdmin = false;
+        updateUIForUser();
+        const container = document.getElementById('main-container');
+        container.innerHTML = `
+            <div class="hero">
+                <h1>💝 Ajude a manter o WazzimaGiygg no ar!</h1>
+                <p>Sua contribuição mantém nossos serviços gratuitos e acessíveis para todos</p>
+            </div>
+            <div class="login-required">
+                <span style="font-size:64px;">🔐</span>
+                <h3>Faça login para apoiar o projeto</h3>
+                <p>O WazzimaGiygg é mantido por doações da comunidade</p>
                 <button class="login-btn" onclick="showLoginModal()">🔑 Entrar com Google</button>
             </div>
         `;
