@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maspia Store - E-commerce</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: white;
+            padding: 20px 40px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 1.8em;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo span {
+            background: linear-gradient(135deg, #e94560, #ff6b6b);
+            padding: 5px 12px;
+            border-radius: 10px;
+            font-size: 0.7em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background: linear-gradient(135deg, #e94560, #ff6b6b);
+        }
+
+        .cart-btn {
+            position: relative;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #e94560;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1400px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        /* Products Grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .product-image {
+            height: 200px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+        }
+
+        .product-info {
+            padding: 20px;
+        }
+
+        .product-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .product-price {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #e94560;
+            margin: 10px 0;
+        }
+
+        .product-stock {
+            font-size: 0.8em;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .stock-low {
+            color: #ff9800;
+        }
+
+        .stock-out {
+            color: #f44336;
+        }
+
+        .btn-add-cart {
+            width: 100%;
+            padding: 10px;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-add-cart:hover:not(:disabled) {
+            background: linear-gradient(135deg, #e94560, #ff6b6b);
+        }
+
+        .btn-add-cart:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Admin Panel */
+        .admin-panel {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #e94560, #ff6b6b);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: inherit;
+        }
+
+        .products-table {
+            width: 100%;
+            border-collapse: collapse;
+            overflow-x: auto;
+            display: block;
+        }
+
+        .products-table th, .products-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .products-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 0.75em;
+        }
+
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Cart Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-item-info h4 {
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .cart-item-qty {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cart-item-qty button {
+            width: 25px;
+            height: 25px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .cart-total {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+            text-align: right;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #e94560, #ff6b6b);
+            color: white;
+        }
+
+        /* Login Required */
+        .login-required {
+            text-align: center;
+            padding: 60px;
+            background: white;
+            border-radius: 16px;
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        /* Service Cards */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .service-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .service-price {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #e94560;
+            margin: 10px 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+            }
+            .products-table {
+                font-size: 12px;
+            }
+            .products-table th, .products-table td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="header-container">
+        <div class="logo">
+            🛍️ Maspia Store
+            <span>E-com</span>
+        </div>
+        <div class="nav-links">
+            <button class="nav-btn" onclick="showProducts()">🏠 Produtos</button>
+            <button class="nav-btn" onclick="showServices()">🔧 Serviços</button>
+            <button class="nav-btn" id="admin-btn" style="display: none;" onclick="showAdmin()">👑 Admin</button>
+            <button class="nav-btn cart-btn" onclick="showCart()">
+                🛒 Carrinho
+                <span class="cart-count" id="cart-count">0</span>
+            </button>
+            <button class="nav-btn" id="login-nav-btn" onclick="showLoginModal()">🔑 Entrar</button>
+            <button class="nav-btn" id="logout-nav-btn" style="display: none;" onclick="logout()">🚪 Sair</button>
+        </div>
+    </div>
+</div>
+
+<div class="main-container" id="main-container">
+    <div id="loading" class="loading" style="text-align:center; padding:60px;">Carregando...</div>
+</div>
+
+<!-- Login Modal -->
+<div id="login-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>🔐 Entrar na Loja</h3>
+            <span class="close-modal" onclick="closeModal('login-modal')">&times;</span>
+        </div>
+        <div class="modal-body">
+            <p>Faça login para comprar produtos e serviços</p>
+            <button id="google-login-btn" class="btn-primary" style="width:100%; margin-top:20px;">
+                🔑 Entrar com Google
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Cart Modal -->
+<div id="cart-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>🛒 Meu Carrinho</h3>
+            <span class="close-modal" onclick="closeModal('cart-modal')">&times;</span>
+        </div>
+        <div class="modal-body" id="cart-items"></div>
+    </div>
+</div>
+
+<!-- Product Modal -->
+<div id="product-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="product-modal-title">Produto</h3>
+            <span class="close-modal" onclick="closeModal('product-modal')">&times;</span>
+        </div>
+        <div class="modal-body" id="product-modal-body"></div>
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+<script>
+// Firebase Config
+const firebaseConfig = {
+    apiKey: "AIzaSyB9GkSqTIZ0kbVsba_WOdQeVAETrF9qna0",
+    authDomain: "wzzm-ce3fc.firebaseapp.com",
+    projectId: "wzzm-ce3fc",
+    storageBucket: "wzzm-ce3fc.appspot.com",
+    messagingSenderId: "249427877153",
+    appId: "1:249427877153:web:0e4297294794a5aadeb260"
+};
+
+if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const auth = firebase.auth();
+
+let currentUser = null;
+let isAdmin = false;
+let cart = [];
+let products = [];
+let services = [];
+
+// Admin UIDs
+const ADMIN_UIDS = ['sZxfMuOBPbXdR8nttVPXIN8QOOl1', '6aPqWVh8JVYL5NqEb78iDGPD7dH3'];
+
+// ============================================
+// FUNÇÕES PRINCIPAIS
+// ============================================
+
+async function checkIsAdmin(user) {
+    if (!user) return false;
+    if (ADMIN_UIDS.includes(user.uid)) return true;
+    try {
+        const userDoc = await db.collection('maspia_users').doc(user.uid).get();
+        return userDoc.exists && userDoc.data().isAdmin === true;
+    } catch { return false; }
+}
+
+function updateUIForUser() {
+    const loginBtn = document.getElementById('login-nav-btn');
+    const logoutBtn = document.getElementById('logout-nav-btn');
+    const adminBtn = document.getElementById('admin-btn');
+    
+    if (currentUser) {
+        loginBtn.style.display = 'none';
+        logoutBtn.style.display = 'flex';
+        if (isAdmin) {
+            adminBtn.style.display = 'flex';
+        } else {
+            adminBtn.style.display = 'none';
+        }
+    } else {
+        loginBtn.style.display = 'flex';
+        logoutBtn.style.display = 'none';
+        adminBtn.style.display = 'none';
+    }
+}
+
+async function loginWithGoogle() {
+    try {
+        await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+        closeModal('login-modal');
+    } catch (error) {
+        alert('Erro: ' + error.message);
+    }
+}
+
+async function logout() {
+    await auth.signOut();
+    cart = [];
+    updateCartCount();
+    currentUser = null;
+    isAdmin = false;
+    updateUIForUser();
+    showProducts();
+}
+
+// ============================================
+// CARRINHO
+// ============================================
+
+function addToCart(item, type) {
+    if (!currentUser) {
+        showLoginModal();
+        return;
+    }
+    
+    const existing = cart.find(i => i.id === item.id && i.type === type);
+    if (existing) {
+        existing.quantity++;
+    } else {
+        cart.push({ ...item, quantity: 1, type });
+    }
+    updateCartCount();
+    alert(`✅ ${item.title} adicionado ao carrinho!`);
+}
+
+function updateCartCount() {
+    const count = cart.reduce((sum, i) => sum + i.quantity, 0);
+    document.getElementById('cart-count').textContent = count;
+}
+
+function showCart() {
+    if (!currentUser) {
+        showLoginModal();
+        return;
+    }
+    
+    const modalBody = document.getElementById('cart-items');
+    
+    if (cart.length === 0) {
+        modalBody.innerHTML = '<p style="text-align:center;">Seu carrinho está vazio</p>';
+    } else {
+        let total = 0;
+        modalBody.innerHTML = cart.map(item => {
+            const itemTotal = item.price * item.quantity;
+            total += itemTotal;
+            return `
+                <div class="cart-item">
+                    <div class="cart-item-info">
+                        <h4>${escapeHtml(item.title)}</h4>
+                        <p>R$ ${item.price.toFixed(2)} ${item.type === 'service' ? '(Serviço)' : ''}</p>
+                    </div>
+                    <div class="cart-item-qty">
+                        <button onclick="updateQuantity('${item.id}', '${item.type}', -1)">-</button>
+                        <span>${item.quantity}</span>
+                        <button onclick="updateQuantity('${item.id}', '${item.type}', 1)">+</button>
+                        <button onclick="removeFromCart('${item.id}', '${item.type}')" style="background:#f44336; color:white;">🗑️</button>
+                    </div>
+                    <div>R$ ${itemTotal.toFixed(2)}</div>
+                </div>
+            `;
+        }).join('');
+        
+        modalBody.innerHTML += `
+            <div class="cart-total">
+                Total: R$ ${total.toFixed(2)}
+                <button class="btn-primary" style="width:100%; margin-top:15px;" onclick="checkout()">✅ Finalizar Compra</button>
+            </div>
+        `;
+    }
+    
+    document.getElementById('cart-modal').style.display = 'flex';
+}
+
+function updateQuantity(id, type, delta) {
+    const item = cart.find(i => i.id === id && i.type === type);
+    if (item) {
+        item.quantity += delta;
+        if (item.quantity <= 0) {
+            cart = cart.filter(i => !(i.id === id && i.type === type));
+        }
+        updateCartCount();
+        showCart();
+    }
+}
+
+function removeFromCart(id, type) {
+    cart = cart.filter(i => !(i.id === id && i.type === type));
+    updateCartCount();
+    showCart();
+}
+
+async function checkout() {
+    if (cart.length === 0) {
+        alert('Carrinho vazio!');
+        return;
+    }
+    
+    try {
+        const orderData = {
+            userId: currentUser.uid,
+            userEmail: currentUser.email,
+            userName: currentUser.displayName,
+            items: cart,
+            total: cart.reduce((sum, i) => sum + (i.price * i.quantity), 0),
+            status: 'pending',
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
+        
+        await db.collection('maspia_orders').add(orderData);
+        
+        // Atualizar estoque
+        for (const item of cart) {
+            if (item.type === 'product') {
+                const productRef = db.collection('maspia_products').doc(item.id);
+                const productDoc = await productRef.get();
+                if (productDoc.exists) {
+                    const newStock = (productDoc.data().stock || 0) - item.quantity;
+                    await productRef.update({ stock: newStock });
+                }
+            }
+        }
+        
+        alert('✅ Pedido realizado com sucesso!');
+        cart = [];
+        updateCartCount();
+        closeModal('cart-modal');
+        showProducts();
+    } catch (error) {
+        alert('Erro: ' + error.message);
+    }
+}
+
+// ============================================
+// PRODUTOS
+// ============================================
+
+async function loadProducts() {
+    try {
+        const snapshot = await db.collection('maspia_products')
+            .where('active', '==', true)
+            .orderBy('createdAt', 'desc')
+            .get();
+        
+        products = [];
+        snapshot.forEach(doc => {
+            products.push({ id: doc.id, ...doc.data() });
+        });
+        renderProducts();
+    } catch (error) {
+        console.error('Erro:', error);
+    }
+}
+
+function renderProducts() {
+    const container = document.getElementById('main-container');
+    
+    if (products.length === 0) {
+        container.innerHTML = '<div class="login-required"><h3>📦 Nenhum produto disponível</h3></div>';
+        return;
+    }
+    
+    container.innerHTML = `
+        <div class="products-grid">
+            ${products.map(product => `
+                <div class="product-card">
+                    <div class="product-image">${product.icon || '📦'}</div>
+                    <div class="product-info">
+                        <div class="product-title">${escapeHtml(product.title)}</div>
+                        <div class="product-price">R$ ${(product.price || 0).toFixed(2)}</div>
+                        <div class="product-stock ${product.stock <= 5 ? 'stock-low' : ''} ${product.stock <= 0 ? 'stock-out' : ''}">
+                            ${product.stock > 0 ? `📦 Estoque: ${product.stock} unidades` : '❌ Indisponível'}
+                        </div>
+                        <button class="btn-add-cart" onclick="addToCart({id:'${product.id}', title:'${escapeHtml(product.title)}', price:${product.price}}, 'product')" ${product.stock <= 0 ? 'disabled' : ''}>
+                            🛒 ${product.stock > 0 ? 'Adicionar ao Carrinho' : 'Indisponível'}
+                        </button>
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
+// ============================================
+// SERVIÇOS
+// ============================================
+
+async function loadServices() {
+    try {
+        const snapshot = await db.collection('maspia_services')
+            .where('active', '==', true)
+            .orderBy('createdAt', 'desc')
+            .get();
+        
+        services = [];
+        snapshot.forEach(doc => {
+            services.push({ id: doc.id, ...doc.data() });
+        });
+        renderServices();
+    } catch (error) {
+        console.error('Erro:', error);
+    }
+}
+
+function renderServices() {
+    const container = document.getElementById('main-container');
+    
+    if (services.length === 0) {
+        container.innerHTML = '<div class="login-required"><h3>🔧 Nenhum serviço disponível</h3></div>';
+        return;
+    }
+    
+    container.innerHTML = `
+        <div class="services-grid">
+            ${services.map(service => `
+                <div class="service-card">
+                    <div class="service-icon">${service.icon || '🔧'}</div>
+                    <h3>${escapeHtml(service.title)}</h3>
+                    <p>${escapeHtml(service.description || '')}</p>
+                    <div class="service-price">R$ ${(service.price || 0).toFixed(2)}</div>
+                    <button class="btn-add-cart" onclick="addToCart({id:'${service.id}', title:'${escapeHtml(service.title)}', price:${service.price}}, 'service')">
+                        🛒 Contratar Serviço
+                    </button>
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
+// ============================================
+// ADMIN
+// ============================================
+
+function showAdmin() {
+    if (!isAdmin) {
+        alert('Acesso restrito a administradores');
+        return;
+    }
+    
+    const container = document.getElementById('main-container');
+    container.innerHTML = `
+        <div class="admin-panel">
+            <div class="admin-header">
+                <h2>👑 Painel Administrativo</h2>
+                <button class="btn-primary" onclick="showAddProductForm()">➕ Adicionar Produto</button>
+                <button class="btn-primary" onclick="showAddServiceForm()">🔧 Adicionar Serviço</button>
+                <button class="btn-secondary" onclick="loadAdminData()">🔄 Atualizar</button>
+            </div>
+            
+            <div class="tabs">
+                <div class="tab active" onclick="showAdminProducts()">📦 Produtos</div>
+                <div class="tab" onclick="showAdminServices()">🔧 Serviços</div>
+                <div class="tab" onclick="showAdminOrders()">📋 Pedidos</div>
+            </div>
+            
+            <div id="admin-content">
+                <div class="loading">Carregando...</div>
+            </div>
+        </div>
+    `;
+    
+    loadAdminProducts();
+}
+
+async function loadAdminProducts() {
+    try {
+        const snapshot = await db.collection('maspia_products').orderBy('createdAt', 'desc').get();
+        const productsList = [];
+        snapshot.forEach(doc => productsList.push({ id: doc.id, ...doc.data() }));
+        
+        document.getElementById('admin-content').innerHTML = `
+            <table class="products-table">
+                <thead>
+                    <tr>
+                        <th>Produto</th>
+                        <th>Preço</th>
+                        <th>Estoque</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${productsList.map(p => `
+                        <tr>
+                            <td>${escapeHtml(p.title)}</td>
+                            <td>R$ ${(p.price || 0).toFixed(2)}</td>
+                            <td>${p.stock || 0}</td>
+                            <td><span class="status-badge ${p.active ? 'status-active' : 'status-inactive'}">${p.active ? 'Ativo' : 'Inativo'}</span></td>
+                            <td>
+                                <button class="btn-secondary" onclick="editProduct('${p.id}')">✏️</button>
+                                <button class="btn-secondary" onclick="toggleProductStatus('${p.id}', ${!p.active})">${p.active ? 'Desativar' : 'Ativar'}</button>
+                                <button class="btn-secondary" style="background:#dc3545;" onclick="deleteProduct('${p.id}')">🗑️</button>
+                            </td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        `;
+    } catch (error) {
+        document.getElementById('admin-content').innerHTML = `<p>Erro: ${error.message}</p>`;
+    }
+}
+
+async function loadAdminServices() {
+    try {
+        const snapshot = await db.collection('maspia_services').orderBy('createdAt', 'desc').get();
+        const servicesList = [];
+        snapshot.forEach(doc => servicesList.push({ id: doc.id, ...doc.data() }));
+        
+        document.getElementById('admin-content').innerHTML = `
+            <table class="products-table">
+                <thead>
+                    <tr>
+                        <th>Serviço</th>
+                        <th>Preço</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${servicesList.map(s => `
+                        <tr>
+                            <td>${escapeHtml(s.title)}</td>
+                            <td>R$ ${(s.price || 0).toFixed(2)}</td>
+                            <td><span class="status-badge ${s.active ? 'status-active' : 'status-inactive'}">${s.active ? 'Ativo' : 'Inativo'}</span></td>
+                            <td>
+                                <button class="btn-secondary" onclick="editService('${s.id}')">✏️</button>
+                                <button class="btn-secondary" onclick="toggleServiceStatus('${s.id}', ${!s.active})">${s.active ? 'Desativar' : 'Ativar'}</button>
+                                <button class="btn-secondary" style="background:#dc3545;" onclick="deleteService('${s.id}')">🗑️</button>
+                            </td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        `;
+    } catch (error) {
+        document.getElementById('admin-content').innerHTML = `<p>Erro: ${error.message}</p>`;
+    }
+}
+
+async function loadAdminOrders() {
+    try {
+        const snapshot = await db.collection('maspia_orders').orderBy('createdAt', 'desc').get();
+        const ordersList = [];
+        snapshot.forEach(doc => ordersList.push({ id: doc.id, ...doc.data() }));
+        
+        document.getElementById('admin-content').innerHTML = `
+            <table class="products-table">
+                <thead>
+                    <tr>
+                        <th>Pedido</th>
+                        <th>Cliente</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Data</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${ordersList.map(o => `
+                        <tr>
+                            <td>#${o.id.substring(0,8)}</td>
+                            <td>${escapeHtml(o.userName || o.userEmail)}</td>
+                            <td>R$ ${(o.total || 0).toFixed(2)}</td>
+                            <td>
+                                <select onchange="updateOrderStatus('${o.id}', this.value)">
+                                    <option value="pending" ${o.status === 'pending' ? 'selected' : ''}>Pendente</option>
+                                    <option value="processing" ${o.status === 'processing' ? 'selected' : ''}>Processando</option>
+                                    <option value="shipped" ${o.status === 'shipped' ? 'selected' : ''}>Enviado</option>
+                                    <option value="delivered" ${o.status === 'delivered' ? 'selected' : ''}>Entregue</option>
+                                    <option value="cancelled" ${o.status === 'cancelled' ? 'selected' : ''}>Cancelado</option>
+                                </select>
+                            </td>
+                            <td>${o.createdAt ? new Date(o.createdAt.seconds * 1000).toLocaleDateString() : '-'}</td>
+                            <td><button class="btn-secondary" onclick="viewOrder('${o.id}')">👁️</button></td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        `;
+    } catch (error) {
+        document.getElementById('admin-content').innerHTML = `<p>Erro: ${error.message}</p>`;
+    }
+}
+
+function showAddProductForm() {
+    const modalBody = document.getElementById('product-modal-body');
+    document.getElementById('product-modal-title').innerHTML = '➕ Adicionar Produto';
+    modalBody.innerHTML = `
+        <form id="add-product-form">
+            <div class="form-group">
+                <label>Título *</label>
+                <input type="text" id="prod-title" required>
+            </div>
+            <div class="form-group">
+                <label>Preço (R$) *</label>
+                <input type="number" step="0.01" id="prod-price" required>
+            </div>
+            <div class="form-group">
+                <label>Estoque *</label>
+                <input type="number" id="prod-stock" value="0" required>
+            </div>
+            <div class="form-group">
+                <label>Ícone (emoji)</label>
+                <input type="text" id="prod-icon" placeholder="📦">
+            </div>
+            <div class="form-group">
+                <label>Descrição</label>
+                <textarea id="prod-description" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn-primary" style="width:100%">✨ Adicionar Produto</button>
+        </form>
+    `;
+    
+    document.getElementById('add-product-form').onsubmit = async (e) => {
+        e.preventDefault();
+        const productData = {
+            title: document.getElementById('prod-title').value,
+            price: parseFloat(document.getElementById('prod-price').value),
+            stock: parseInt(document.getElementById('prod-stock').value),
+            icon: document.getElementById('prod-icon').value || '📦',
+            description: document.getElementById('prod-description').value,
+            active: true,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
+        
+        try {
+            await db.collection('maspia_products').add(productData);
+            alert('✅ Produto adicionado!');
+            closeModal('product-modal');
+            loadAdminProducts();
+        } catch (error) {
+            alert('Erro: ' + error.message);
+        }
+    };
+    
+    document.getElementById('product-modal').style.display = 'flex';
+}
+
+function showAddServiceForm() {
+    const modalBody = document.getElementById('product-modal-body');
+    document.getElementById('product-modal-title').innerHTML = '🔧 Adicionar Serviço';
+    modalBody.innerHTML = `
+        <form id="add-service-form">
+            <div class="form-group">
+                <label>Título *</label>
+                <input type="text" id="serv-title" required>
+            </div>
+            <div class="form-group">
+                <label>Preço (R$) *</label>
+                <input type="number" step="0.01" id="serv-price" required>
+            </div>
+            <div class="form-group">
+                <label>Ícone (emoji)</label>
+                <input type="text" id="serv-icon" placeholder="🔧">
+            </div>
+            <div class="form-group">
+                <label>Descrição</label>
+                <textarea id="serv-description" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn-primary" style="width:100%">✨ Adicionar Serviço</button>
+        </form>
+    `;
+    
+    document.getElementById('add-service-form').onsubmit = async (e) => {
+        e.preventDefault();
+        const serviceData = {
+            title: document.getElementById('serv-title').value,
+            price: parseFloat(document.getElementById('serv-price').value),
+            icon: document.getElementById('serv-icon').value || '🔧',
+            description: document.getElementById('serv-description').value,
+            active: true,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
+        
+        try {
+            await db.collection('maspia_services').add(serviceData);
+            alert('✅ Serviço adicionado!');
+            closeModal('product-modal');
+            loadAdminServices();
+        } catch (error) {
+            alert('Erro: ' + error.message);
+        }
+    };
+    
+    document.getElementById('product-modal').style.display = 'flex';
+}
+
+async function editProduct(id) {
+    const doc = await db.collection('maspia_products').doc(id).get();
+    const p = doc.data();
+    
+    const modalBody = document.getElementById('product-modal-body');
+    document.getElementById('product-modal-title').innerHTML = '✏️ Editar Produto';
+    modalBody.innerHTML = `
+        <form id="edit-product-form">
+            <div class="form-group">
+                <label>Título</label>
+                <input type="text" id="prod-title" value="${escapeHtml(p.title)}" required>
+            </div>
+            <div class="form-group">
+                <label>Preço (R$)</label>
+                <input type="number" step="0.01" id="prod-price" value="${p.price}" required>
+            </div>
+            <div class="form-group">
+                <label>Estoque</label>
+                <input type="number" id="prod-stock" value="${p.stock || 0}" required>
+            </div>
+            <div class="form-group">
+                <label>Ícone</label>
+                <input type="text" id="prod-icon" value="${escapeHtml(p.icon || '📦')}">
+            </div>
+            <button type="submit" class="btn-primary" style="width:100%">💾 Salvar</button>
+        </form>
+    `;
+    
+    document.getElementById('edit-product-form').onsubmit = async (e) => {
+        e.preventDefault();
+        await db.collection('maspia_products').doc(id).update({
+            title: document.getElementById('prod-title').value,
+            price: parseFloat(document.getElementById('prod-price').value),
+            stock: parseInt(document.getElementById('prod-stock').value),
+            icon: document.getElementById('prod-icon').value
+        });
+        alert('✅ Produto atualizado!');
+        closeModal('product-modal');
+        loadAdminProducts();
+    };
+    
+    document.getElementById('product-modal').style.display = 'flex';
+}
+
+async function editService(id) {
+    const doc = await db.collection('maspia_services').doc(id).get();
+    const s = doc.data();
+    
+    const modalBody = document.getElementById('product-modal-body');
+    document.getElementById('product-modal-title').innerHTML = '✏️ Editar Serviço';
+    modalBody.innerHTML = `
+        <form id="edit-service-form">
+            <div class="form-group">
+                <label>Título</label>
+                <input type="text" id="serv-title" value="${escapeHtml(s.title)}" required>
+            </div>
+            <div class="form-group">
+                <label>Preço (R$)</label>
+                <input type="number" step="0.01" id="serv-price" value="${s.price}" required>
+            </div>
+            <div class="form-group">
+                <label>Ícone</label>
+                <input type="text" id="serv-icon" value="${escapeHtml(s.icon || '🔧')}">
+            </div>
+            <div class="form-group">
+                <label>Descrição</label>
+                <textarea id="serv-description" rows="3">${escapeHtml(s.description || '')}</textarea>
+            </div>
+            <button type="submit" class="btn-primary" style="width:100%">💾 Salvar</button>
+        </form>
+    `;
+    
+    document.getElementById('edit-service-form').onsubmit = async (e) => {
+        e.preventDefault();
+        await db.collection('maspia_services').doc(id).update({
+            title: document.getElementById('serv-title').value,
+            price: parseFloat(document.getElementById('serv-price').value),
+            icon: document.getElementById('serv-icon').value,
+            description: document.getElementById('serv-description').value
+        });
+        alert('✅ Serviço atualizado!');
+        closeModal('product-modal');
+        loadAdminServices();
+    };
+    
+    document.getElementById('product-modal').style.display = 'flex';
+}
+
+async function toggleProductStatus(id, active) {
+    await db.collection('maspia_products').doc(id).update({ active });
+    loadAdminProducts();
+}
+
+async function toggleServiceStatus(id, active) {
+    await db.collection('maspia_services').doc(id).update({ active });
+    loadAdminServices();
+}
+
+async function deleteProduct(id) {
+    if (confirm('Tem certeza que deseja excluir este produto?')) {
+        await db.collection('maspia_products').doc(id).delete();
+        loadAdminProducts();
+    }
+}
+
+async function deleteService(id) {
+    if (confirm('Tem certeza que deseja excluir este serviço?')) {
+        await db.collection('maspia_services').doc(id).delete();
+        loadAdminServices();
+    }
+}
+
+async function updateOrderStatus(id, status) {
+    await db.collection('maspia_orders').doc(id).update({ status });
+    loadAdminOrders();
+}
+
+async function viewOrder(id) {
+    const doc = await db.collection('maspia_orders').doc(id).get();
+    const order = doc.data();
+    
+    const modalBody = document.getElementById('product-modal-body');
+    document.getElementById('product-modal-title').innerHTML = `📋 Pedido #${id.substring(0,8)}`;
+    modalBody.innerHTML = `
+        <p><strong>Cliente:</strong> ${escapeHtml(order.userName || order.userEmail)}</p>
+        <p><strong>Email:</strong> ${escapeHtml(order.userEmail)}</p>
+        <p><strong>Status:</strong> ${order.status}</p>
+        <p><strong>Total:</strong> R$ ${(order.total || 0).toFixed(2)}</p>
+        <h4>Itens:</h4>
+        <ul>
+            ${order.items.map(item => `<li>${escapeHtml(item.title)} x ${item.quantity} = R$ ${(item.price * item.quantity).toFixed(2)}</li>`).join('')}
+        </ul>
+        <button class="btn-secondary" onclick="closeModal('product-modal')">Fechar</button>
+    `;
+    
+    document.getElementById('product-modal').style.display = 'flex';
+}
+
+function showAdminProducts() {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    event.target.classList.add('active');
+    loadAdminProducts();
+}
+
+function showAdminServices() {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    event.target.classList.add('active');
+    loadAdminServices();
+}
+
+function showAdminOrders() {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    event.target.classList.add('active');
+    loadAdminOrders();
+}
+
+// ============================================
+// NAVEGAÇÃO
+// ============================================
+
+function showProducts() {
+    if (!currentUser) {
+        showLoginModal();
+        return;
+    }
+    loadProducts();
+}
+
+function showServices() {
+    if (!currentUser) {
+        showLoginModal();
+        return;
+    }
+    loadServices();
+}
+
+function showLoginModal() {
+    document.getElementById('login-modal').style.display = 'flex';
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+}
+
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+function loadAdminData() {
+    if (document.querySelector('.tab.active').innerText.includes('Produtos')) {
+        loadAdminProducts();
+    } else if (document.querySelector('.tab.active').innerText.includes('Serviços')) {
+        loadAdminServices();
+    } else {
+        loadAdminOrders();
+    }
+}
+
+// ============================================
+// INICIALIZAÇÃO
+// ============================================
+
+document.getElementById('google-login-btn')?.addEventListener('click', loginWithGoogle);
+
+auth.onAuthStateChanged(async (user) => {
+    if (user) {
+        currentUser = user;
+        isAdmin = await checkIsAdmin(user);
+        updateUIForUser();
+        showProducts();
+    } else {
+        currentUser = null;
+        isAdmin = false;
+        updateUIForUser();
+        const container = document.getElementById('main-container');
+        container.innerHTML = `
+            <div class="login-required">
+                <span class="material-icons" style="font-size:64px;">🔐</span>
+                <h3>Bem-vindo à Maspia Store</h3>
+                <p>Faça login para visualizar produtos e serviços</p>
+                <button class="login-btn" onclick="showLoginModal()">Entrar com Google</button>
+            </div>
+        `;
+    }
+});
+</script>
+</body>
+</html>
