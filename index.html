@@ -20,7 +20,6 @@
             color: #333;
         }
 
-        /* Header */
         .header {
             background: linear-gradient(135deg, #1a1a2e, #16213e);
             color: white;
@@ -99,14 +98,12 @@
             justify-content: center;
         }
 
-        /* Main Container */
         .main-container {
             max-width: 1400px;
             margin: 30px auto;
             padding: 0 20px;
         }
 
-        /* Products Grid */
         .products-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -191,7 +188,6 @@
             cursor: not-allowed;
         }
 
-        /* Admin Panel */
         .admin-panel {
             background: white;
             border-radius: 16px;
@@ -282,7 +278,6 @@
             color: #721c24;
         }
 
-        /* Cart Modal */
         .modal {
             display: none;
             position: fixed;
@@ -354,7 +349,6 @@
             font-weight: bold;
         }
 
-        /* Tabs */
         .tabs {
             display: flex;
             gap: 10px;
@@ -375,7 +369,6 @@
             color: white;
         }
 
-        /* Login Required */
         .login-required {
             text-align: center;
             padding: 60px;
@@ -393,7 +386,6 @@
             margin-top: 20px;
         }
 
-        /* Service Cards */
         .services-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -421,7 +413,6 @@
             margin: 10px 0;
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
             .header-container {
                 flex-direction: column;
@@ -528,14 +519,23 @@ let services = [];
 const ADMIN_UIDS = ['sZxfMuOBPbXdR8nttVPXIN8QOOl1', '6aPqWVh8JVYL5NqEb78iDGPD7dH3'];
 
 // ============================================
-// FUNÇÕES PRINCIPAIS
+// FUNÇÕES AUXILIARES - ACESSO ÀS SUBCOLEÇÕES
 // ============================================
+
+// Referência à coleção principal maspia
+const maspiaRef = db.collection('maspia');
+
+// Subcoleções dentro de maspia
+const produtosRef = () => maspiaRef.doc('loja').collection('produtos');
+const servicosRef = () => maspiaRef.doc('loja').collection('servicos');
+const pedidosRef = () => maspiaRef.doc('pedidos').collection('todos');
+const usuariosLojaRef = () => maspiaRef.doc('usuarios').collection('perfis');
 
 async function checkIsAdmin(user) {
     if (!user) return false;
     if (ADMIN_UIDS.includes(user.uid)) return true;
     try {
-        const userDoc = await db.collection('maspia_users').doc(user.uid).get();
+        const userDoc = await usuariosLojaRef().doc(user.uid).get();
         return userDoc.exists && userDoc.data().isAdmin === true;
     } catch { return false; }
 }
@@ -682,12 +682,12 @@ async function checkout() {
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         };
         
-        await db.collection('maspia_orders').add(orderData);
+        await pedidosRef().add(orderData);
         
         // Atualizar estoque
         for (const item of cart) {
             if (item.type === 'product') {
-                const productRef = db.collection('maspia_products').doc(item.id);
+                const productRef = produtosRef().doc(item.id);
                 const productDoc = await productRef.get();
                 if (productDoc.exists) {
                     const newStock = (productDoc.data().stock || 0) - item.quantity;
@@ -712,7 +712,7 @@ async function checkout() {
 
 async function loadProducts() {
     try {
-        const snapshot = await db.collection('maspia_products')
+        const snapshot = await produtosRef()
             .where('active', '==', true)
             .orderBy('createdAt', 'desc')
             .get();
@@ -724,6 +724,7 @@ async function loadProducts() {
         renderProducts();
     } catch (error) {
         console.error('Erro:', error);
+        document.getElementById('main-container').innerHTML = `<div class="login-required"><h3>Erro ao carregar produtos: ${error.message}</h3></div>`;
     }
 }
 
@@ -762,7 +763,7 @@ function renderProducts() {
 
 async function loadServices() {
     try {
-        const snapshot = await db.collection('maspia_services')
+        const snapshot = await servicosRef()
             .where('active', '==', true)
             .orderBy('createdAt', 'desc')
             .get();
@@ -774,6 +775,7 @@ async function loadServices() {
         renderServices();
     } catch (error) {
         console.error('Erro:', error);
+        document.getElementById('main-container').innerHTML = `<div class="login-required"><h3>Erro ao carregar serviços: ${error.message}</h3></div>`;
     }
 }
 
@@ -816,10 +818,12 @@ function showAdmin() {
     container.innerHTML = `
         <div class="admin-panel">
             <div class="admin-header">
-                <h2>👑 Painel Administrativo</h2>
-                <button class="btn-primary" onclick="showAddProductForm()">➕ Adicionar Produto</button>
-                <button class="btn-primary" onclick="showAddServiceForm()">🔧 Adicionar Serviço</button>
-                <button class="btn-secondary" onclick="loadAdminData()">🔄 Atualizar</button>
+                <h2>👑 Painel Administrativo - Maspia Store</h2>
+                <div>
+                    <button class="btn-primary" onclick="showAddProductForm()">➕ Adicionar Produto</button>
+                    <button class="btn-primary" onclick="showAddServiceForm()">🔧 Adicionar Serviço</button>
+                    <button class="btn-secondary" onclick="loadAdminData()">🔄 Atualizar</button>
+                </div>
             </div>
             
             <div class="tabs">
@@ -839,7 +843,7 @@ function showAdmin() {
 
 async function loadAdminProducts() {
     try {
-        const snapshot = await db.collection('maspia_products').orderBy('createdAt', 'desc').get();
+        const snapshot = await produtosRef().orderBy('createdAt', 'desc').get();
         const productsList = [];
         snapshot.forEach(doc => productsList.push({ id: doc.id, ...doc.data() }));
         
@@ -878,7 +882,7 @@ async function loadAdminProducts() {
 
 async function loadAdminServices() {
     try {
-        const snapshot = await db.collection('maspia_services').orderBy('createdAt', 'desc').get();
+        const snapshot = await servicosRef().orderBy('createdAt', 'desc').get();
         const servicesList = [];
         snapshot.forEach(doc => servicesList.push({ id: doc.id, ...doc.data() }));
         
@@ -915,9 +919,14 @@ async function loadAdminServices() {
 
 async function loadAdminOrders() {
     try {
-        const snapshot = await db.collection('maspia_orders').orderBy('createdAt', 'desc').get();
+        const snapshot = await pedidosRef().orderBy('createdAt', 'desc').get();
         const ordersList = [];
         snapshot.forEach(doc => ordersList.push({ id: doc.id, ...doc.data() }));
+        
+        if (ordersList.length === 0) {
+            document.getElementById('admin-content').innerHTML = '<p style="text-align:center; padding:40px;">Nenhum pedido realizado ainda</p>';
+            return;
+        }
         
         document.getElementById('admin-content').innerHTML = `
             <table class="products-table">
@@ -938,16 +947,16 @@ async function loadAdminOrders() {
                             <td>${escapeHtml(o.userName || o.userEmail)}</td>
                             <td>R$ ${(o.total || 0).toFixed(2)}</td>
                             <td>
-                                <select onchange="updateOrderStatus('${o.id}', this.value)">
-                                    <option value="pending" ${o.status === 'pending' ? 'selected' : ''}>Pendente</option>
-                                    <option value="processing" ${o.status === 'processing' ? 'selected' : ''}>Processando</option>
-                                    <option value="shipped" ${o.status === 'shipped' ? 'selected' : ''}>Enviado</option>
-                                    <option value="delivered" ${o.status === 'delivered' ? 'selected' : ''}>Entregue</option>
-                                    <option value="cancelled" ${o.status === 'cancelled' ? 'selected' : ''}>Cancelado</option>
+                                <select onchange="updateOrderStatus('${o.id}', this.value)" class="status-select">
+                                    <option value="pending" ${o.status === 'pending' ? 'selected' : ''}>⏳ Pendente</option>
+                                    <option value="processing" ${o.status === 'processing' ? 'selected' : ''}>🔄 Processando</option>
+                                    <option value="shipped" ${o.status === 'shipped' ? 'selected' : ''}>🚚 Enviado</option>
+                                    <option value="delivered" ${o.status === 'delivered' ? 'selected' : ''}>✅ Entregue</option>
+                                    <option value="cancelled" ${o.status === 'cancelled' ? 'selected' : ''}>❌ Cancelado</option>
                                 </select>
                             </td>
-                            <td>${o.createdAt ? new Date(o.createdAt.seconds * 1000).toLocaleDateString() : '-'}</td>
-                            <td><button class="btn-secondary" onclick="viewOrder('${o.id}')">👁️</button></td>
+                            <td>${o.createdAt ? new Date(o.createdAt.seconds * 1000).toLocaleDateString('pt-BR') : '-'}</td>
+                            <td><button class="btn-secondary" onclick="viewOrder('${o.id}')">👁️ Detalhes</button></td>
                         </tr>
                     `).join('')}
                 </tbody>
@@ -1000,7 +1009,7 @@ function showAddProductForm() {
         };
         
         try {
-            await db.collection('maspia_products').add(productData);
+            await produtosRef().add(productData);
             alert('✅ Produto adicionado!');
             closeModal('product-modal');
             loadAdminProducts();
@@ -1049,7 +1058,7 @@ function showAddServiceForm() {
         };
         
         try {
-            await db.collection('maspia_services').add(serviceData);
+            await servicosRef().add(serviceData);
             alert('✅ Serviço adicionado!');
             closeModal('product-modal');
             loadAdminServices();
@@ -1062,7 +1071,7 @@ function showAddServiceForm() {
 }
 
 async function editProduct(id) {
-    const doc = await db.collection('maspia_products').doc(id).get();
+    const doc = await produtosRef().doc(id).get();
     const p = doc.data();
     
     const modalBody = document.getElementById('product-modal-body');
@@ -1085,17 +1094,22 @@ async function editProduct(id) {
                 <label>Ícone</label>
                 <input type="text" id="prod-icon" value="${escapeHtml(p.icon || '📦')}">
             </div>
+            <div class="form-group">
+                <label>Descrição</label>
+                <textarea id="prod-description" rows="3">${escapeHtml(p.description || '')}</textarea>
+            </div>
             <button type="submit" class="btn-primary" style="width:100%">💾 Salvar</button>
         </form>
     `;
     
     document.getElementById('edit-product-form').onsubmit = async (e) => {
         e.preventDefault();
-        await db.collection('maspia_products').doc(id).update({
+        await produtosRef().doc(id).update({
             title: document.getElementById('prod-title').value,
             price: parseFloat(document.getElementById('prod-price').value),
             stock: parseInt(document.getElementById('prod-stock').value),
-            icon: document.getElementById('prod-icon').value
+            icon: document.getElementById('prod-icon').value,
+            description: document.getElementById('prod-description').value
         });
         alert('✅ Produto atualizado!');
         closeModal('product-modal');
@@ -1106,7 +1120,7 @@ async function editProduct(id) {
 }
 
 async function editService(id) {
-    const doc = await db.collection('maspia_services').doc(id).get();
+    const doc = await servicosRef().doc(id).get();
     const s = doc.data();
     
     const modalBody = document.getElementById('product-modal-body');
@@ -1135,7 +1149,7 @@ async function editService(id) {
     
     document.getElementById('edit-service-form').onsubmit = async (e) => {
         e.preventDefault();
-        await db.collection('maspia_services').doc(id).update({
+        await servicosRef().doc(id).update({
             title: document.getElementById('serv-title').value,
             price: parseFloat(document.getElementById('serv-price').value),
             icon: document.getElementById('serv-icon').value,
@@ -1150,36 +1164,36 @@ async function editService(id) {
 }
 
 async function toggleProductStatus(id, active) {
-    await db.collection('maspia_products').doc(id).update({ active });
+    await produtosRef().doc(id).update({ active });
     loadAdminProducts();
 }
 
 async function toggleServiceStatus(id, active) {
-    await db.collection('maspia_services').doc(id).update({ active });
+    await servicosRef().doc(id).update({ active });
     loadAdminServices();
 }
 
 async function deleteProduct(id) {
-    if (confirm('Tem certeza que deseja excluir este produto?')) {
-        await db.collection('maspia_products').doc(id).delete();
+    if (confirm('Tem certeza que deseja excluir este produto permanentemente?')) {
+        await produtosRef().doc(id).delete();
         loadAdminProducts();
     }
 }
 
 async function deleteService(id) {
-    if (confirm('Tem certeza que deseja excluir este serviço?')) {
-        await db.collection('maspia_services').doc(id).delete();
+    if (confirm('Tem certeza que deseja excluir este serviço permanentemente?')) {
+        await servicosRef().doc(id).delete();
         loadAdminServices();
     }
 }
 
 async function updateOrderStatus(id, status) {
-    await db.collection('maspia_orders').doc(id).update({ status });
+    await pedidosRef().doc(id).update({ status });
     loadAdminOrders();
 }
 
 async function viewOrder(id) {
-    const doc = await db.collection('maspia_orders').doc(id).get();
+    const doc = await pedidosRef().doc(id).get();
     const order = doc.data();
     
     const modalBody = document.getElementById('product-modal-body');
@@ -1189,11 +1203,12 @@ async function viewOrder(id) {
         <p><strong>Email:</strong> ${escapeHtml(order.userEmail)}</p>
         <p><strong>Status:</strong> ${order.status}</p>
         <p><strong>Total:</strong> R$ ${(order.total || 0).toFixed(2)}</p>
-        <h4>Itens:</h4>
-        <ul>
+        <p><strong>Data:</strong> ${order.createdAt ? new Date(order.createdAt.seconds * 1000).toLocaleString('pt-BR') : '-'}</p>
+        <h4>📦 Itens do Pedido:</h4>
+        <ul style="margin-left: 20px;">
             ${order.items.map(item => `<li>${escapeHtml(item.title)} x ${item.quantity} = R$ ${(item.price * item.quantity).toFixed(2)}</li>`).join('')}
         </ul>
-        <button class="btn-secondary" onclick="closeModal('product-modal')">Fechar</button>
+        <button class="btn-secondary" onclick="closeModal('product-modal')" style="margin-top:15px;">Fechar</button>
     `;
     
     document.getElementById('product-modal').style.display = 'flex';
@@ -1253,12 +1268,16 @@ function escapeHtml(text) {
 }
 
 function loadAdminData() {
-    if (document.querySelector('.tab.active').innerText.includes('Produtos')) {
-        loadAdminProducts();
-    } else if (document.querySelector('.tab.active').innerText.includes('Serviços')) {
-        loadAdminServices();
-    } else {
-        loadAdminOrders();
+    const activeTab = document.querySelector('.tab.active');
+    if (activeTab) {
+        const tabText = activeTab.innerText;
+        if (tabText.includes('Produtos')) {
+            loadAdminProducts();
+        } else if (tabText.includes('Serviços')) {
+            loadAdminServices();
+        } else {
+            loadAdminOrders();
+        }
     }
 }
 
@@ -1281,10 +1300,10 @@ auth.onAuthStateChanged(async (user) => {
         const container = document.getElementById('main-container');
         container.innerHTML = `
             <div class="login-required">
-                <span class="material-icons" style="font-size:64px;">🔐</span>
+                <span style="font-size:64px;">🛍️</span>
                 <h3>Bem-vindo à Maspia Store</h3>
                 <p>Faça login para visualizar produtos e serviços</p>
-                <button class="login-btn" onclick="showLoginModal()">Entrar com Google</button>
+                <button class="login-btn" onclick="showLoginModal()">🔑 Entrar com Google</button>
             </div>
         `;
     }
