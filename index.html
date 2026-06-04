@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Maspia Forum - Comunidade</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="icon" href="https://forum.wazzimagiygg.com/Favicom.png" type="image/x-icon">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <!-- Editor de texto rico - Quill -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
     <style>
         * {
             margin: 0;
@@ -179,6 +181,23 @@
             line-height: 1.6;
         }
 
+        /* Estilos para o conteúdo formatado */
+        .post-content h1, .post-content h2, .post-content h3 {
+            margin: 15px 0 10px 0;
+        }
+        .post-content h1 { font-size: 1.5em; }
+        .post-content h2 { font-size: 1.3em; }
+        .post-content h3 { font-size: 1.1em; }
+        .post-content p { margin-bottom: 10px; }
+        .post-content ul, .post-content ol { margin: 10px 0 10px 30px; }
+        .post-content img { max-width: 100%; border-radius: 8px; margin: 10px 0; }
+        .post-content iframe { max-width: 100%; border-radius: 8px; margin: 10px 0; }
+        .post-content pre { background: #f4f4f4; padding: 15px; border-radius: 8px; overflow-x: auto; }
+        .post-content code { background: #f4f4f4; padding: 2px 5px; border-radius: 4px; font-family: monospace; }
+        .post-content blockquote { border-left: 4px solid #e94560; padding-left: 20px; margin: 15px 0; color: #666; }
+        .post-content a { color: #e94560; text-decoration: none; }
+        .post-content a:hover { text-decoration: underline; }
+
         .post-actions {
             padding: 15px 20px;
             border-top: 1px solid #eee;
@@ -250,7 +269,7 @@
             margin-bottom: 8px;
         }
 
-        .form-group input, .form-group select, .form-group textarea {
+        .form-group input, .form-group select {
             width: 100%;
             padding: 12px;
             border: 1px solid #ddd;
@@ -258,9 +277,13 @@
             font-family: inherit;
         }
 
-        .form-group textarea {
-            min-height: 200px;
-            resize: vertical;
+        /* Editor Quill */
+        .ql-container {
+            min-height: 300px;
+            font-size: 14px;
+        }
+        .ql-editor {
+            min-height: 300px;
         }
 
         .btn-primary {
@@ -298,9 +321,9 @@
         .modal-content {
             background: white;
             border-radius: 16px;
-            max-width: 600px;
+            max-width: 800px;
             width: 90%;
-            max-height: 80vh;
+            max-height: 85vh;
             overflow-y: auto;
         }
 
@@ -310,6 +333,9 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: sticky;
+            top: 0;
+            background: white;
         }
 
         .modal-body {
@@ -328,21 +354,6 @@
             padding: 25px;
         }
 
-        .admin-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .admin-table th, .admin-table td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-        }
-
-        .admin-table th {
-            background: #f8f9fa;
-        }
-
         .badge {
             display: inline-block;
             padding: 4px 8px;
@@ -353,7 +364,6 @@
 
         .badge-admin { background: #e94560; color: white; }
         .badge-mod { background: #ff9800; color: white; }
-        .badge-member { background: #4caf50; color: white; }
 
         .loading {
             text-align: center;
@@ -372,6 +382,29 @@
             color: #667eea;
             text-decoration: none;
             cursor: pointer;
+        }
+
+        /* Toolbar de formatação rápida */
+        .format-toolbar {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 8px 8px 0 0;
+            padding: 8px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .format-btn {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .format-btn:hover {
+            background: #e94560;
+            color: white;
         }
 
         @media (max-width: 768px) {
@@ -434,6 +467,27 @@
     </div>
 </div>
 
+<!-- Image Modal -->
+<div id="image-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>🖼️ Inserir Imagem</h3>
+            <span class="close-modal" onclick="closeModal('image-modal')">&times;</span>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label>URL da Imagem</label>
+                <input type="text" id="image-url" placeholder="https://exemplo.com/imagem.jpg">
+            </div>
+            <div class="form-group">
+                <label>Texto alternativo (opcional)</label>
+                <input type="text" id="image-alt" placeholder="Descrição da imagem">
+            </div>
+            <button class="btn-primary" onclick="insertImage()">Inserir Imagem</button>
+        </div>
+    </div>
+</div>
+
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
@@ -458,6 +512,7 @@ let isAdmin = false;
 let currentCategoryId = null;
 let currentSubcategoryId = null;
 let currentThreadId = null;
+let quillEditor = null;
 
 const ADMIN_UIDS = ['sZxfMuOBPbXdR8nttVPXIN8QOOl1', '6aPqWVh8JVYL5NqEb78iDGPD7dH3'];
 
@@ -535,14 +590,15 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-function formatContent(content) {
-    if (!content) return '';
-    let html = content;
-    html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-    html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
-    html = html.replace(/`(.+?)`/g, '<code>$1</code>');
-    html = html.replace(/\n/g, '<br>');
-    return html;
+// Função para converter HTML salvo para exibição segura
+function renderHtmlContent(html) {
+    if (!html) return '';
+    // Permitir tags seguras
+    const allowedTags = ['h1','h2','h3','h4','h5','h6','p','br','hr','b','i','strong','em',
+                         'ul','ol','li','a','img','table','thead','tbody','tr','th','td',
+                         'pre','code','blockquote','div','span','figure','figcaption','iframe'];
+    const sanitized = DOMPurify ? DOMPurify.sanitize(html, { ALLOWED_TAGS: allowedTags }) : html;
+    return sanitized;
 }
 
 // ============================================
@@ -746,7 +802,7 @@ async function showPosts(categoryId, subcategoryId, threadId) {
                             <div class="post-date">${formatDate(post.createdAt)}</div>
                         </div>
                         <div class="post-content">
-                            ${formatContent(post.content)}
+                            ${renderHtmlContent(post.content)}
                         </div>
                         <div class="post-actions">
                             <button class="action-btn" onclick="showCommentForm('${post.id}')">
@@ -771,10 +827,28 @@ async function showPosts(categoryId, subcategoryId, threadId) {
             </div>
             <div class="form-container" style="margin-top: 20px;">
                 <h3>Responder ao Topico</h3>
-                <textarea id="new-post-content" rows="5" placeholder="Digite sua resposta aqui... Use **negrito**, *italico*"></textarea>
-                <button class="btn-primary" style="margin-top: 10px;" onclick="createPost()">Enviar Resposta</button>
+                <div id="reply-editor" style="height: 200px; margin-bottom: 10px;"></div>
+                <button class="btn-primary" onclick="createPost()">Enviar Resposta</button>
             </div>
         `;
+        
+        // Inicializar editor Quill para resposta
+        if (typeof Quill !== 'undefined') {
+            quillEditor = new Quill('#reply-editor', {
+                theme: 'snow',
+                placeholder: 'Digite sua resposta aqui... Use as ferramentas de formatação!',
+                modules: {
+                    toolbar: [
+                        ['bold', 'italic', 'underline', 'strike'],
+                        ['blockquote', 'code-block'],
+                        [{ 'header': [1, 2, 3, false] }],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        ['link', 'image'],
+                        ['clean']
+                    ]
+                }
+            });
+        }
         
         for (const post of posts) {
             loadComments(categoryId, subcategoryId, threadId, post.id);
@@ -822,62 +896,111 @@ function showCreateThread() {
     
     document.getElementById('post-modal-title').innerHTML = 'Criar Novo Topico';
     document.getElementById('post-modal-body').innerHTML = `
-        <form id="create-thread-form">
-            <div class="form-group">
-                <label>Titulo</label>
-                <input type="text" id="thread-title" required placeholder="Titulo do topico">
+        <div class="form-group">
+            <label>Titulo</label>
+            <input type="text" id="thread-title" class="form-control" placeholder="Titulo do topico">
+        </div>
+        <div class="form-group">
+            <label>Conteudo</label>
+            <div id="thread-editor" style="height: 300px; margin-bottom: 10px;"></div>
+            <div style="margin-top: 10px;">
+                <button class="format-btn" onclick="insertImageInEditor('thread-editor')">🖼️ Inserir Imagem</button>
             </div>
-            <div class="form-group">
-                <label>Conteudo</label>
-                <textarea id="thread-content" rows="8" required placeholder="Digite o conteudo do seu topico aqui"></textarea>
-            </div>
-            <button type="submit" class="btn-primary" style="width:100%">Criar Topico</button>
-        </form>
+        </div>
+        <button class="btn-primary" onclick="createThread()">Criar Topico</button>
     `;
     
-    document.getElementById('create-thread-form').onsubmit = async (e) => {
-        e.preventDefault();
-        const title = document.getElementById('thread-title').value;
-        const content = document.getElementById('thread-content').value;
-        
-        try {
-            const threadId = Date.now().toString();
-            const postId = Date.now().toString();
-            
-            await threadsRef(currentCategoryId, currentSubcategoryId).doc(threadId).set({
-                title: title,
-                authorId: currentUser.uid,
-                authorName: currentUser.displayName || currentUser.email,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                lastActivity: firebase.firestore.FieldValue.serverTimestamp(),
-                postsCount: 1
-            });
-            
-            await postsRef(currentCategoryId, currentSubcategoryId, threadId).doc(postId).set({
-                content: content,
-                authorId: currentUser.uid,
-                authorName: currentUser.displayName || currentUser.email,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                isAdmin: isAdmin
-            });
-            
-            await updateCounts(currentCategoryId, currentSubcategoryId);
-            
-            closeModal('post-modal');
-            showThreads(currentCategoryId, currentSubcategoryId);
-        } catch (error) {
-            alert('Erro: ' + error.message);
-        }
-    };
+    if (typeof Quill !== 'undefined') {
+        window.threadQuill = new Quill('#thread-editor', {
+            theme: 'snow',
+            placeholder: 'Digite o conteudo do seu topico aqui... Use as ferramentas de formatacao!',
+            modules: {
+                toolbar: [
+                    ['bold', 'italic', 'underline', 'strike'],
+                    ['blockquote', 'code-block'],
+                    [{ 'header': [1, 2, 3, false] }],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    ['link', 'image'],
+                    ['clean']
+                ]
+            }
+        });
+    }
     
     document.getElementById('post-modal').style.display = 'flex';
 }
 
+window.insertImageInEditor = function(editorId) {
+    window.currentEditorId = editorId;
+    document.getElementById('image-modal').style.display = 'flex';
+};
+
+window.insertImage = function() {
+    const url = document.getElementById('image-url').value;
+    const alt = document.getElementById('image-alt').value || 'imagem';
+    
+    if (url && window.threadQuill) {
+        const range = window.threadQuill.getSelection();
+        window.threadQuill.insertEmbed(range.index, 'image', url);
+        closeModal('image-modal');
+        document.getElementById('image-url').value = '';
+        document.getElementById('image-alt').value = '';
+    } else if (url && window.replyQuill) {
+        const range = window.replyQuill.getSelection();
+        window.replyQuill.insertEmbed(range.index, 'image', url);
+        closeModal('image-modal');
+    } else {
+        alert('Digite uma URL de imagem valida');
+    }
+};
+
+async function createThread() {
+    if (!window.threadQuill) return;
+    
+    const title = document.getElementById('thread-title').value;
+    const content = window.threadQuill.root.innerHTML;
+    
+    if (!title || !content) {
+        alert('Preencha titulo e conteudo');
+        return;
+    }
+    
+    try {
+        const threadId = Date.now().toString();
+        const postId = Date.now().toString();
+        
+        await threadsRef(currentCategoryId, currentSubcategoryId).doc(threadId).set({
+            title: title,
+            authorId: currentUser.uid,
+            authorName: currentUser.displayName || currentUser.email,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            lastActivity: firebase.firestore.FieldValue.serverTimestamp(),
+            postsCount: 1
+        });
+        
+        await postsRef(currentCategoryId, currentSubcategoryId, threadId).doc(postId).set({
+            content: content,
+            authorId: currentUser.uid,
+            authorName: currentUser.displayName || currentUser.email,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            isAdmin: isAdmin
+        });
+        
+        await updateCounts(currentCategoryId, currentSubcategoryId);
+        
+        closeModal('post-modal');
+        showThreads(currentCategoryId, currentSubcategoryId);
+    } catch (error) {
+        alert('Erro: ' + error.message);
+    }
+}
+
 async function createPost() {
     if (!currentUser) { showLoginModal(); return; }
+    if (!quillEditor) return;
     
-    const content = document.getElementById('new-post-content').value;
-    if (!content.trim()) {
+    const content = quillEditor.root.innerHTML;
+    if (!content || content === '<p><br></p>') {
         alert('Digite o conteudo do post');
         return;
     }
@@ -898,7 +1021,7 @@ async function createPost() {
             postsCount: firebase.firestore.FieldValue.increment(1)
         });
         
-        document.getElementById('new-post-content').value = '';
+        quillEditor.root.innerHTML = '';
         showPosts(currentCategoryId, currentSubcategoryId, currentThreadId);
     } catch (error) {
         alert('Erro: ' + error.message);
@@ -944,7 +1067,7 @@ async function submitComment(postId) {
 // ============================================
 
 async function editPost(postId) {
-    const newContent = prompt('Editar conteudo:');
+    const newContent = prompt('Editar conteudo (HTML):');
     if (newContent) {
         try {
             await postsRef(currentCategoryId, currentSubcategoryId, currentThreadId).doc(postId).update({
@@ -1016,6 +1139,7 @@ function showAdminPanel() {
             <div id="admin-stats"></div>
         </div>
     `;
+    showAdminStats();
 }
 
 async function showAdminStats() {
@@ -1081,7 +1205,7 @@ function showCreateCategory() {
             </div>
             <div class="form-group">
                 <label>Descricao</label>
-                <textarea id="cat-description" rows="3"></textarea>
+                <textarea id="cat-description" rows="3" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;"></textarea>
             </div>
             <div class="form-group">
                 <label>Icone (emoji)</label>
@@ -1127,7 +1251,7 @@ function showCreateSubcategory(categoryId) {
             </div>
             <div class="form-group">
                 <label>Descricao</label>
-                <textarea id="sub-description" rows="3"></textarea>
+                <textarea id="sub-description" rows="3" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;"></textarea>
             </div>
             <div class="form-group">
                 <label>Icone (emoji)</label>
@@ -1190,6 +1314,12 @@ function closeModal(modalId) {
 // INICIALIZAÇÃO
 // ============================================
 
+// Adicionar DOMPurify para sanitização
+const script = document.createElement('script');
+script.src = 'https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js';
+script.onload = () => console.log('DOMPurify carregado');
+document.head.appendChild(script);
+
 document.getElementById('google-login-btn')?.addEventListener('click', loginWithGoogle);
 
 auth.onAuthStateChanged(async (user) => {
@@ -1235,6 +1365,9 @@ window.showCommentForm = showCommentForm;
 window.submitComment = submitComment;
 window.editPost = editPost;
 window.deletePost = deletePost;
+window.insertImage = insertImage;
+window.createThread = createThread;
+window.createPost = createPost;
 </script>
 </body>
 </html>
