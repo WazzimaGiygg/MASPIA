@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Maspia Forum - Comunidade</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="icon" href="https://forum.wazzimagiygg.com/Favicom.png" type="image/x-icon">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <style>
         * {
@@ -455,7 +454,6 @@ const auth = firebase.auth();
 
 let currentUser = null;
 let isAdmin = false;
-let currentView = 'home';
 let currentCategoryId = null;
 let currentSubcategoryId = null;
 let currentThreadId = null;
@@ -510,7 +508,9 @@ async function loginWithGoogle() {
 }
 
 async function logout() {
-    await auth.signOut();
+    try {
+        await auth.signOut();
+    } catch (e) {}
     currentUser = null;
     isAdmin = false;
     updateUIForUser();
@@ -549,7 +549,6 @@ function formatContent(content) {
 // ============================================
 
 async function showHome() {
-    currentView = 'home';
     currentCategoryId = null;
     currentSubcategoryId = null;
     currentThreadId = null;
@@ -567,9 +566,9 @@ async function showHome() {
         if (categories.length === 0 && isAdmin) {
             container.innerHTML = `
                 <div class="admin-panel" style="text-align:center;">
-                    <h3>📁 Nenhuma categoria criada ainda</h3>
+                    <h3>Nenhuma categoria criada ainda</h3>
                     <p>Clique no botão abaixo para criar sua primeira categoria</p>
-                    <button class="btn-primary" onclick="showCreateCategory()">➕ Criar Categoria</button>
+                    <button class="btn-primary" onclick="showCreateCategory()">Criar Categoria</button>
                 </div>
             `;
             return;
@@ -577,7 +576,7 @@ async function showHome() {
         
         container.innerHTML = `
             <div class="breadcrumb">
-                <a onclick="showHome()">🏠 Fórum</a>
+                <a onclick="showHome()">Forum</a>
             </div>
             <div class="categories-grid">
                 ${categories.map(cat => `
@@ -588,14 +587,14 @@ async function showHome() {
                         </div>
                         <div class="category-body">
                             <div class="category-stats">
-                                <span>📌 ${cat.subcategoriesCount || 0} subcategorias</span>
-                                <span>💬 ${cat.threadsCount || 0} tópicos</span>
+                                <span>Subcategorias: ${cat.subcategoriesCount || 0}</span>
+                                <span>Topicos: ${cat.threadsCount || 0}</span>
                             </div>
                         </div>
                     </div>
                 `).join('')}
             </div>
-            ${isAdmin ? `<div style="text-align:center; margin-top:20px;"><button class="btn-primary" onclick="showCreateCategory()">➕ Criar Nova Categoria</button></div>` : ''}
+            ${isAdmin ? `<div style="text-align:center; margin-top:20px;"><button class="btn-primary" onclick="showCreateCategory()">Criar Nova Categoria</button></div>` : ''}
         `;
     } catch (error) {
         container.innerHTML = `<div class="loading">Erro: ${error.message}</div>`;
@@ -621,7 +620,7 @@ async function showSubcategories(categoryId) {
         
         container.innerHTML = `
             <div class="breadcrumb">
-                <a onclick="showHome()">🏠 Fórum</a> &gt;
+                <a onclick="showHome()">Forum</a> &gt;
                 <a onclick="showSubcategories('${categoryId}')">${escapeHtml(category?.name || 'Categoria')}</a>
             </div>
             <div style="margin-bottom: 20px;">
@@ -637,14 +636,14 @@ async function showSubcategories(categoryId) {
                         </div>
                         <div class="category-body">
                             <div class="category-stats">
-                                <span>💬 ${sub.threadsCount || 0} tópicos</span>
-                                <span>📝 ${sub.postsCount || 0} posts</span>
+                                <span>Topicos: ${sub.threadsCount || 0}</span>
+                                <span>Posts: ${sub.postsCount || 0}</span>
                             </div>
                         </div>
                     </div>
                 `).join('')}
             </div>
-            ${isAdmin ? `<div style="text-align:center; margin-top:20px;"><button class="btn-primary" onclick="showCreateSubcategory('${categoryId}')">➕ Criar Subcategoria</button></div>` : ''}
+            ${isAdmin ? `<div style="text-align:center; margin-top:20px;"><button class="btn-primary" onclick="showCreateSubcategory('${categoryId}')">Criar Subcategoria</button></div>` : ''}
         `;
     } catch (error) {
         container.innerHTML = `<div class="loading">Erro: ${error.message}</div>`;
@@ -657,7 +656,7 @@ async function showThreads(categoryId, subcategoryId) {
     currentThreadId = null;
     
     const container = document.getElementById('main-container');
-    container.innerHTML = '<div class="loading">Carregando tópicos...</div>';
+    container.innerHTML = '<div class="loading">Carregando topicos...</div>';
     
     try {
         const catDoc = await categoriesRef().doc(categoryId).get();
@@ -673,23 +672,23 @@ async function showThreads(categoryId, subcategoryId) {
         
         container.innerHTML = `
             <div class="breadcrumb">
-                <a onclick="showHome()">🏠 Fórum</a> &gt;
+                <a onclick="showHome()">Forum</a> &gt;
                 <a onclick="showSubcategories('${categoryId}')">${escapeHtml(category?.name)}</a> &gt;
                 <a onclick="showThreads('${categoryId}', '${subcategoryId}')">${escapeHtml(subcategory?.name)}</a>
             </div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <h2>${escapeHtml(subcategory?.icon || '📌')} ${escapeHtml(subcategory?.name)}</h2>
-                <button class="btn-primary" onclick="showCreateThread()">📝 Criar Novo Tópico</button>
+                <button class="btn-primary" onclick="showCreateThread()">Criar Novo Topico</button>
             </div>
             <div class="threads-list">
-                ${threads.length === 0 ? '<div style="padding: 40px; text-align: center;">Nenhum tópico ainda. Seja o primeiro a criar um!</div>' : 
+                ${threads.length === 0 ? '<div style="padding: 40px; text-align: center;">Nenhum topico ainda. Seja o primeiro a criar um!</div>' : 
                     threads.map(thread => `
                         <div class="thread-item" onclick="showPosts('${categoryId}', '${subcategoryId}', '${thread.id}')">
                             <div class="thread-title">${escapeHtml(thread.title)}</div>
                             <div class="thread-meta">
-                                <span>👤 ${escapeHtml(thread.authorName || 'Anônimo')}</span>
-                                <span>📅 ${formatDate(thread.createdAt)}</span>
-                                <span>💬 ${thread.postsCount || 0} respostas</span>
+                                <span>Por: ${escapeHtml(thread.authorName || 'Anonimo')}</span>
+                                <span>Data: ${formatDate(thread.createdAt)}</span>
+                                <span>Respostas: ${thread.postsCount || 0}</span>
                             </div>
                         </div>
                     `).join('')
@@ -726,21 +725,21 @@ async function showPosts(categoryId, subcategoryId, threadId) {
         
         container.innerHTML = `
             <div class="breadcrumb">
-                <a onclick="showHome()">🏠 Fórum</a> &gt;
+                <a onclick="showHome()">Forum</a> &gt;
                 <a onclick="showSubcategories('${categoryId}')">${escapeHtml(category?.name)}</a> &gt;
                 <a onclick="showThreads('${categoryId}', '${subcategoryId}')">${escapeHtml(subcategory?.name)}</a> &gt;
                 <span>${escapeHtml(thread?.title)}</span>
             </div>
             <div style="margin-bottom: 20px;">
                 <h1>${escapeHtml(thread?.title)}</h1>
-                <p style="color:#666;">Criado por ${escapeHtml(thread?.authorName || 'Anônimo')} em ${formatDate(thread?.createdAt)}</p>
+                <p style="color:#666;">Criado por ${escapeHtml(thread?.authorName || 'Anonimo')} em ${formatDate(thread?.createdAt)}</p>
             </div>
             <div id="posts-list">
                 ${posts.map(post => `
                     <div class="post-card" id="post-${post.id}">
                         <div class="post-header">
                             <div class="post-author">
-                                <strong>${escapeHtml(post.authorName || 'Anônimo')}</strong>
+                                <strong>${escapeHtml(post.authorName || 'Anonimo')}</strong>
                                 ${post.isAdmin ? '<span class="badge badge-admin">Admin</span>' : ''}
                             </div>
                             <div class="post-date">${formatDate(post.createdAt)}</div>
@@ -763,16 +762,16 @@ async function showPosts(categoryId, subcategoryId, threadId) {
                         </div>
                         <div id="comments-${post.id}" class="comment-list"></div>
                         <div id="comment-form-${post.id}" style="display:none; padding:20px;">
-                            <textarea id="comment-content-${post.id}" rows="3" placeholder="Escreva seu comentário..." style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd;"></textarea>
-                            <button class="btn-primary" style="margin-top:10px;" onclick="submitComment('${post.id}')">Enviar Comentário</button>
+                            <textarea id="comment-content-${post.id}" rows="3" placeholder="Escreva seu comentario..." style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd;"></textarea>
+                            <button class="btn-primary" style="margin-top:10px;" onclick="submitComment('${post.id}')">Enviar Comentario</button>
                         </div>
                     </div>
                 `).join('')}
             </div>
             <div class="form-container" style="margin-top: 20px;">
-                <h3>💬 Responder ao Tópico</h3>
-                <textarea id="new-post-content" rows="5" placeholder="Digite sua resposta aqui... Use **negrito**, *itálico*"></textarea>
-                <button class="btn-primary" style="margin-top: 10px;" onclick="createPost()">📝 Enviar Resposta</button>
+                <h3>Responder ao Topico</h3>
+                <textarea id="new-post-content" rows="5" placeholder="Digite sua resposta aqui... Use **negrito**, *italico*"></textarea>
+                <button class="btn-primary" style="margin-top: 10px;" onclick="createPost()">Enviar Resposta</button>
             </div>
         `;
         
@@ -795,12 +794,12 @@ async function loadComments(categoryId, subcategoryId, threadId, postId) {
         const commentsDiv = document.getElementById(`comments-${postId}`);
         if (commentsDiv) {
             if (comments.length === 0) {
-                commentsDiv.innerHTML = '<div style="padding: 10px; text-align:center; color:#999;">Nenhum comentário ainda.</div>';
+                commentsDiv.innerHTML = '<div style="padding: 10px; text-align:center; color:#999;">Nenhum comentario ainda.</div>';
             } else {
                 commentsDiv.innerHTML = comments.map(comment => `
                     <div class="comment-item">
                         <div class="comment-header">
-                            <span class="comment-author">${escapeHtml(comment.authorName || 'Anônimo')}</span>
+                            <span class="comment-author">${escapeHtml(comment.authorName || 'Anonimo')}</span>
                             <span class="comment-date">${formatDate(comment.createdAt)}</span>
                         </div>
                         <div class="comment-text">${escapeHtml(comment.content)}</div>
@@ -809,7 +808,7 @@ async function loadComments(categoryId, subcategoryId, threadId, postId) {
             }
         }
     } catch (error) {
-        console.error('Erro ao carregar comentários:', error);
+        console.error('Erro ao carregar comentarios:', error);
     }
 }
 
@@ -820,18 +819,18 @@ async function loadComments(categoryId, subcategoryId, threadId, postId) {
 function showCreateThread() {
     if (!currentUser) { showLoginModal(); return; }
     
-    document.getElementById('post-modal-title').innerHTML = '📝 Criar Novo Tópico';
+    document.getElementById('post-modal-title').innerHTML = 'Criar Novo Topico';
     document.getElementById('post-modal-body').innerHTML = `
         <form id="create-thread-form">
             <div class="form-group">
-                <label>Título</label>
-                <input type="text" id="thread-title" required placeholder="Título do tópico">
+                <label>Titulo</label>
+                <input type="text" id="thread-title" required placeholder="Titulo do topico">
             </div>
             <div class="form-group">
-                <label>Conteúdo</label>
-                <textarea id="thread-content" rows="8" required placeholder="Digite o conteúdo do seu tópico aqui"></textarea>
+                <label>Conteudo</label>
+                <textarea id="thread-content" rows="8" required placeholder="Digite o conteudo do seu topico aqui"></textarea>
             </div>
-            <button type="submit" class="btn-primary" style="width:100%">✨ Criar Tópico</button>
+            <button type="submit" class="btn-primary" style="width:100%">Criar Topico</button>
         </form>
     `;
     
@@ -878,7 +877,7 @@ async function createPost() {
     
     const content = document.getElementById('new-post-content').value;
     if (!content.trim()) {
-        alert('Digite o conteúdo do post');
+        alert('Digite o conteudo do post');
         return;
     }
     
@@ -917,7 +916,7 @@ async function submitComment(postId) {
     
     const content = document.getElementById(`comment-content-${postId}`).value;
     if (!content.trim()) {
-        alert('Digite o comentário');
+        alert('Digite o comentario');
         return;
     }
     
@@ -944,7 +943,7 @@ async function submitComment(postId) {
 // ============================================
 
 async function editPost(postId) {
-    const newContent = prompt('Editar conteúdo:');
+    const newContent = prompt('Editar conteudo:');
     if (newContent) {
         try {
             await postsRef(currentCategoryId, currentSubcategoryId, currentThreadId).doc(postId).update({
@@ -1008,18 +1007,17 @@ function showAdminPanel() {
     const container = document.getElementById('main-container');
     container.innerHTML = `
         <div class="admin-panel">
-            <h2>👑 Painel Administrativo</h2>
+            <h2>Painel Administrativo</h2>
             <div style="display: flex; gap: 15px; margin: 20px 0; flex-wrap: wrap;">
-                <button class="btn-primary" onclick="showCreateCategory()">📁 Criar Categoria</button>
-                <button class="btn-primary" onclick="showAdminStats()">📊 Estatísticas</button>
+                <button class="btn-primary" onclick="showCreateCategory()">Criar Categoria</button>
+                <button class="btn-secondary" onclick="showAdminStats()">Ver Estatisticas</button>
             </div>
             <div id="admin-stats"></div>
         </div>
     `;
-    loadAdminStats();
 }
 
-async function loadAdminStats() {
+async function showAdminStats() {
     try {
         const categoriesSnapshot = await categoriesRef().get();
         const categories = categoriesSnapshot.size;
@@ -1058,7 +1056,7 @@ async function loadAdminStats() {
                 <div style="background:#f8f9fa; padding:20px; border-radius:12px; text-align:center;">
                     <div style="font-size:2em;">💬</div>
                     <div style="font-size:1.5em; font-weight:bold;">${threads}</div>
-                    <div>Tópicos</div>
+                    <div>Topicos</div>
                 </div>
                 <div style="background:#f8f9fa; padding:20px; border-radius:12px; text-align:center;">
                     <div style="font-size:2em;">📝</div>
@@ -1073,7 +1071,7 @@ async function loadAdminStats() {
 }
 
 function showCreateCategory() {
-    document.getElementById('post-modal-title').innerHTML = '📁 Criar Categoria';
+    document.getElementById('post-modal-title').innerHTML = 'Criar Categoria';
     document.getElementById('post-modal-body').innerHTML = `
         <form id="create-category-form">
             <div class="form-group">
@@ -1081,18 +1079,18 @@ function showCreateCategory() {
                 <input type="text" id="cat-name" required>
             </div>
             <div class="form-group">
-                <label>Descrição</label>
+                <label>Descricao</label>
                 <textarea id="cat-description" rows="3"></textarea>
             </div>
             <div class="form-group">
-                <label>Ícone (emoji)</label>
+                <label>Icone (emoji)</label>
                 <input type="text" id="cat-icon" placeholder="📁">
             </div>
             <div class="form-group">
                 <label>Ordem</label>
                 <input type="number" id="cat-order" value="0">
             </div>
-            <button type="submit" class="btn-primary" style="width:100%">✨ Criar Categoria</button>
+            <button type="submit" class="btn-primary" style="width:100%">Criar Categoria</button>
         </form>
     `;
     
@@ -1108,7 +1106,7 @@ function showCreateCategory() {
                 subcategoriesCount: 0,
                 threadsCount: 0
             });
-            alert('✅ Categoria criada!');
+            alert('Categoria criada com sucesso!');
             closeModal('post-modal');
             showHome();
         } catch (error) {
@@ -1119,7 +1117,7 @@ function showCreateCategory() {
 }
 
 function showCreateSubcategory(categoryId) {
-    document.getElementById('post-modal-title').innerHTML = '📌 Criar Subcategoria';
+    document.getElementById('post-modal-title').innerHTML = 'Criar Subcategoria';
     document.getElementById('post-modal-body').innerHTML = `
         <form id="create-subcategory-form">
             <div class="form-group">
@@ -1127,18 +1125,18 @@ function showCreateSubcategory(categoryId) {
                 <input type="text" id="sub-name" required>
             </div>
             <div class="form-group">
-                <label>Descrição</label>
+                <label>Descricao</label>
                 <textarea id="sub-description" rows="3"></textarea>
             </div>
             <div class="form-group">
-                <label>Ícone (emoji)</label>
+                <label>Icone (emoji)</label>
                 <input type="text" id="sub-icon" placeholder="📌">
             </div>
             <div class="form-group">
                 <label>Ordem</label>
                 <input type="number" id="sub-order" value="0">
             </div>
-            <button type="submit" class="btn-primary" style="width:100%">✨ Criar Subcategoria</button>
+            <button type="submit" class="btn-primary" style="width:100%">Criar Subcategoria</button>
         </form>
     `;
     
@@ -1160,7 +1158,7 @@ function showCreateSubcategory(categoryId) {
                 subcategoriesCount: subcategoriesSnapshot.size
             });
             
-            alert('✅ Subcategoria criada!');
+            alert('Subcategoria criada com sucesso!');
             closeModal('post-modal');
             showSubcategories(categoryId);
         } catch (error) {
@@ -1171,12 +1169,12 @@ function showCreateSubcategory(categoryId) {
 }
 
 function showRecentPosts() {
-    alert('Posts recentes em desenvolvimento');
+    alert('Posts recentes - Funcionalidade em desenvolvimento');
 }
 
 function showProfile() {
     if (!currentUser) { showLoginModal(); return; }
-    alert(`Perfil de ${currentUser.displayName || currentUser.email}\nFunção: ${isAdmin ? 'Administrador' : 'Membro'}`);
+    alert(`Perfil de ${currentUser.displayName || currentUser.email}\nFuncao: ${isAdmin ? 'Administrador' : 'Membro'}`);
 }
 
 function showLoginModal() {
