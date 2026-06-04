@@ -21,6 +21,9 @@
             font-family: 'Inter', sans-serif;
             background: #f5f5f5;
             color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         .header {
@@ -49,6 +52,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            cursor: pointer;
         }
 
         .nav-links {
@@ -79,8 +83,59 @@
             max-width: 1400px;
             margin: 30px auto;
             padding: 0 20px;
+            flex: 1;
         }
 
+        /* Footer */
+        .footer {
+            background: #1a1a2e;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.8em;
+            margin-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .footer a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .footer-ticket {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(255,255,255,0.15);
+            padding: 5px 12px;
+            border-radius: 20px;
+            transition: all 0.2s;
+        }
+
+        .footer-ticket:hover {
+            background: rgba(255,255,255,0.25);
+            transform: scale(1.02);
+            text-decoration: none;
+        }
+
+        .footer-divider {
+            margin: 0 10px;
+            opacity: 0.5;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        /* Restante dos estilos do fórum */
         .categories-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -390,6 +445,13 @@
             .categories-grid {
                 grid-template-columns: 1fr;
             }
+            .footer-links {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .footer-divider {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -397,7 +459,7 @@
 
 <div class="header">
     <div class="header-container">
-        <div class="logo">
+        <div class="logo" onclick="showHome()">
             <span class="material-icons">forum</span>
             Maspia Forum
         </div>
@@ -406,6 +468,7 @@
             <button class="nav-btn" onclick="showRecentPosts()">📰 Recentes</button>
             <button class="nav-btn" id="admin-btn" style="display: none;" onclick="showAdminPanel()">👑 Admin</button>
             <button class="nav-btn" onclick="showProfile()">👤 Perfil</button>
+            <button class="nav-btn" id="moderacao-btn" style="display: none;" onclick="openModeracao()">⚖️ Moderação</button>
             <button class="nav-btn" id="login-nav-btn" onclick="showLoginModal()">🔑 Entrar</button>
             <button class="nav-btn" id="logout-nav-btn" style="display: none;" onclick="logout()">🚪 Sair</button>
         </div>
@@ -414,6 +477,27 @@
 
 <div class="main-container" id="main-container">
     <div class="loading">Carregando fórum...</div>
+</div>
+
+<!-- FOOTER COM CONTATO POR TICKET ADICIONADO -->
+<div class="footer">
+    <div class="footer-links">
+        <a href="https://wazzimagiygg.com/donate/" style="color:white;">💝 Faça sua doação!</a>
+        <span class="footer-divider">|</span>
+        <a href="https://wazzimagiygg.com/desktop.html" target="_blank">🖥️ Acessar Desktop</a>
+        <span class="footer-divider">|</span>
+        <a href="https://wazzimagiygg.com/LGPD" style="color:white;">🔒 LGPD</a>
+        <span class="footer-divider">|</span>
+        <a href="https://wazzimagiygg.com/MarcoCivil" style="color:white;">📜 Marco Civil</a>
+        <span class="footer-divider">|</span>
+        <a href="https://wazzimagiygg.com/relatorio-wikipedia.html" target="_blank" style="color:#ffb347;">📄 Relatório Wikipédia</a>
+        <span class="footer-divider">|</span>
+        <a href="https://support.wazzimagiygg.com/" target="_blank" class="footer-ticket">
+            🎫 Contato por Ticket
+        </a>
+        <span class="footer-divider">|</span>
+        <a href="https://wazzimagiygg.com/produtos" target="_blank" style="color:#ffb347;">🛍️ Produtos WazzimaGiygg</a>
+    </div>
 </div>
 
 <!-- Login Modal -->
@@ -519,15 +603,23 @@ function updateUIForUser() {
     const loginBtn = document.getElementById('login-nav-btn');
     const logoutBtn = document.getElementById('logout-nav-btn');
     const adminBtn = document.getElementById('admin-btn');
+    const moderacaoBtn = document.getElementById('moderacao-btn');
     
     if (currentUser) {
         loginBtn.style.display = 'none';
         logoutBtn.style.display = 'flex';
-        adminBtn.style.display = isAdmin ? 'flex' : 'none';
+        if (isAdmin) {
+            adminBtn.style.display = 'flex';
+            moderacaoBtn.style.display = 'flex';
+        } else {
+            adminBtn.style.display = 'none';
+            moderacaoBtn.style.display = 'none';
+        }
     } else {
         loginBtn.style.display = 'flex';
         logoutBtn.style.display = 'none';
         adminBtn.style.display = 'none';
+        moderacaoBtn.style.display = 'none';
     }
 }
 
@@ -548,6 +640,10 @@ async function logout() {
     isAdmin = false;
     updateUIForUser();
     showHome();
+}
+
+function openModeracao() {
+    window.open('moderacao.html', '_blank');
 }
 
 // ============================================
@@ -810,7 +906,6 @@ async function showPosts(categoryId, subcategoryId, threadId) {
             </div>
         `;
         
-        // Inicializar editor Quill para resposta
         if (typeof Quill !== 'undefined') {
             replyQuill = new Quill('#reply-editor', {
                 theme: 'snow',
@@ -900,21 +995,6 @@ function showCreateThread() {
                 ]
             }
         });
-        
-        // Adicionar botão de imagem customizado
-        const toolbar = document.querySelector('.ql-toolbar');
-        if (toolbar) {
-            const imageBtn = document.createElement('button');
-            imageBtn.innerHTML = '🖼️';
-            imageBtn.className = 'ql-image-custom';
-            imageBtn.style.background = 'none';
-            imageBtn.style.border = 'none';
-            imageBtn.style.cursor = 'pointer';
-            imageBtn.style.padding = '5px';
-            imageBtn.style.fontSize = '18px';
-            imageBtn.onclick = () => openImageModal('thread');
-            toolbar.appendChild(imageBtn);
-        }
     }
     
     document.getElementById('post-modal').style.display = 'flex';
@@ -1367,6 +1447,7 @@ window.insertImageToEditor = insertImageToEditor;
 window.openImageModal = openImageModal;
 window.createThread = createThread;
 window.createReply = createReply;
+window.openModeracao = openModeracao;
 </script>
 </body>
 </html>
