@@ -19,7 +19,6 @@
             color: #333;
         }
 
-        /* Header */
         .header {
             background: linear-gradient(135deg, #1a1a2e, #16213e);
             color: white;
@@ -72,14 +71,12 @@
             background: linear-gradient(135deg, #e94560, #ff6b6b);
         }
 
-        /* Main Container */
         .main-container {
             max-width: 1400px;
             margin: 30px auto;
             padding: 0 20px;
         }
 
-        /* Categories Grid */
         .categories-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -119,7 +116,6 @@
             font-size: 0.85em;
         }
 
-        /* Threads List */
         .threads-list {
             background: white;
             border-radius: 16px;
@@ -151,7 +147,6 @@
             color: #666;
         }
 
-        /* Posts */
         .post-card {
             background: white;
             border-radius: 16px;
@@ -205,7 +200,6 @@
             color: #e94560;
         }
 
-        /* Comment */
         .comment-list {
             background: #f8f9fa;
             padding: 20px;
@@ -238,7 +232,6 @@
             line-height: 1.5;
         }
 
-        /* Forms */
         .form-container {
             background: white;
             border-radius: 16px;
@@ -288,7 +281,6 @@
             cursor: pointer;
         }
 
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -329,7 +321,6 @@
             color: #999;
         }
 
-        /* Admin Panel */
         .admin-panel {
             background: white;
             border-radius: 16px;
@@ -351,7 +342,6 @@
             background: #f8f9fa;
         }
 
-        /* Badges */
         .badge {
             display: inline-block;
             padding: 4px 8px;
@@ -364,14 +354,12 @@
         .badge-mod { background: #ff9800; color: white; }
         .badge-member { background: #4caf50; color: white; }
 
-        /* Loading */
         .loading {
             text-align: center;
             padding: 60px;
             color: #666;
         }
 
-        /* Breadcrumb */
         .breadcrumb {
             margin-bottom: 20px;
             padding: 15px;
@@ -385,7 +373,6 @@
             cursor: pointer;
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
             .header-container {
                 flex-direction: column;
@@ -783,12 +770,11 @@ async function showPosts(categoryId, subcategoryId, threadId) {
             </div>
             <div class="form-container" style="margin-top: 20px;">
                 <h3>💬 Responder ao Tópico</h3>
-                <textarea id="new-post-content" rows="5" placeholder="Digite sua resposta aqui... Use **negrito**, *itálico*, `código`"></textarea>
+                <textarea id="new-post-content" rows="5" placeholder="Digite sua resposta aqui... Use **negrito**, *itálico*"></textarea>
                 <button class="btn-primary" style="margin-top: 10px;" onclick="createPost()">📝 Enviar Resposta</button>
             </div>
         `;
         
-        // Carregar comentários para cada post
         for (const post of posts) {
             loadComments(categoryId, subcategoryId, threadId, post.id);
         }
@@ -842,7 +828,7 @@ function showCreateThread() {
             </div>
             <div class="form-group">
                 <label>Conteúdo</label>
-                <textarea id="thread-content" rows="8" required placeholder="Use **negrito**, *itálico*, `código`"></textarea>
+                <textarea id="thread-content" rows="8" required placeholder="Digite o conteúdo do seu tópico aqui"></textarea>
             </div>
             <button type="submit" class="btn-primary" style="width:100%">✨ Criar Tópico</button>
         </form>
@@ -1024,10 +1010,8 @@ function showAdminPanel() {
             <h2>👑 Painel Administrativo</h2>
             <div style="display: flex; gap: 15px; margin: 20px 0; flex-wrap: wrap;">
                 <button class="btn-primary" onclick="showCreateCategory()">📁 Criar Categoria</button>
-                <button class="btn-primary" onclick="showModerateContent()">⚖️ Moderar Conteúdo</button>
-                <button class="btn-primary" onclick="showUserManagement()">👥 Gerenciar Usuários</button>
+                <button class="btn-primary" onclick="showAdminStats()">📊 Estatísticas</button>
             </div>
-            <h3>📊 Estatísticas do Fórum</h3>
             <div id="admin-stats"></div>
         </div>
     `;
@@ -1060,22 +1044,22 @@ async function loadAdminStats() {
         
         document.getElementById('admin-stats').innerHTML = `
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap:15px; margin-top:15px;">
-                <div class="stat-card" style="background:#f8f9fa; padding:20px; border-radius:12px; text-align:center;">
+                <div style="background:#f8f9fa; padding:20px; border-radius:12px; text-align:center;">
                     <div style="font-size:2em;">📁</div>
                     <div style="font-size:1.5em; font-weight:bold;">${categories}</div>
                     <div>Categorias</div>
                 </div>
-                <div class="stat-card" style="background:#f8f9fa; padding:20px; border-radius:12px; text-align:center;">
+                <div style="background:#f8f9fa; padding:20px; border-radius:12px; text-align:center;">
                     <div style="font-size:2em;">📌</div>
                     <div style="font-size:1.5em; font-weight:bold;">${subcategories}</div>
                     <div>Subcategorias</div>
                 </div>
-                <div class="stat-card" style="background:#f8f9fa; padding:20px; border-radius:12px; text-align:center;">
+                <div style="background:#f8f9fa; padding:20px; border-radius:12px; text-align:center;">
                     <div style="font-size:2em;">💬</div>
                     <div style="font-size:1.5em; font-weight:bold;">${threads}</div>
                     <div>Tópicos</div>
                 </div>
-                <div class="stat-card" style="background:#f8f9fa; padding:20px; border-radius:12px; text-align:center;">
+                <div style="background:#f8f9fa; padding:20px; border-radius:12px; text-align:center;">
                     <div style="font-size:2em;">📝</div>
                     <div style="font-size:1.5em; font-weight:bold;">${posts}</div>
                     <div>Posts</div>
@@ -1185,14 +1169,6 @@ function showCreateSubcategory(categoryId) {
     document.getElementById('post-modal').style.display = 'flex';
 }
 
-function showModerateContent() {
-    alert('Função de moderação em desenvolvimento');
-}
-
-function showUserManagement() {
-    alert('Gestão de usuários em desenvolvimento');
-}
-
 function showRecentPosts() {
     alert('Posts recentes em desenvolvimento');
 }
@@ -1201,10 +1177,6 @@ function showProfile() {
     if (!currentUser) { showLoginModal(); return; }
     alert(`Perfil de ${currentUser.displayName || currentUser.email}\nFunção: ${isAdmin ? 'Administrador' : 'Membro'}`);
 }
-
-// ============================================
-// FUNÇÕES DE MODAL
-// ============================================
 
 function showLoginModal() {
     document.getElementById('login-modal').style.display = 'flex';
@@ -1252,8 +1224,7 @@ window.showCreateThread = showCreateThread;
 window.showCreateCategory = showCreateCategory;
 window.showCreateSubcategory = showCreateSubcategory;
 window.showAdminPanel = showAdminPanel;
-window.showModerateContent = showModerateContent;
-window.showUserManagement = showUserManagement;
+window.showAdminStats = showAdminStats;
 window.showRecentPosts = showRecentPosts;
 window.showProfile = showProfile;
 window.showLoginModal = showLoginModal;
