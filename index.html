@@ -349,6 +349,12 @@
             border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
+            transition: opacity 0.3s;
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
 
         .btn-secondary {
@@ -577,6 +583,29 @@ let threadQuill = null;
 let replyQuill = null;
 
 const ADMIN_UIDS = ['sZxfMuOBPbXdR8nttVPXIN8QOOl1', '6aPqWVh8JVYL5NqEb78iDGPD7dH3'];
+
+// ============================================
+// CONTROLE ANTI-SPAM
+// ============================================
+const submitLocks = new Map(); // Armazena locks das funções
+
+function isLocked(key, timeout = 2000) {
+    if (submitLocks.has(key)) {
+        const lockTime = submitLocks.get(key);
+        if (Date.now() - lockTime < timeout) {
+            return true; // Ainda está bloqueado
+        }
+        submitLocks.delete(key); // Limpa lock expirado
+    }
+    return false;
+}
+
+function lock(key, timeout = 2000) {
+    submitLocks.set(key, Date.now());
+    setTimeout(() => {
+        submitLocks.delete(key);
+    }, timeout);
+}
 
 // Referências Firestore
 const maspiaRef = db.collection('maspia');
@@ -962,7 +991,7 @@ async function loadComments(categoryId, subcategoryId, threadId, postId) {
 }
 
 // ============================================
-// FUNÇÕES DE CRIAÇÃO
+// FUNÇÕES DE CRIAÇÃO COM PROTEÇÃO ANTI-SPAM
 // ============================================
 
 function showCreateThread() {
@@ -1042,6 +1071,12 @@ function insertImageToEditor() {
 async function createThread() {
     if (!threadQuill) return;
     
+    // Verifica lock
+    if (isLocked(`createThread_${currentUser?.uid}`)) {
+        alert('Aguarde um momento antes de criar outro tópico...');
+        return;
+    }
+    
     const title = document.getElementById('thread-title').value;
     const content = threadQuill.root.innerHTML;
     
@@ -1050,11 +1085,27 @@ async function createThread() {
         return;
     }
     
+    // Aplica lock
+    lock(`createThread_${currentUser?.uid}`, 3000);
+    
+    // Desabilita botão durante criação
+    const submitBtn = document.querySelector('#post-modal .btn-primary');
+    let originalText = '';
+    if (submitBtn) {
+        originalText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Criando...';
+    }
+    
     try {
         const threadId = Date.now().toString();
         const postId = Date.now().toString();
         
-        await threadsRef(currentCategoryId, currentSubcategoryId).doc(threadId).set({
+        // Batch write para garantir atomicidade
+        const batch = db.batch();
+        
+        const threadRef = threadsRef(currentCategoryId, currentSubcategoryId).doc(threadId);
+        batch.set(threadRef, {
             title: title,
             authorId: currentUser.uid,
             authorName: currentUser.displayName || currentUser.email,
@@ -1063,7 +1114,8 @@ async function createThread() {
             postsCount: 1
         });
         
-        await postsRef(currentCategoryId, currentSubcategoryId, threadId).doc(postId).set({
+        const postRef = postsRef(currentCategoryId, currentSubcategoryId, threadId).doc(postId);
+        batch.set(postRef, {
             content: content,
             authorId: currentUser.uid,
             authorName: currentUser.displayName || currentUser.email,
@@ -1071,12 +1123,22 @@ async function createThread() {
             isAdmin: isAdmin
         });
         
+        await batch.commit();
         await updateCounts(currentCategoryId, currentSubcategoryId);
         
         closeModal('post-modal');
         showThreads(currentCategoryId, currentSubcategoryId);
+        
     } catch (error) {
         alert('Erro: ' + error.message);
+    } finally {
+        // Restaura botão
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText || 'Criar Topico';
+        }
+        // Remove lock
+        submitLocks.delete(`createThread_${currentUser?.uid}`);
     }
 }
 
@@ -1084,16 +1146,37 @@ async function createReply() {
     if (!currentUser) { showLoginModal(); return; }
     if (!replyQuill) return;
     
+    // Verifica lock
+    if (isLocked(`createReply_${currentThreadId}_${currentUser?.uid}`)) {
+        alert('Aguarde um momento antes de enviar outra resposta...');
+        return;
+    }
+    
     const content = replyQuill.root.innerHTML;
     if (!content || content === '<p><br></p>') {
         alert('Digite o conteudo do post');
         return;
     }
     
+    // Aplica lock
+    lock(`createReply_${currentThreadId}_${currentUser?.uid}`, 3000);
+    
+    const submitBtn = document.querySelector('#reply-editor')?.parentElement?.querySelector('.btn-primary');
+    let originalText = '';
+    if (submitBtn) {
+        originalText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Enviando...';
+    }
+    
     try {
         const postId = Date.now().toString();
         
-        await postsRef(currentCategoryId, currentSubcategoryId, currentThreadId).doc(postId).set({
+        // Usa batch write
+        const batch = db.batch();
+        
+        const postRef = postsRef(currentCategoryId, currentSubcategoryId, currentThreadId).doc(postId);
+        batch.set(postRef, {
             content: content,
             authorId: currentUser.uid,
             authorName: currentUser.displayName || currentUser.email,
@@ -1101,15 +1184,25 @@ async function createReply() {
             isAdmin: isAdmin
         });
         
-        await threadsRef(currentCategoryId, currentSubcategoryId).doc(currentThreadId).update({
+        const threadRef = threadsRef(currentCategoryId, currentSubcategoryId).doc(currentThreadId);
+        batch.update(threadRef, {
             lastActivity: firebase.firestore.FieldValue.serverTimestamp(),
             postsCount: firebase.firestore.FieldValue.increment(1)
         });
         
+        await batch.commit();
+        
         replyQuill.root.innerHTML = '';
-        showPosts(currentCategoryId, currentSubcategoryId, currentThreadId);
+        await showPosts(currentCategoryId, currentSubcategoryId, currentThreadId);
+        
     } catch (error) {
         alert('Erro: ' + error.message);
+    } finally {
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText || 'Enviar Resposta';
+        }
+        submitLocks.delete(`createReply_${currentThreadId}_${currentUser?.uid}`);
     }
 }
 
@@ -1129,6 +1222,23 @@ async function submitComment(postId) {
         return;
     }
     
+    // Verifica lock
+    const lockKey = `comment_${currentThreadId}_${postId}_${currentUser?.uid}`;
+    if (isLocked(lockKey)) {
+        alert('Aguarde um momento antes de enviar outro comentário...');
+        return;
+    }
+    
+    lock(lockKey, 2000);
+    
+    const submitBtn = document.querySelector(`#comment-form-${postId} .btn-primary`);
+    let originalText = '';
+    if (submitBtn) {
+        originalText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Enviando...';
+    }
+    
     try {
         const commentId = Date.now().toString();
         
@@ -1141,28 +1251,44 @@ async function submitComment(postId) {
         
         document.getElementById(`comment-content-${postId}`).value = '';
         document.getElementById(`comment-form-${postId}`).style.display = 'none';
-        loadComments(currentCategoryId, currentSubcategoryId, currentThreadId, postId);
+        await loadComments(currentCategoryId, currentSubcategoryId, currentThreadId, postId);
+        
     } catch (error) {
         alert('Erro: ' + error.message);
+    } finally {
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText || 'Enviar Comentario';
+        }
+        submitLocks.delete(lockKey);
     }
 }
 
 // ============================================
-// FUNÇÕES DE EDIÇÃO E EXCLUSÃO
+// FUNÇÕES DE EDIÇÃO E EXCLUSÃO COM PROTEÇÃO
 // ============================================
 
 async function editPost(postId) {
+    // Verifica lock
+    if (isLocked(`editPost_${postId}_${currentUser?.uid}`)) {
+        alert('Aguarde um momento...');
+        return;
+    }
+    
+    lock(`editPost_${postId}_${currentUser?.uid}`, 1000);
+    
     const newContent = prompt('Editar conteudo (HTML):');
-    if (newContent) {
+    if (newContent && newContent !== 'null') {
         try {
             await postsRef(currentCategoryId, currentSubcategoryId, currentThreadId).doc(postId).update({
                 content: newContent
             });
-            showPosts(currentCategoryId, currentSubcategoryId, currentThreadId);
+            await showPosts(currentCategoryId, currentSubcategoryId, currentThreadId);
         } catch (error) {
             alert('Erro: ' + error.message);
         }
     }
+    submitLocks.delete(`editPost_${postId}_${currentUser?.uid}`);
 }
 
 async function deletePost(postId) {
@@ -1207,7 +1333,7 @@ async function updateCounts(categoryId, subcategoryId) {
 }
 
 // ============================================
-// ADMIN
+// ADMIN COM PROTEÇÃO ANTI-SPAM
 // ============================================
 
 function showAdminPanel() {
@@ -1304,8 +1430,22 @@ function showCreateCategory() {
         </form>
     `;
     
+    let isSubmitting = false;
+    
     document.getElementById('create-category-form').onsubmit = async (e) => {
         e.preventDefault();
+        
+        if (isSubmitting) return;
+        isSubmitting = true;
+        
+        const submitBtn = e.target.querySelector('.btn-primary');
+        let originalText = '';
+        if (submitBtn) {
+            originalText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Criando...';
+        }
+        
         try {
             await categoriesRef().add({
                 name: document.getElementById('cat-name').value,
@@ -1321,6 +1461,12 @@ function showCreateCategory() {
             showHome();
         } catch (error) {
             alert('Erro: ' + error.message);
+        } finally {
+            isSubmitting = false;
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText || 'Criar Categoria';
+            }
         }
     };
     document.getElementById('post-modal').style.display = 'flex';
@@ -1350,8 +1496,22 @@ function showCreateSubcategory(categoryId) {
         </form>
     `;
     
+    let isSubmitting = false;
+    
     document.getElementById('create-subcategory-form').onsubmit = async (e) => {
         e.preventDefault();
+        
+        if (isSubmitting) return;
+        isSubmitting = true;
+        
+        const submitBtn = e.target.querySelector('.btn-primary');
+        let originalText = '';
+        if (submitBtn) {
+            originalText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Criando...';
+        }
+        
         try {
             await subcategoriesRef(categoryId).add({
                 name: document.getElementById('sub-name').value,
@@ -1373,6 +1533,12 @@ function showCreateSubcategory(categoryId) {
             showSubcategories(categoryId);
         } catch (error) {
             alert('Erro: ' + error.message);
+        } finally {
+            isSubmitting = false;
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText || 'Criar Subcategoria';
+            }
         }
     };
     document.getElementById('post-modal').style.display = 'flex';
