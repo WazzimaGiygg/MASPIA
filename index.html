@@ -213,6 +213,7 @@
             margin-bottom: 20px;
             overflow: hidden;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: background-color 0.3s;
         }
 
         .post-header {
@@ -259,6 +260,7 @@
             border-top: 1px solid #eee;
             display: flex;
             gap: 20px;
+            flex-wrap: wrap;
         }
 
         .action-btn {
@@ -270,10 +272,14 @@
             align-items: center;
             gap: 5px;
             font-size: 0.85em;
+            padding: 5px 10px;
+            border-radius: 6px;
+            transition: all 0.2s;
         }
 
         .action-btn:hover {
             color: #e94560;
+            background: rgba(233, 69, 96, 0.1);
         }
 
         .comment-list {
@@ -437,6 +443,10 @@
             padding: 15px;
             background: white;
             border-radius: 8px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 5px;
         }
 
         .breadcrumb a {
@@ -445,18 +455,75 @@
             cursor: pointer;
         }
 
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
         .copy-link-btn {
             background: none;
-            border: none;
+            border: 1px solid #ddd;
             cursor: pointer;
             font-size: 0.8em;
-            padding: 2px 8px;
-            border-radius: 12px;
+            padding: 4px 12px;
+            border-radius: 20px;
             transition: all 0.2s;
+            margin-left: 10px;
+            color: #666;
         }
 
         .copy-link-btn:hover {
-            background: rgba(0,0,0,0.1);
+            background: rgba(233, 69, 96, 0.1);
+            border-color: #e94560;
+            color: #e94560;
+        }
+
+        /* Estilos para paginação */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .pagination-btn {
+            background: white;
+            border: 1px solid #ddd;
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.2s;
+            color: #333;
+        }
+
+        .pagination-btn:hover:not(:disabled) {
+            background: linear-gradient(135deg, #e94560, #ff6b6b);
+            color: white;
+            border-color: #e94560;
+        }
+
+        .pagination-btn.active {
+            background: linear-gradient(135deg, #e94560, #ff6b6b);
+            color: white;
+            border-color: #e94560;
+            cursor: default;
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .pagination-dots {
+            padding: 8px 4px;
+            color: #666;
+        }
+
+        .post-highlight {
+            background-color: #ffffcc;
+            transition: background-color 0.5s;
         }
 
         @media (max-width: 768px) {
@@ -472,6 +539,13 @@
             }
             .footer-divider {
                 display: none;
+            }
+            .pagination {
+                gap: 4px;
+            }
+            .pagination-btn {
+                padding: 6px 10px;
+                font-size: 0.8em;
             }
         }
     </style>
@@ -599,17 +673,26 @@ let replyQuill = null;
 const ADMIN_UIDS = ['sZxfMuOBPbXdR8nttVPXIN8QOOl1', '6aPqWVh8JVYL5NqEb78iDGPD7dH3'];
 
 // ============================================
+// CONFIGURAÇÕES DE PAGINAÇÃO
+// ============================================
+const POSTS_PER_PAGE = 10;
+let currentPage = 1;
+let totalPosts = 0;
+let totalPages = 0;
+
+// ============================================
 // SISTEMA DE ROTAS BASEADO EM URL
 // ============================================
 
-function updateURL(categoryId, subcategoryId, threadId) {
+function updateURL(categoryId, subcategoryId, threadId, page = null) {
     const params = new URLSearchParams();
     if (categoryId) params.set('cat', categoryId);
     if (subcategoryId) params.set('sub', subcategoryId);
     if (threadId) params.set('thread', threadId);
+    if (page && page > 1) params.set('page', page);
     
     const newURL = `${window.location.origin}${window.location.pathname}${params.toString() ? '?' + params.toString() : ''}`;
-    window.history.pushState({ categoryId, subcategoryId, threadId }, '', newURL);
+    window.history.pushState({ categoryId, subcategoryId, threadId, page }, '', newURL);
 }
 
 function getURLParams() {
@@ -617,21 +700,22 @@ function getURLParams() {
     return {
         categoryId: params.get('cat'),
         subcategoryId: params.get('sub'),
-        threadId: params.get('thread')
+        threadId: params.get('thread'),
+        page: parseInt(params.get('page')) || 1
     };
 }
 
 function getCurrentLink() {
     const params = getURLParams();
     let link = window.location.origin + window.location.pathname;
-    if (params.categoryId) {
-        link += `?cat=${params.categoryId}`;
-        if (params.subcategoryId) {
-            link += `&sub=${params.subcategoryId}`;
-            if (params.threadId) {
-                link += `&thread=${params.threadId}`;
-            }
-        }
+    const queryParams = [];
+    if (params.categoryId) queryParams.push(`cat=${params.categoryId}`);
+    if (params.subcategoryId) queryParams.push(`sub=${params.subcategoryId}`);
+    if (params.threadId) queryParams.push(`thread=${params.threadId}`);
+    if (params.page > 1) queryParams.push(`page=${params.page}`);
+    
+    if (queryParams.length > 0) {
+        link += '?' + queryParams.join('&');
     }
     return link;
 }
@@ -640,25 +724,22 @@ async function handleRouting() {
     const params = getURLParams();
     
     if (params.threadId && params.subcategoryId && params.categoryId) {
-        // Carregar tópico específico
         currentCategoryId = params.categoryId;
         currentSubcategoryId = params.subcategoryId;
         currentThreadId = params.threadId;
-        await showPosts(params.categoryId, params.subcategoryId, params.threadId);
+        currentPage = params.page;
+        await showPostsWithPagination(params.categoryId, params.subcategoryId, params.threadId, params.page);
     } 
     else if (params.subcategoryId && params.categoryId) {
-        // Carregar subcategoria específica
         currentCategoryId = params.categoryId;
         currentSubcategoryId = params.subcategoryId;
         await showThreads(params.categoryId, params.subcategoryId);
     }
     else if (params.categoryId) {
-        // Carregar categoria específica
         currentCategoryId = params.categoryId;
         await showSubcategories(params.categoryId);
     }
     else {
-        // Home
         await showHome();
     }
 }
@@ -682,16 +763,14 @@ async function navigateToThreads(categoryId, subcategoryId) {
     await showThreads(categoryId, subcategoryId);
 }
 
-async function navigateToPosts(categoryId, subcategoryId, threadId) {
-    updateURL(categoryId, subcategoryId, threadId);
-    await showPosts(categoryId, subcategoryId, threadId);
+async function navigateToPosts(categoryId, subcategoryId, threadId, page = 1) {
+    updateURL(categoryId, subcategoryId, threadId, page);
+    await showPostsWithPagination(categoryId, subcategoryId, threadId, page);
 }
 
-// Função para copiar link atual
 function copyCurrentLink() {
     const link = getCurrentLink();
     navigator.clipboard.writeText(link).then(() => {
-        // Mostrar feedback visual
         const btn = event.target;
         const originalText = btn.textContent;
         btn.textContent = '✅ Link copiado!';
@@ -703,7 +782,6 @@ function copyCurrentLink() {
     });
 }
 
-// Adicionar botão de copiar link no breadcrumb
 function addCopyLinkButton() {
     const breadcrumb = document.querySelector('.breadcrumb');
     if (breadcrumb && !breadcrumb.querySelector('.copy-link-btn')) {
@@ -711,7 +789,6 @@ function addCopyLinkButton() {
         copyBtn.className = 'copy-link-btn';
         copyBtn.innerHTML = '🔗 Copiar link';
         copyBtn.onclick = copyCurrentLink;
-        copyBtn.style.marginLeft = '10px';
         breadcrumb.appendChild(copyBtn);
     }
 }
@@ -838,13 +915,141 @@ function renderHtmlContent(html) {
 }
 
 // ============================================
-// TELAS PRINCIPAIS (MODIFICADAS PARA USAR NAVEGAÇÃO COM URL)
+// FUNÇÕES DE PAGINAÇÃO
+// ============================================
+
+async function loadPostsWithPagination(categoryId, subcategoryId, threadId, page = 1) {
+    currentPage = page;
+    
+    try {
+        const postsQuery = await postsRef(categoryId, subcategoryId, threadId).get();
+        totalPosts = postsQuery.size;
+        totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE);
+        
+        if (currentPage > totalPages && totalPages > 0) {
+            currentPage = totalPages;
+        }
+        if (currentPage < 1) currentPage = 1;
+        
+        const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
+        
+        const postsSnapshot = await postsRef(categoryId, subcategoryId, threadId)
+            .orderBy('createdAt', 'asc')
+            .get();
+        
+        const allPosts = [];
+        postsSnapshot.forEach(doc => {
+            allPosts.push({ id: doc.id, ...doc.data() });
+        });
+        
+        const posts = allPosts.slice(startIndex, startIndex + POSTS_PER_PAGE);
+        
+        return { posts, totalPosts, totalPages, currentPage };
+        
+    } catch (error) {
+        console.error('Erro ao carregar posts:', error);
+        throw error;
+    }
+}
+
+function renderPagination(categoryId, subcategoryId, threadId, currentPage, totalPages) {
+    if (totalPages <= 1) return '';
+    
+    let paginationHTML = '<div class="pagination">';
+    
+    if (currentPage > 1) {
+        paginationHTML += `<button class="pagination-btn" onclick="goToPage('${categoryId}', '${subcategoryId}', '${threadId}', 1)">« Primeira</button>`;
+        paginationHTML += `<button class="pagination-btn" onclick="goToPage('${categoryId}', '${subcategoryId}', '${threadId}', ${currentPage - 1})">‹ Anterior</button>`;
+    }
+    
+    let startPage = Math.max(1, currentPage - 2);
+    let endPage = Math.min(totalPages, currentPage + 2);
+    
+    if (endPage - startPage < 4) {
+        if (startPage === 1) {
+            endPage = Math.min(totalPages, startPage + 4);
+        } else if (endPage === totalPages) {
+            startPage = Math.max(1, endPage - 4);
+        }
+    }
+    
+    if (startPage > 1) {
+        paginationHTML += `<span class="pagination-dots">...</span>`;
+    }
+    
+    for (let i = startPage; i <= endPage; i++) {
+        if (i === currentPage) {
+            paginationHTML += `<button class="pagination-btn active" disabled>${i}</button>`;
+        } else {
+            paginationHTML += `<button class="pagination-btn" onclick="goToPage('${categoryId}', '${subcategoryId}', '${threadId}', ${i})">${i}</button>`;
+        }
+    }
+    
+    if (endPage < totalPages) {
+        paginationHTML += `<span class="pagination-dots">...</span>`;
+    }
+    
+    if (currentPage < totalPages) {
+        paginationHTML += `<button class="pagination-btn" onclick="goToPage('${categoryId}', '${subcategoryId}', '${threadId}', ${currentPage + 1})">Próxima ›</button>`;
+        paginationHTML += `<button class="pagination-btn" onclick="goToPage('${categoryId}', '${subcategoryId}', '${threadId}', ${totalPages})">Última »</button>`;
+    }
+    
+    paginationHTML += `</div>`;
+    paginationHTML += `<div style="text-align: center; margin-top: 10px; margin-bottom: 20px; color: #666; font-size: 0.9em;">
+        Mostrando ${((currentPage - 1) * POSTS_PER_PAGE) + 1} - ${Math.min(currentPage * POSTS_PER_PAGE, totalPosts)} de ${totalPosts} posts
+    </div>`;
+    
+    return paginationHTML;
+}
+
+async function goToPage(categoryId, subcategoryId, threadId, page) {
+    if (!categoryId || !subcategoryId || !threadId) return;
+    await navigateToPosts(categoryId, subcategoryId, threadId, page);
+}
+
+function copyPostLink(postId, postNumber) {
+    const baseUrl = window.location.origin + window.location.pathname;
+    const params = getURLParams();
+    let link = `${baseUrl}?cat=${params.categoryId}&sub=${params.subcategoryId}&thread=${params.threadId}&page=${currentPage}#post-${postId}`;
+    
+    navigator.clipboard.writeText(link).then(() => {
+        const btn = event.target;
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '<span class="material-icons">check</span> Link copiado!';
+        setTimeout(() => {
+            btn.innerHTML = originalHTML;
+        }, 2000);
+    }).catch(() => {
+        alert('Link do post: ' + link);
+    });
+}
+
+function handlePostAnchor() {
+    const hash = window.location.hash;
+    if (hash && hash.startsWith('#post-')) {
+        const postId = hash.substring(1);
+        setTimeout(() => {
+            const postElement = document.getElementById(postId);
+            if (postElement) {
+                postElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                postElement.classList.add('post-highlight');
+                setTimeout(() => {
+                    postElement.classList.remove('post-highlight');
+                }, 2000);
+            }
+        }, 500);
+    }
+}
+
+// ============================================
+// TELAS PRINCIPAIS
 // ============================================
 
 async function showHome() {
     currentCategoryId = null;
     currentSubcategoryId = null;
     currentThreadId = null;
+    currentPage = 1;
     
     const container = document.getElementById('main-container');
     container.innerHTML = '<div class="loading">Carregando categorias...</div>';
@@ -898,6 +1103,8 @@ async function showHome() {
 async function showSubcategories(categoryId) {
     currentCategoryId = categoryId;
     currentSubcategoryId = null;
+    currentThreadId = null;
+    currentPage = 1;
     
     const container = document.getElementById('main-container');
     container.innerHTML = '<div class="loading">Carregando...</div>';
@@ -949,6 +1156,7 @@ async function showThreads(categoryId, subcategoryId) {
     currentCategoryId = categoryId;
     currentSubcategoryId = subcategoryId;
     currentThreadId = null;
+    currentPage = 1;
     
     const container = document.getElementById('main-container');
     container.innerHTML = '<div class="loading">Carregando tópicos...</div>';
@@ -971,7 +1179,7 @@ async function showThreads(categoryId, subcategoryId) {
                 <a onclick="navigateToSubcategories('${categoryId}')">${escapeHtml(category?.name)}</a> &gt;
                 <a onclick="navigateToThreads('${categoryId}', '${subcategoryId}')">${escapeHtml(subcategory?.name)}</a>
             </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
                 <h2>${escapeHtml(subcategory?.icon || '📌')} ${escapeHtml(subcategory?.name)}</h2>
                 <button class="btn-primary" onclick="showCreateThread()">Criar Novo Tópico</button>
             </div>
@@ -996,10 +1204,11 @@ async function showThreads(categoryId, subcategoryId) {
     }
 }
 
-async function showPosts(categoryId, subcategoryId, threadId) {
+async function showPostsWithPagination(categoryId, subcategoryId, threadId, page = 1) {
     currentCategoryId = categoryId;
     currentSubcategoryId = subcategoryId;
     currentThreadId = threadId;
+    currentPage = page;
     
     const container = document.getElementById('main-container');
     container.innerHTML = '<div class="loading">Carregando posts...</div>';
@@ -1018,11 +1227,14 @@ async function showPosts(categoryId, subcategoryId, threadId) {
             return;
         }
         
-        const snapshot = await postsRef(categoryId, subcategoryId, threadId).orderBy('createdAt', 'asc').get();
-        const posts = [];
-        snapshot.forEach(doc => {
-            posts.push({ id: doc.id, ...doc.data() });
-        });
+        const { posts, totalPosts: total, totalPages: pages, currentPage: currPage } = 
+            await loadPostsWithPagination(categoryId, subcategoryId, threadId, page);
+        
+        totalPosts = total;
+        totalPages = pages;
+        currentPage = currPage;
+        
+        updateURL(categoryId, subcategoryId, threadId, currentPage);
         
         container.innerHTML = `
             <div class="breadcrumb">
@@ -1034,13 +1246,14 @@ async function showPosts(categoryId, subcategoryId, threadId) {
             <div style="margin-bottom: 20px;">
                 <h1>${escapeHtml(thread?.title)}</h1>
                 <p style="color:#666;">Criado por ${escapeHtml(thread?.authorName || 'Anônimo')} em ${formatDate(thread?.createdAt)}</p>
+                <p style="color:#666; font-size:0.9em;">Total de respostas: ${totalPosts - 1} | Página ${currentPage} de ${totalPages}</p>
             </div>
             <div id="posts-list">
-                ${posts.map(post => `
+                ${posts.map((post, index) => `
                     <div class="post-card" id="post-${post.id}">
                         <div class="post-header">
                             <div class="post-author">
-                                <strong>${escapeHtml(post.authorName || 'Anônimo')}</strong>
+                                <strong>#${index + 1 + (currentPage - 1) * POSTS_PER_PAGE} - ${escapeHtml(post.authorName || 'Anônimo')}</strong>
                                 ${post.isAdmin ? '<span class="badge badge-admin">Admin</span>' : ''}
                             </div>
                             <div class="post-date">${formatDate(post.createdAt)}</div>
@@ -1060,6 +1273,9 @@ async function showPosts(categoryId, subcategoryId, threadId) {
                                     <span class="material-icons">delete</span> Excluir
                                 </button>
                             ` : ''}
+                            <button class="action-btn" onclick="copyPostLink('${post.id}', ${index + 1 + (currentPage - 1) * POSTS_PER_PAGE})">
+                                <span class="material-icons">link</span> Copiar link
+                            </button>
                         </div>
                         <div id="comments-${post.id}" class="comment-list"></div>
                         <div id="comment-form-${post.id}" style="display:none; padding:20px;">
@@ -1069,6 +1285,7 @@ async function showPosts(categoryId, subcategoryId, threadId) {
                     </div>
                 `).join('')}
             </div>
+            ${renderPagination(categoryId, subcategoryId, threadId, currentPage, totalPages)}
             <div class="form-container" style="margin-top: 20px;">
                 <h3>Responder ao Tópico</h3>
                 <div id="reply-editor" style="height: 200px; margin-bottom: 10px;"></div>
@@ -1096,10 +1313,19 @@ async function showPosts(categoryId, subcategoryId, threadId) {
         for (const post of posts) {
             loadComments(categoryId, subcategoryId, threadId, post.id);
         }
+        
         addCopyLinkButton();
+        handlePostAnchor();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        
     } catch (error) {
         container.innerHTML = `<div class="loading">Erro: ${error.message}</div>`;
     }
+}
+
+// Função original showPosts mantida para compatibilidade
+async function showPosts(categoryId, subcategoryId, threadId) {
+    await showPostsWithPagination(categoryId, subcategoryId, threadId, 1);
 }
 
 async function loadComments(categoryId, subcategoryId, threadId, postId) {
@@ -1325,7 +1551,11 @@ async function createReply() {
         await batch.commit();
         
         replyQuill.root.innerHTML = '';
-        await navigateToPosts(currentCategoryId, currentSubcategoryId, currentThreadId);
+        
+        const totalPostsAfter = (await postsRef(currentCategoryId, currentSubcategoryId, currentThreadId).get()).size;
+        const lastPage = Math.ceil(totalPostsAfter / POSTS_PER_PAGE);
+        
+        await navigateToPosts(currentCategoryId, currentSubcategoryId, currentThreadId, lastPage);
         
     } catch (error) {
         alert('Erro: ' + error.message);
@@ -1413,7 +1643,7 @@ async function editPost(postId) {
             await postsRef(currentCategoryId, currentSubcategoryId, currentThreadId).doc(postId).update({
                 content: newContent
             });
-            await navigateToPosts(currentCategoryId, currentSubcategoryId, currentThreadId);
+            await navigateToPosts(currentCategoryId, currentSubcategoryId, currentThreadId, currentPage);
         } catch (error) {
             alert('Erro: ' + error.message);
         }
@@ -1425,7 +1655,16 @@ async function deletePost(postId) {
     if (confirm('Tem certeza que deseja excluir este post?')) {
         try {
             await postsRef(currentCategoryId, currentSubcategoryId, currentThreadId).doc(postId).delete();
-            await navigateToPosts(currentCategoryId, currentSubcategoryId, currentThreadId);
+            
+            const totalPostsAfter = (await postsRef(currentCategoryId, currentSubcategoryId, currentThreadId).get()).size;
+            const newTotalPages = Math.ceil(totalPostsAfter / POSTS_PER_PAGE);
+            
+            let newPage = currentPage;
+            if (currentPage > newTotalPages && newTotalPages > 0) {
+                newPage = newTotalPages;
+            }
+            
+            await navigateToPosts(currentCategoryId, currentSubcategoryId, currentThreadId, newPage);
         } catch (error) {
             alert('Erro: ' + error.message);
         }
@@ -1697,7 +1936,6 @@ function closeModal(modalId) {
 
 document.getElementById('google-login-btn')?.addEventListener('click', loginWithGoogle);
 
-// Escutar mudanças no histórico (botão voltar/avançar)
 window.addEventListener('popstate', (event) => {
     handleRouting();
 });
@@ -1732,10 +1970,13 @@ window.navigateToSubcategories = navigateToSubcategories;
 window.navigateToThreads = navigateToThreads;
 window.navigateToPosts = navigateToPosts;
 window.copyCurrentLink = copyCurrentLink;
+window.goToPage = goToPage;
+window.copyPostLink = copyPostLink;
 window.showHome = showHome;
 window.showSubcategories = showSubcategories;
 window.showThreads = showThreads;
 window.showPosts = showPosts;
+window.showPostsWithPagination = showPostsWithPagination;
 window.showCreateThread = showCreateThread;
 window.showCreateCategory = showCreateCategory;
 window.showCreateSubcategory = showCreateSubcategory;
