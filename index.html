@@ -445,6 +445,20 @@
             cursor: pointer;
         }
 
+        .copy-link-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.8em;
+            padding: 2px 8px;
+            border-radius: 12px;
+            transition: all 0.2s;
+        }
+
+        .copy-link-btn:hover {
+            background: rgba(0,0,0,0.1);
+        }
+
         @media (max-width: 768px) {
             .header-container {
                 flex-direction: column;
@@ -466,12 +480,12 @@
 
 <div class="header">
     <div class="header-container">
-        <div class="logo" onclick="showHome()">
+        <div class="logo" onclick="navigateToHome()">
             <span class="material-icons">forum</span>
             Maspia Forum
         </div>
         <div class="nav-links">
-            <button class="nav-btn" onclick="showHome()">🏠 Início</button>
+            <button class="nav-btn" onclick="navigateToHome()">🏠 Início</button>
             <button class="nav-btn" onclick="showRecentPosts()">📰 Recentes</button>
             <button class="nav-btn" id="admin-btn" style="display: none;" onclick="showAdminPanel()">👑 Admin</button>
             <button class="nav-btn" onclick="showProfile()">👤 Perfil</button>
@@ -585,17 +599,135 @@ let replyQuill = null;
 const ADMIN_UIDS = ['sZxfMuOBPbXdR8nttVPXIN8QOOl1', '6aPqWVh8JVYL5NqEb78iDGPD7dH3'];
 
 // ============================================
+// SISTEMA DE ROTAS BASEADO EM URL
+// ============================================
+
+function updateURL(categoryId, subcategoryId, threadId) {
+    const params = new URLSearchParams();
+    if (categoryId) params.set('cat', categoryId);
+    if (subcategoryId) params.set('sub', subcategoryId);
+    if (threadId) params.set('thread', threadId);
+    
+    const newURL = `${window.location.origin}${window.location.pathname}${params.toString() ? '?' + params.toString() : ''}`;
+    window.history.pushState({ categoryId, subcategoryId, threadId }, '', newURL);
+}
+
+function getURLParams() {
+    const params = new URLSearchParams(window.location.search);
+    return {
+        categoryId: params.get('cat'),
+        subcategoryId: params.get('sub'),
+        threadId: params.get('thread')
+    };
+}
+
+function getCurrentLink() {
+    const params = getURLParams();
+    let link = window.location.origin + window.location.pathname;
+    if (params.categoryId) {
+        link += `?cat=${params.categoryId}`;
+        if (params.subcategoryId) {
+            link += `&sub=${params.subcategoryId}`;
+            if (params.threadId) {
+                link += `&thread=${params.threadId}`;
+            }
+        }
+    }
+    return link;
+}
+
+async function handleRouting() {
+    const params = getURLParams();
+    
+    if (params.threadId && params.subcategoryId && params.categoryId) {
+        // Carregar tópico específico
+        currentCategoryId = params.categoryId;
+        currentSubcategoryId = params.subcategoryId;
+        currentThreadId = params.threadId;
+        await showPosts(params.categoryId, params.subcategoryId, params.threadId);
+    } 
+    else if (params.subcategoryId && params.categoryId) {
+        // Carregar subcategoria específica
+        currentCategoryId = params.categoryId;
+        currentSubcategoryId = params.subcategoryId;
+        await showThreads(params.categoryId, params.subcategoryId);
+    }
+    else if (params.categoryId) {
+        // Carregar categoria específica
+        currentCategoryId = params.categoryId;
+        await showSubcategories(params.categoryId);
+    }
+    else {
+        // Home
+        await showHome();
+    }
+}
+
+// ============================================
+// FUNÇÕES DE NAVEGAÇÃO COM ATUALIZAÇÃO DE URL
+// ============================================
+
+async function navigateToHome() {
+    updateURL(null, null, null);
+    await showHome();
+}
+
+async function navigateToSubcategories(categoryId) {
+    updateURL(categoryId, null, null);
+    await showSubcategories(categoryId);
+}
+
+async function navigateToThreads(categoryId, subcategoryId) {
+    updateURL(categoryId, subcategoryId, null);
+    await showThreads(categoryId, subcategoryId);
+}
+
+async function navigateToPosts(categoryId, subcategoryId, threadId) {
+    updateURL(categoryId, subcategoryId, threadId);
+    await showPosts(categoryId, subcategoryId, threadId);
+}
+
+// Função para copiar link atual
+function copyCurrentLink() {
+    const link = getCurrentLink();
+    navigator.clipboard.writeText(link).then(() => {
+        // Mostrar feedback visual
+        const btn = event.target;
+        const originalText = btn.textContent;
+        btn.textContent = '✅ Link copiado!';
+        setTimeout(() => {
+            btn.textContent = originalText;
+        }, 2000);
+    }).catch(() => {
+        alert('Link: ' + link);
+    });
+}
+
+// Adicionar botão de copiar link no breadcrumb
+function addCopyLinkButton() {
+    const breadcrumb = document.querySelector('.breadcrumb');
+    if (breadcrumb && !breadcrumb.querySelector('.copy-link-btn')) {
+        const copyBtn = document.createElement('button');
+        copyBtn.className = 'copy-link-btn';
+        copyBtn.innerHTML = '🔗 Copiar link';
+        copyBtn.onclick = copyCurrentLink;
+        copyBtn.style.marginLeft = '10px';
+        breadcrumb.appendChild(copyBtn);
+    }
+}
+
+// ============================================
 // CONTROLE ANTI-SPAM
 // ============================================
-const submitLocks = new Map(); // Armazena locks das funções
+const submitLocks = new Map();
 
 function isLocked(key, timeout = 2000) {
     if (submitLocks.has(key)) {
         const lockTime = submitLocks.get(key);
         if (Date.now() - lockTime < timeout) {
-            return true; // Ainda está bloqueado
+            return true;
         }
-        submitLocks.delete(key); // Limpa lock expirado
+        submitLocks.delete(key);
     }
     return false;
 }
@@ -665,11 +797,11 @@ async function loginWithGoogle() {
 async function logout() {
     try {
         await auth.signOut();
+        navigateToHome();
     } catch (e) {}
     currentUser = null;
     isAdmin = false;
     updateUIForUser();
-    showHome();
 }
 
 function openModeracao() {
@@ -706,7 +838,7 @@ function renderHtmlContent(html) {
 }
 
 // ============================================
-// TELAS PRINCIPAIS
+// TELAS PRINCIPAIS (MODIFICADAS PARA USAR NAVEGAÇÃO COM URL)
 // ============================================
 
 async function showHome() {
@@ -737,11 +869,11 @@ async function showHome() {
         
         container.innerHTML = `
             <div class="breadcrumb">
-                <a onclick="showHome()">Forum</a>
+                <a onclick="navigateToHome()">Fórum</a>
             </div>
             <div class="categories-grid">
                 ${categories.map(cat => `
-                    <div class="category-card" onclick="showSubcategories('${cat.id}')">
+                    <div class="category-card" onclick="navigateToSubcategories('${cat.id}')">
                         <div class="category-header">
                             <h3>${escapeHtml(cat.icon || '📁')} ${escapeHtml(cat.name)}</h3>
                             <p>${escapeHtml(cat.description || '')}</p>
@@ -749,7 +881,7 @@ async function showHome() {
                         <div class="category-body">
                             <div class="category-stats">
                                 <span>Subcategorias: ${cat.subcategoriesCount || 0}</span>
-                                <span>Topicos: ${cat.threadsCount || 0}</span>
+                                <span>Tópicos: ${cat.threadsCount || 0}</span>
                             </div>
                         </div>
                     </div>
@@ -757,6 +889,7 @@ async function showHome() {
             </div>
             ${isAdmin ? `<div style="text-align:center; margin-top:20px;"><button class="btn-primary" onclick="showCreateCategory()">Criar Nova Categoria</button></div>` : ''}
         `;
+        addCopyLinkButton();
     } catch (error) {
         container.innerHTML = `<div class="loading">Erro: ${error.message}</div>`;
     }
@@ -781,8 +914,8 @@ async function showSubcategories(categoryId) {
         
         container.innerHTML = `
             <div class="breadcrumb">
-                <a onclick="showHome()">Forum</a> &gt;
-                <a onclick="showSubcategories('${categoryId}')">${escapeHtml(category?.name || 'Categoria')}</a>
+                <a onclick="navigateToHome()">Fórum</a> &gt;
+                <a onclick="navigateToSubcategories('${categoryId}')">${escapeHtml(category?.name || 'Categoria')}</a>
             </div>
             <div style="margin-bottom: 20px;">
                 <h2>${escapeHtml(category?.icon || '📁')} ${escapeHtml(category?.name || 'Categoria')}</h2>
@@ -790,14 +923,14 @@ async function showSubcategories(categoryId) {
             </div>
             <div class="categories-grid">
                 ${subcategories.map(sub => `
-                    <div class="category-card" onclick="showThreads('${categoryId}', '${sub.id}')">
+                    <div class="category-card" onclick="navigateToThreads('${categoryId}', '${sub.id}')">
                         <div class="category-header" style="background: linear-gradient(135deg, #e94560, #ff6b6b);">
                             <h3>${escapeHtml(sub.icon || '📌')} ${escapeHtml(sub.name)}</h3>
                             <p>${escapeHtml(sub.description || '')}</p>
                         </div>
                         <div class="category-body">
                             <div class="category-stats">
-                                <span>Topicos: ${sub.threadsCount || 0}</span>
+                                <span>Tópicos: ${sub.threadsCount || 0}</span>
                                 <span>Posts: ${sub.postsCount || 0}</span>
                             </div>
                         </div>
@@ -806,6 +939,7 @@ async function showSubcategories(categoryId) {
             </div>
             ${isAdmin ? `<div style="text-align:center; margin-top:20px;"><button class="btn-primary" onclick="showCreateSubcategory('${categoryId}')">Criar Subcategoria</button></div>` : ''}
         `;
+        addCopyLinkButton();
     } catch (error) {
         container.innerHTML = `<div class="loading">Erro: ${error.message}</div>`;
     }
@@ -817,7 +951,7 @@ async function showThreads(categoryId, subcategoryId) {
     currentThreadId = null;
     
     const container = document.getElementById('main-container');
-    container.innerHTML = '<div class="loading">Carregando topicos...</div>';
+    container.innerHTML = '<div class="loading">Carregando tópicos...</div>';
     
     try {
         const catDoc = await categoriesRef().doc(categoryId).get();
@@ -833,21 +967,21 @@ async function showThreads(categoryId, subcategoryId) {
         
         container.innerHTML = `
             <div class="breadcrumb">
-                <a onclick="showHome()">Forum</a> &gt;
-                <a onclick="showSubcategories('${categoryId}')">${escapeHtml(category?.name)}</a> &gt;
-                <a onclick="showThreads('${categoryId}', '${subcategoryId}')">${escapeHtml(subcategory?.name)}</a>
+                <a onclick="navigateToHome()">Fórum</a> &gt;
+                <a onclick="navigateToSubcategories('${categoryId}')">${escapeHtml(category?.name)}</a> &gt;
+                <a onclick="navigateToThreads('${categoryId}', '${subcategoryId}')">${escapeHtml(subcategory?.name)}</a>
             </div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <h2>${escapeHtml(subcategory?.icon || '📌')} ${escapeHtml(subcategory?.name)}</h2>
-                <button class="btn-primary" onclick="showCreateThread()">Criar Novo Topico</button>
+                <button class="btn-primary" onclick="showCreateThread()">Criar Novo Tópico</button>
             </div>
             <div class="threads-list">
-                ${threads.length === 0 ? '<div style="padding: 40px; text-align: center;">Nenhum topico ainda. Seja o primeiro a criar um!</div>' : 
+                ${threads.length === 0 ? '<div style="padding: 40px; text-align: center;">Nenhum tópico ainda. Seja o primeiro a criar um!</div>' : 
                     threads.map(thread => `
-                        <div class="thread-item" onclick="showPosts('${categoryId}', '${subcategoryId}', '${thread.id}')">
+                        <div class="thread-item" onclick="navigateToPosts('${categoryId}', '${subcategoryId}', '${thread.id}')">
                             <div class="thread-title">${escapeHtml(thread.title)}</div>
                             <div class="thread-meta">
-                                <span>Por: ${escapeHtml(thread.authorName || 'Anonimo')}</span>
+                                <span>Por: ${escapeHtml(thread.authorName || 'Anônimo')}</span>
                                 <span>Data: ${formatDate(thread.createdAt)}</span>
                                 <span>Respostas: ${thread.postsCount || 0}</span>
                             </div>
@@ -856,6 +990,7 @@ async function showThreads(categoryId, subcategoryId) {
                 }
             </div>
         `;
+        addCopyLinkButton();
     } catch (error) {
         container.innerHTML = `<div class="loading">Erro: ${error.message}</div>`;
     }
@@ -878,6 +1013,11 @@ async function showPosts(categoryId, subcategoryId, threadId) {
         const subcategory = subDoc.data();
         const thread = threadDoc.data();
         
+        if (!thread) {
+            container.innerHTML = '<div class="loading">Tópico não encontrado!</div>';
+            return;
+        }
+        
         const snapshot = await postsRef(categoryId, subcategoryId, threadId).orderBy('createdAt', 'asc').get();
         const posts = [];
         snapshot.forEach(doc => {
@@ -886,21 +1026,21 @@ async function showPosts(categoryId, subcategoryId, threadId) {
         
         container.innerHTML = `
             <div class="breadcrumb">
-                <a onclick="showHome()">Forum</a> &gt;
-                <a onclick="showSubcategories('${categoryId}')">${escapeHtml(category?.name)}</a> &gt;
-                <a onclick="showThreads('${categoryId}', '${subcategoryId}')">${escapeHtml(subcategory?.name)}</a> &gt;
+                <a onclick="navigateToHome()">Fórum</a> &gt;
+                <a onclick="navigateToSubcategories('${categoryId}')">${escapeHtml(category?.name)}</a> &gt;
+                <a onclick="navigateToThreads('${categoryId}', '${subcategoryId}')">${escapeHtml(subcategory?.name)}</a> &gt;
                 <span>${escapeHtml(thread?.title)}</span>
             </div>
             <div style="margin-bottom: 20px;">
                 <h1>${escapeHtml(thread?.title)}</h1>
-                <p style="color:#666;">Criado por ${escapeHtml(thread?.authorName || 'Anonimo')} em ${formatDate(thread?.createdAt)}</p>
+                <p style="color:#666;">Criado por ${escapeHtml(thread?.authorName || 'Anônimo')} em ${formatDate(thread?.createdAt)}</p>
             </div>
             <div id="posts-list">
                 ${posts.map(post => `
                     <div class="post-card" id="post-${post.id}">
                         <div class="post-header">
                             <div class="post-author">
-                                <strong>${escapeHtml(post.authorName || 'Anonimo')}</strong>
+                                <strong>${escapeHtml(post.authorName || 'Anônimo')}</strong>
                                 ${post.isAdmin ? '<span class="badge badge-admin">Admin</span>' : ''}
                             </div>
                             <div class="post-date">${formatDate(post.createdAt)}</div>
@@ -923,14 +1063,14 @@ async function showPosts(categoryId, subcategoryId, threadId) {
                         </div>
                         <div id="comments-${post.id}" class="comment-list"></div>
                         <div id="comment-form-${post.id}" style="display:none; padding:20px;">
-                            <textarea id="comment-content-${post.id}" rows="3" placeholder="Escreva seu comentario..." style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd;"></textarea>
-                            <button class="btn-primary" style="margin-top:10px;" onclick="submitComment('${post.id}')">Enviar Comentario</button>
+                            <textarea id="comment-content-${post.id}" rows="3" placeholder="Escreva seu comentário..." style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd;"></textarea>
+                            <button class="btn-primary" style="margin-top:10px;" onclick="submitComment('${post.id}')">Enviar Comentário</button>
                         </div>
                     </div>
                 `).join('')}
             </div>
             <div class="form-container" style="margin-top: 20px;">
-                <h3>Responder ao Topico</h3>
+                <h3>Responder ao Tópico</h3>
                 <div id="reply-editor" style="height: 200px; margin-bottom: 10px;"></div>
                 <button class="btn-primary" onclick="createReply()">Enviar Resposta</button>
             </div>
@@ -939,7 +1079,7 @@ async function showPosts(categoryId, subcategoryId, threadId) {
         if (typeof Quill !== 'undefined') {
             replyQuill = new Quill('#reply-editor', {
                 theme: 'snow',
-                placeholder: 'Digite sua resposta aqui... Use as ferramentas de formatacao!',
+                placeholder: 'Digite sua resposta aqui... Use as ferramentas de formatação!',
                 modules: {
                     toolbar: [
                         ['bold', 'italic', 'underline', 'strike'],
@@ -956,6 +1096,7 @@ async function showPosts(categoryId, subcategoryId, threadId) {
         for (const post of posts) {
             loadComments(categoryId, subcategoryId, threadId, post.id);
         }
+        addCopyLinkButton();
     } catch (error) {
         container.innerHTML = `<div class="loading">Erro: ${error.message}</div>`;
     }
@@ -972,12 +1113,12 @@ async function loadComments(categoryId, subcategoryId, threadId, postId) {
         const commentsDiv = document.getElementById(`comments-${postId}`);
         if (commentsDiv) {
             if (comments.length === 0) {
-                commentsDiv.innerHTML = '<div style="padding: 10px; text-align:center; color:#999;">Nenhum comentario ainda.</div>';
+                commentsDiv.innerHTML = '<div style="padding: 10px; text-align:center; color:#999;">Nenhum comentário ainda.</div>';
             } else {
                 commentsDiv.innerHTML = comments.map(comment => `
                     <div class="comment-item">
                         <div class="comment-header">
-                            <span class="comment-author">${escapeHtml(comment.authorName || 'Anonimo')}</span>
+                            <span class="comment-author">${escapeHtml(comment.authorName || 'Anônimo')}</span>
                             <span class="comment-date">${formatDate(comment.createdAt)}</span>
                         </div>
                         <div class="comment-text">${escapeHtml(comment.content)}</div>
@@ -986,7 +1127,7 @@ async function loadComments(categoryId, subcategoryId, threadId, postId) {
             }
         }
     } catch (error) {
-        console.error('Erro ao carregar comentarios:', error);
+        console.error('Erro ao carregar comentários:', error);
     }
 }
 
@@ -997,23 +1138,23 @@ async function loadComments(categoryId, subcategoryId, threadId, postId) {
 function showCreateThread() {
     if (!currentUser) { showLoginModal(); return; }
     
-    document.getElementById('post-modal-title').innerHTML = 'Criar Novo Topico';
+    document.getElementById('post-modal-title').innerHTML = 'Criar Novo Tópico';
     document.getElementById('post-modal-body').innerHTML = `
         <div class="form-group">
-            <label>Titulo</label>
-            <input type="text" id="thread-title" class="form-control" placeholder="Titulo do topico">
+            <label>Título</label>
+            <input type="text" id="thread-title" class="form-control" placeholder="Título do tópico">
         </div>
         <div class="form-group">
-            <label>Conteudo</label>
+            <label>Conteúdo</label>
             <div id="thread-editor" style="height: 300px; margin-bottom: 10px;"></div>
         </div>
-        <button class="btn-primary" onclick="createThread()">Criar Topico</button>
+        <button class="btn-primary" onclick="createThread()">Criar Tópico</button>
     `;
     
     if (typeof Quill !== 'undefined') {
         threadQuill = new Quill('#thread-editor', {
             theme: 'snow',
-            placeholder: 'Digite o conteudo do seu topico aqui... Use as ferramentas de formatacao!',
+            placeholder: 'Digite o conteúdo do seu tópico aqui... Use as ferramentas de formatação!',
             modules: {
                 toolbar: [
                     ['bold', 'italic', 'underline', 'strike'],
@@ -1040,7 +1181,7 @@ function insertImageToEditor() {
     const alt = document.getElementById('image-alt').value || 'imagem';
     
     if (!url) {
-        alert('Digite uma URL de imagem valida');
+        alert('Digite uma URL de imagem válida');
         return;
     }
     
@@ -1059,7 +1200,7 @@ function insertImageToEditor() {
             replyQuill.insertEmbed(replyQuill.getLength() - 1, 'image', url);
         }
     } else {
-        alert('Editor nao encontrado');
+        alert('Editor não encontrado');
         return;
     }
     
@@ -1071,7 +1212,6 @@ function insertImageToEditor() {
 async function createThread() {
     if (!threadQuill) return;
     
-    // Verifica lock
     if (isLocked(`createThread_${currentUser?.uid}`)) {
         alert('Aguarde um momento antes de criar outro tópico...');
         return;
@@ -1081,14 +1221,12 @@ async function createThread() {
     const content = threadQuill.root.innerHTML;
     
     if (!title || !content || content === '<p><br></p>') {
-        alert('Preencha titulo e conteudo');
+        alert('Preencha título e conteúdo');
         return;
     }
     
-    // Aplica lock
     lock(`createThread_${currentUser?.uid}`, 3000);
     
-    // Desabilita botão durante criação
     const submitBtn = document.querySelector('#post-modal .btn-primary');
     let originalText = '';
     if (submitBtn) {
@@ -1101,7 +1239,6 @@ async function createThread() {
         const threadId = Date.now().toString();
         const postId = Date.now().toString();
         
-        // Batch write para garantir atomicidade
         const batch = db.batch();
         
         const threadRef = threadsRef(currentCategoryId, currentSubcategoryId).doc(threadId);
@@ -1127,17 +1264,15 @@ async function createThread() {
         await updateCounts(currentCategoryId, currentSubcategoryId);
         
         closeModal('post-modal');
-        showThreads(currentCategoryId, currentSubcategoryId);
+        navigateToThreads(currentCategoryId, currentSubcategoryId);
         
     } catch (error) {
         alert('Erro: ' + error.message);
     } finally {
-        // Restaura botão
         if (submitBtn) {
             submitBtn.disabled = false;
-            submitBtn.textContent = originalText || 'Criar Topico';
+            submitBtn.textContent = originalText || 'Criar Tópico';
         }
-        // Remove lock
         submitLocks.delete(`createThread_${currentUser?.uid}`);
     }
 }
@@ -1146,7 +1281,6 @@ async function createReply() {
     if (!currentUser) { showLoginModal(); return; }
     if (!replyQuill) return;
     
-    // Verifica lock
     if (isLocked(`createReply_${currentThreadId}_${currentUser?.uid}`)) {
         alert('Aguarde um momento antes de enviar outra resposta...');
         return;
@@ -1154,11 +1288,10 @@ async function createReply() {
     
     const content = replyQuill.root.innerHTML;
     if (!content || content === '<p><br></p>') {
-        alert('Digite o conteudo do post');
+        alert('Digite o conteúdo do post');
         return;
     }
     
-    // Aplica lock
     lock(`createReply_${currentThreadId}_${currentUser?.uid}`, 3000);
     
     const submitBtn = document.querySelector('#reply-editor')?.parentElement?.querySelector('.btn-primary');
@@ -1172,7 +1305,6 @@ async function createReply() {
     try {
         const postId = Date.now().toString();
         
-        // Usa batch write
         const batch = db.batch();
         
         const postRef = postsRef(currentCategoryId, currentSubcategoryId, currentThreadId).doc(postId);
@@ -1193,7 +1325,7 @@ async function createReply() {
         await batch.commit();
         
         replyQuill.root.innerHTML = '';
-        await showPosts(currentCategoryId, currentSubcategoryId, currentThreadId);
+        await navigateToPosts(currentCategoryId, currentSubcategoryId, currentThreadId);
         
     } catch (error) {
         alert('Erro: ' + error.message);
@@ -1218,11 +1350,10 @@ async function submitComment(postId) {
     
     const content = document.getElementById(`comment-content-${postId}`).value;
     if (!content.trim()) {
-        alert('Digite o comentario');
+        alert('Digite o comentário');
         return;
     }
     
-    // Verifica lock
     const lockKey = `comment_${currentThreadId}_${postId}_${currentUser?.uid}`;
     if (isLocked(lockKey)) {
         alert('Aguarde um momento antes de enviar outro comentário...');
@@ -1258,18 +1389,17 @@ async function submitComment(postId) {
     } finally {
         if (submitBtn) {
             submitBtn.disabled = false;
-            submitBtn.textContent = originalText || 'Enviar Comentario';
+            submitBtn.textContent = originalText || 'Enviar Comentário';
         }
         submitLocks.delete(lockKey);
     }
 }
 
 // ============================================
-// FUNÇÕES DE EDIÇÃO E EXCLUSÃO COM PROTEÇÃO
+// FUNÇÕES DE EDIÇÃO E EXCLUSÃO
 // ============================================
 
 async function editPost(postId) {
-    // Verifica lock
     if (isLocked(`editPost_${postId}_${currentUser?.uid}`)) {
         alert('Aguarde um momento...');
         return;
@@ -1277,13 +1407,13 @@ async function editPost(postId) {
     
     lock(`editPost_${postId}_${currentUser?.uid}`, 1000);
     
-    const newContent = prompt('Editar conteudo (HTML):');
+    const newContent = prompt('Editar conteúdo (HTML):');
     if (newContent && newContent !== 'null') {
         try {
             await postsRef(currentCategoryId, currentSubcategoryId, currentThreadId).doc(postId).update({
                 content: newContent
             });
-            await showPosts(currentCategoryId, currentSubcategoryId, currentThreadId);
+            await navigateToPosts(currentCategoryId, currentSubcategoryId, currentThreadId);
         } catch (error) {
             alert('Erro: ' + error.message);
         }
@@ -1295,7 +1425,7 @@ async function deletePost(postId) {
     if (confirm('Tem certeza que deseja excluir este post?')) {
         try {
             await postsRef(currentCategoryId, currentSubcategoryId, currentThreadId).doc(postId).delete();
-            showPosts(currentCategoryId, currentSubcategoryId, currentThreadId);
+            await navigateToPosts(currentCategoryId, currentSubcategoryId, currentThreadId);
         } catch (error) {
             alert('Erro: ' + error.message);
         }
@@ -1333,7 +1463,7 @@ async function updateCounts(categoryId, subcategoryId) {
 }
 
 // ============================================
-// ADMIN COM PROTEÇÃO ANTI-SPAM
+// ADMIN
 // ============================================
 
 function showAdminPanel() {
@@ -1345,7 +1475,7 @@ function showAdminPanel() {
             <h2>Painel Administrativo</h2>
             <div style="display: flex; gap: 15px; margin: 20px 0; flex-wrap: wrap;">
                 <button class="btn-primary" onclick="showCreateCategory()">Criar Categoria</button>
-                <button class="btn-secondary" onclick="showAdminStats()">Ver Estatisticas</button>
+                <button class="btn-secondary" onclick="showAdminStats()">Ver Estatísticas</button>
             </div>
             <div id="admin-stats"></div>
         </div>
@@ -1392,7 +1522,7 @@ async function showAdminStats() {
                 <div style="background:#f8f9fa; padding:20px; border-radius:12px; text-align:center;">
                     <div style="font-size:2em;">💬</div>
                     <div style="font-size:1.5em; font-weight:bold;">${threads}</div>
-                    <div>Topicos</div>
+                    <div>Tópicos</div>
                 </div>
                 <div style="background:#f8f9fa; padding:20px; border-radius:12px; text-align:center;">
                     <div style="font-size:2em;">📝</div>
@@ -1415,11 +1545,11 @@ function showCreateCategory() {
                 <input type="text" id="cat-name" required>
             </div>
             <div class="form-group">
-                <label>Descricao</label>
+                <label>Descrição</label>
                 <textarea id="cat-description" rows="3" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;"></textarea>
             </div>
             <div class="form-group">
-                <label>Icone (emoji)</label>
+                <label>Ícone (emoji)</label>
                 <input type="text" id="cat-icon" placeholder="📁">
             </div>
             <div class="form-group">
@@ -1458,7 +1588,7 @@ function showCreateCategory() {
             });
             alert('Categoria criada com sucesso!');
             closeModal('post-modal');
-            showHome();
+            navigateToHome();
         } catch (error) {
             alert('Erro: ' + error.message);
         } finally {
@@ -1481,11 +1611,11 @@ function showCreateSubcategory(categoryId) {
                 <input type="text" id="sub-name" required>
             </div>
             <div class="form-group">
-                <label>Descricao</label>
+                <label>Descrição</label>
                 <textarea id="sub-description" rows="3" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;"></textarea>
             </div>
             <div class="form-group">
-                <label>Icone (emoji)</label>
+                <label>Ícone (emoji)</label>
                 <input type="text" id="sub-icon" placeholder="📌">
             </div>
             <div class="form-group">
@@ -1530,7 +1660,7 @@ function showCreateSubcategory(categoryId) {
             
             alert('Subcategoria criada com sucesso!');
             closeModal('post-modal');
-            showSubcategories(categoryId);
+            navigateToSubcategories(categoryId);
         } catch (error) {
             alert('Erro: ' + error.message);
         } finally {
@@ -1550,7 +1680,7 @@ function showRecentPosts() {
 
 function showProfile() {
     if (!currentUser) { showLoginModal(); return; }
-    alert(`Perfil de ${currentUser.displayName || currentUser.email}\nFuncao: ${isAdmin ? 'Administrador' : 'Membro'}`);
+    alert(`Perfil de ${currentUser.displayName || currentUser.email}\nFunção: ${isAdmin ? 'Administrador' : 'Membro'}`);
 }
 
 function showLoginModal() {
@@ -1567,6 +1697,11 @@ function closeModal(modalId) {
 
 document.getElementById('google-login-btn')?.addEventListener('click', loginWithGoogle);
 
+// Escutar mudanças no histórico (botão voltar/avançar)
+window.addEventListener('popstate', (event) => {
+    handleRouting();
+});
+
 auth.onAuthStateChanged(async (user) => {
     if (user) {
         currentUser = user;
@@ -1582,15 +1717,21 @@ auth.onAuthStateChanged(async (user) => {
         }
         
         updateUIForUser();
-        showHome();
+        await handleRouting();
     } else {
         currentUser = null;
         isAdmin = false;
         updateUIForUser();
-        showHome();
+        await handleRouting();
     }
 });
 
+// Funções globais expostas
+window.navigateToHome = navigateToHome;
+window.navigateToSubcategories = navigateToSubcategories;
+window.navigateToThreads = navigateToThreads;
+window.navigateToPosts = navigateToPosts;
+window.copyCurrentLink = copyCurrentLink;
 window.showHome = showHome;
 window.showSubcategories = showSubcategories;
 window.showThreads = showThreads;
