@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Gerador de Sitemap - Fórum WazzimaGiygg</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; }
+        pre { background: #f4f4f4; padding: 15px; overflow-x: auto; border-radius: 8px; font-size: 12px; }
+        button { background: #e94560; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; margin: 10px 0; }
+        button:hover { background: #ff6b6b; }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>🗺️ Gerador de Sitemap - Fórum WazzimaGiygg</h1>
+        <p>Este gerador cria automaticamente o arquivo <strong>sitemap.xml</strong> com todas as categorias, subcategorias e tópicos do seu fórum.</p>
+        
+        <button onclick="generateAndDownload()">📥 Gerar e Baixar sitemap.xml</button>
+        
+        <h3>📄 Conteúdo Gerado:</h3>
+        <pre id="output">Clique no botão para gerar...</pre>
+    </div>
+
+    <script>
+        // Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyB9GkSqTIZ0kbVsba_WOdQeVAETrF9qna0",
+            authDomain: "wzzm-ce3fc.firebaseapp.com",
+            projectId: "wzzm-ce3fc",
+            storageBucket: "wzzm-ce3fc.appspot.com",
+            messagingSenderId: "249427877153",
+            appId: "1:249427877153:web:0e4297294794a5aadeb260"
+        };
+
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        function formatDate(timestamp) {
+            if (!timestamp) return new Date().toISOString().split('T')[0];
+            if (timestamp.toDate) {
+                return timestamp.toDate().toISOString().split('T')[0];
+            }
+            return new Date().toISOString().split('T')[0];
+        }
+
+        async function generateSitemap() {
+            let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+            xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+            
+            const today = new Date().toISOString().split('T')[0];
+            
+            // 1. Página inicial
+            xml += '\n    <!-- Página Inicial do Fórum -->\n';
+            xml += '    <url>\n';
+            xml += '        <loc>https://forum.wazzimagiygg.com/</loc>\n';
+            xml += `        <lastmod>${today}</lastmod>\n`;
+            xml += '        <changefreq>daily</changefreq>\n';
+            xml += '        <priority>1.0</priority>\n';
+            xml += '    </url>\n';
+            
+            try {
+                // 2. Buscar categorias
+                const categoriesSnapshot = await db.collection('maspia').doc('forum').collection('categories').orderBy('order', 'asc').get();
+                const categories = [];
+                categoriesSnapshot.forEach(doc => {
+                    categories.push({ id: doc.id, ...doc.data() });
+                });
+                
+                if (categories.length > 0) {
+                    xml += '\n    <!-- Categorias -->\n';
+                }
+                
+                for (const cat of categories) {
+                    xml += '    <url>\n';
+                    xml += `        <loc>https://forum.wazzimagiygg.com/?cat=${cat.id}</loc>\n`;
+                    xml += `        <lastmod>${today}</lastmod>\n`;
+                    xml += '        <changefreq>weekly</changefreq>\n';
+                    xml += '        <priority>0.8</priority>\n';
+                    xml += '    </url>\n';
+                    
+                    // 3. Buscar subcategorias
+                    const subSnapshot = await db.collection('maspia').doc('forum').collection('categories').doc(cat.id).collection('subcategories').orderBy('order', 'asc').get();
+                    const subcategories = [];
+                    subSnapshot.forEach(doc => {
+                        subcategories.push({ id: doc.id, ...doc.data() });
+                    });
+                    
+                    if (subcategories.length > 0) {
+                        xml += `\n    <!-- Subcategorias de ${cat.name || cat.id} -->\n`;
+                    }
+                    
+                    for (const sub of subcategories) {
+                        xml += '    <url>\n';
+                        xml += `        <loc>https://forum.wazzimagiygg.com/?cat=${cat.id}&sub=${sub.id}</loc>\n`;
+                        xml += `        <lastmod>${today}</lastmod>\n`;
+                        xml += '        <changefreq>weekly</changefreq>\n';
+                        xml += '        <priority>0.7</priority>\n';
+                        xml += '    </url>\n';
+                        
+                        // 4. Buscar tópicos (últimos 100 para não sobrecarregar)
+                        const threadsSnapshot = await db.collection('maspia').doc('forum').collection('categories').doc(cat.id).collection('subcategories').doc(sub.id).collection('threads')
+                            .orderBy('lastActivity', 'desc')
+                            .limit(100)
+                            .get();
+                        const threads = [];
+                        threadsSnapshot.forEach(doc => {
+                            threads.push({ id: doc.id, ...doc.data() });
+                        });
+                        
+                        if (threads.length > 0) {
+                            xml += `\n    <!-- Tópicos de ${sub.name || sub.id} -->\n`;
+                        }
+                        
+                        for (const thread of threads) {
+                            const lastMod = formatDate(thread.lastActivity);
+                            xml += '    <url>\n';
+                            xml += `        <loc>https://forum.wazzimagiygg.com/?cat=${cat.id}&sub=${sub.id}&thread=${thread.id}</loc>\n`;
+                            xml += `        <lastmod>${lastMod}</lastmod>\n`;
+                            xml += '        <changefreq>monthly</changefreq>\n';
+                            xml += '        <priority>0.6</priority>\n';
+                            xml += '    </url>\n';
+                        }
+                    }
+                }
+                
+                xml += '</urlset>';
+                return xml;
+                
+            } catch (error) {
+                console.error('Erro:', error);
+                throw error;
+            }
+        }
+
+        async function generateAndDownload() {
+            const outputElement = document.getElementById('output');
+            outputElement.textContent = '🔄 Gerando sitemap... Aguarde.';
+            
+            try {
+                const xml = await generateSitemap();
+                outputElement.textContent = xml;
+                
+                // Criar link para download
+                const blob = new Blob([xml], { type: 'application/xml' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'sitemap.xml';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                // Mostrar mensagem de sucesso
+                const successMsg = document.createElement('p');
+                successMsg.className = 'success';
+                successMsg.innerHTML = '✅ sitemap.xml gerado e baixado com sucesso! Faça o upload para a pasta raiz do seu site.';
+                document.querySelector('.container').appendChild(successMsg);
+                setTimeout(() => successMsg.remove(), 5000);
+                
+            } catch (error) {
+                outputElement.textContent = '❌ Erro: ' + error.message;
+                const errorMsg = document.createElement('p');
+                errorMsg.className = 'error';
+                errorMsg.innerHTML = '❌ Erro ao gerar sitemap: ' + error.message;
+                document.querySelector('.container').appendChild(errorMsg);
+                setTimeout(() => errorMsg.remove(), 5000);
+            }
+        }
+    </script>
+</body>
+</html>
