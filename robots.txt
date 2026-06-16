@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://forum.wazzimagiygg.com/sitemap.xml
+
+# Evita indexar páginas de perfil e edição
+Disallow: /profile/
+Disallow: /edit/
+Disallow: /login/
+Disallow: /register/
+Disallow: /admin/
+
+# Atraso de rastreamento para não sobrecarregar o servidor
+Crawl-delay: 10
