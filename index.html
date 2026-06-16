@@ -136,6 +136,78 @@
             gap: 5px;
         }
 
+        /* BANNED OVERLAY */
+        .banned-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .banned-overlay.show {
+            display: flex;
+        }
+
+        .banned-box {
+            background: #1a1a1a;
+            border: 2px solid #e94560;
+            border-radius: 16px;
+            padding: 50px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            color: white;
+        }
+
+        .banned-box .icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .banned-box h2 {
+            color: #e94560;
+            margin-bottom: 15px;
+        }
+
+        .banned-box p {
+            color: #aaa;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .banned-box .btn-logout-banned {
+            background: #e94560;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .banned-box .btn-logout-banned:hover {
+            background: #c0392b;
+        }
+
+        .banned-box .ban-details {
+            background: #2a2a2a;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 13px;
+            color: #888;
+        }
+
         /* Restante dos estilos do fórum */
         .categories-grid {
             display: grid;
@@ -547,10 +619,27 @@
                 padding: 6px 10px;
                 font-size: 0.8em;
             }
+            .banned-box {
+                padding: 30px 20px;
+            }
         }
     </style>
 </head>
 <body>
+
+<!-- BANNED OVERLAY -->
+<div id="bannedOverlay" class="banned-overlay">
+    <div class="banned-box">
+        <div class="icon">🚫</div>
+        <h2>⚠️ Conta Banida</h2>
+        <p>Sua conta foi banida permanentemente do fórum.</p>
+        <div id="banDetails" class="ban-details">
+            Motivo: Violação das políticas de uso
+        </div>
+        <p style="font-size: 14px; color: #666;">Se você acredita que isso é um erro, entre em contato com o suporte.</p>
+        <button class="btn-logout-banned" onclick="logoutBanned()">🚪 Sair da conta</button>
+    </div>
+</div>
 
 <div class="header">
     <div class="header-container">
@@ -664,6 +753,7 @@ const auth = firebase.auth();
 
 let currentUser = null;
 let isAdmin = false;
+let isBanned = false;
 let currentCategoryId = null;
 let currentSubcategoryId = null;
 let currentThreadId = null;
@@ -678,17 +768,22 @@ const ADMIN_UIDS = ['sZxfMuOBPbXdR8nttVPXIN8QOOl1', '6aPqWVh8JVYL5NqEb78iDGPD7dH
 async function registerUser(user) {
     try {
         const uid = user.uid;
+        
+        // Verifica se o usuário já existe para preservar o status de ban
+        const userDoc = await db.collection('users').doc(uid).get();
+        const existingData = userDoc.exists ? userDoc.data() : {};
+        
         const userData = {
             uid: uid,
             email: user.email || '',
             name: user.displayName || 'Usuário',
             profilePictureUrl: user.photoURL || '',
             isAdmin: false,
-            isBan: false,
-            isBanned: false,
+            isBan: existingData.isBan || false,
+            isBanned: existingData.isBanned || false,
             isTeacher: false,
             isTeatcher: false,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            createdAt: existingData.createdAt || firebase.firestore.FieldValue.serverTimestamp(),
             updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
             lastLoginAt: firebase.firestore.FieldValue.serverTimestamp()
         };
@@ -704,12 +799,55 @@ async function registerUser(user) {
         // Registra na coleção 'usuários'
         await db.collection('usuários').doc(uid).set(userData, { merge: true });
 
-        console.log(`Usuário ${uid} registrado com sucesso!`);
-        return true;
+        console.log(`Usuário ${uid} registrado com sucesso! isBanned: ${userData.isBanned}`);
+        return userData;
     } catch (error) {
         console.error('Erro ao registrar usuário:', error);
-        return false;
+        return null;
     }
+}
+
+// ============================================
+// FUNÇÃO PARA VERIFICAR SE USUÁRIO ESTÁ BANIDO
+// ============================================
+async function checkIfUserIsBanned(user) {
+    if (!user) return false;
+    
+    try {
+        const userDoc = await db.collection('users').doc(user.uid).get();
+        if (userDoc.exists) {
+            const data = userDoc.data();
+            return data.isBanned === true || data.isBan === true;
+        }
+    } catch (error) {
+        console.log("Erro ao verificar banimento:", error);
+    }
+    
+    return false;
+}
+
+// ============================================
+// FUNÇÃO PARA USUÁRIO BANIDO
+// ============================================
+function showBannedScreen(reason = 'Violação das políticas de uso') {
+    const overlay = document.getElementById('bannedOverlay');
+    const details = document.getElementById('banDetails');
+    details.textContent = `Motivo: ${reason}`;
+    overlay.classList.add('show');
+    
+    // Esconde o conteúdo principal
+    document.querySelector('.main-container').style.opacity = '0.3';
+    document.querySelector('.main-container').style.pointerEvents = 'none';
+    document.querySelector('.header').style.opacity = '0.3';
+    document.querySelector('.header').style.pointerEvents = 'none';
+    document.querySelector('.footer').style.opacity = '0.3';
+    document.querySelector('.footer').style.pointerEvents = 'none';
+}
+
+function logoutBanned() {
+    auth.signOut().then(() => {
+        location.reload();
+    });
 }
 
 // ============================================
@@ -761,6 +899,9 @@ function getCurrentLink() {
 }
 
 async function handleRouting() {
+    // Se estiver banido, não carrega conteúdo
+    if (isBanned) return;
+    
     const params = getURLParams();
     
     if (params.threadId && params.subcategoryId && params.categoryId) {
@@ -789,21 +930,25 @@ async function handleRouting() {
 // ============================================
 
 async function navigateToHome() {
+    if (isBanned) return;
     updateURL(null, null, null);
     await showHome();
 }
 
 async function navigateToSubcategories(categoryId) {
+    if (isBanned) return;
     updateURL(categoryId, null, null);
     await showSubcategories(categoryId);
 }
 
 async function navigateToThreads(categoryId, subcategoryId) {
+    if (isBanned) return;
     updateURL(categoryId, subcategoryId, null);
     await showThreads(categoryId, subcategoryId);
 }
 
 async function navigateToPosts(categoryId, subcategoryId, threadId, page = 1) {
+    if (isBanned) return;
     updateURL(categoryId, subcategoryId, threadId, page);
     await showPostsWithPagination(categoryId, subcategoryId, threadId, page);
 }
@@ -884,7 +1029,7 @@ function updateUIForUser() {
     const adminBtn = document.getElementById('admin-btn');
     const moderacaoBtn = document.getElementById('moderacao-btn');
     
-    if (currentUser) {
+    if (currentUser && !isBanned) {
         loginBtn.style.display = 'none';
         logoutBtn.style.display = 'flex';
         if (isAdmin) {
@@ -923,6 +1068,7 @@ async function logout() {
     } catch (e) {}
     currentUser = null;
     isAdmin = false;
+    isBanned = false;
     updateUIForUser();
 }
 
@@ -1091,6 +1237,7 @@ function handlePostAnchor() {
 // ============================================
 
 async function showHome() {
+    if (isBanned) return;
     currentCategoryId = null;
     currentSubcategoryId = null;
     currentThreadId = null;
@@ -1146,6 +1293,7 @@ async function showHome() {
 }
 
 async function showSubcategories(categoryId) {
+    if (isBanned) return;
     currentCategoryId = categoryId;
     currentSubcategoryId = null;
     currentThreadId = null;
@@ -1198,6 +1346,7 @@ async function showSubcategories(categoryId) {
 }
 
 async function showThreads(categoryId, subcategoryId) {
+    if (isBanned) return;
     currentCategoryId = categoryId;
     currentSubcategoryId = subcategoryId;
     currentThreadId = null;
@@ -1250,6 +1399,7 @@ async function showThreads(categoryId, subcategoryId) {
 }
 
 async function showPostsWithPagination(categoryId, subcategoryId, threadId, page = 1) {
+    if (isBanned) return;
     currentCategoryId = categoryId;
     currentSubcategoryId = subcategoryId;
     currentThreadId = threadId;
@@ -1310,7 +1460,7 @@ async function showPostsWithPagination(categoryId, subcategoryId, threadId, page
                             <button class="action-btn" onclick="showCommentForm('${post.id}')">
                                 <span class="material-icons">comment</span> Responder
                             </button>
-                            ${(currentUser && (post.authorId === currentUser.uid || isAdmin)) ? `
+                            ${(currentUser && !isBanned && (post.authorId === currentUser.uid || isAdmin)) ? `
                                 <button class="action-btn" onclick="editPost('${post.id}')">
                                     <span class="material-icons">edit</span> Editar
                                 </button>
@@ -1407,7 +1557,14 @@ async function loadComments(categoryId, subcategoryId, threadId, postId) {
 // ============================================
 
 function showCreateThread() {
-    if (!currentUser) { showLoginModal(); return; }
+    if (!currentUser || isBanned) { 
+        if (isBanned) {
+            alert('Sua conta está banida. Não é possível criar tópicos.');
+        } else {
+            showLoginModal();
+        }
+        return; 
+    }
     
     document.getElementById('post-modal-title').innerHTML = 'Criar Novo Tópico';
     document.getElementById('post-modal-body').innerHTML = `
@@ -1481,7 +1638,10 @@ function insertImageToEditor() {
 }
 
 async function createThread() {
-    if (!threadQuill) return;
+    if (!threadQuill || isBanned) {
+        if (isBanned) alert('Sua conta está banida.');
+        return;
+    }
     
     if (isLocked(`createThread_${currentUser?.uid}`)) {
         alert('Aguarde um momento antes de criar outro tópico...');
@@ -1549,7 +1709,14 @@ async function createThread() {
 }
 
 async function createReply() {
-    if (!currentUser) { showLoginModal(); return; }
+    if (!currentUser || isBanned) {
+        if (isBanned) {
+            alert('Sua conta está banida. Não é possível responder.');
+        } else {
+            showLoginModal();
+        }
+        return;
+    }
     if (!replyQuill) return;
     
     if (isLocked(`createReply_${currentThreadId}_${currentUser?.uid}`)) {
@@ -1614,6 +1781,10 @@ async function createReply() {
 }
 
 function showCommentForm(postId) {
+    if (isBanned) {
+        alert('Sua conta está banida. Não é possível comentar.');
+        return;
+    }
     const formDiv = document.getElementById(`comment-form-${postId}`);
     if (formDiv) {
         formDiv.style.display = formDiv.style.display === 'none' ? 'block' : 'none';
@@ -1621,7 +1792,14 @@ function showCommentForm(postId) {
 }
 
 async function submitComment(postId) {
-    if (!currentUser) { showLoginModal(); return; }
+    if (!currentUser || isBanned) {
+        if (isBanned) {
+            alert('Sua conta está banida. Não é possível comentar.');
+        } else {
+            showLoginModal();
+        }
+        return;
+    }
     
     const content = document.getElementById(`comment-content-${postId}`).value;
     if (!content.trim()) {
@@ -1675,6 +1853,10 @@ async function submitComment(postId) {
 // ============================================
 
 async function editPost(postId) {
+    if (isBanned) {
+        alert('Sua conta está banida. Não é possível editar.');
+        return;
+    }
     if (isLocked(`editPost_${postId}_${currentUser?.uid}`)) {
         alert('Aguarde um momento...');
         return;
@@ -1697,6 +1879,10 @@ async function editPost(postId) {
 }
 
 async function deletePost(postId) {
+    if (isBanned) {
+        alert('Sua conta está banida. Não é possível excluir.');
+        return;
+    }
     if (confirm('Tem certeza que deseja excluir este post?')) {
         try {
             await postsRef(currentCategoryId, currentSubcategoryId, currentThreadId).doc(postId).delete();
@@ -1964,6 +2150,10 @@ function showRecentPosts() {
 
 function showProfile() {
     if (!currentUser) { showLoginModal(); return; }
+    if (isBanned) {
+        alert('Sua conta está banida.');
+        return;
+    }
     alert(`Perfil de ${currentUser.displayName || currentUser.email}\nFunção: ${isAdmin ? 'Administrador' : 'Membro'}`);
 }
 
@@ -1990,7 +2180,18 @@ auth.onAuthStateChanged(async (user) => {
         currentUser = user;
         
         // Registra o usuário no Firestore
-        await registerUser(user);
+        const userData = await registerUser(user);
+        
+        // VERIFICA BANIMENTO PRIMEIRO
+        isBanned = await checkIfUserIsBanned(user);
+        
+        if (isBanned) {
+            // Usuário banido - mostra tela de bloqueio
+            showBannedScreen('Sua conta foi banida por violação das políticas de uso.');
+            // Não carrega o conteúdo
+            updateUIForUser();
+            return;
+        }
         
         isAdmin = await checkIsAdmin(user);
         
@@ -2008,7 +2209,18 @@ auth.onAuthStateChanged(async (user) => {
     } else {
         currentUser = null;
         isAdmin = false;
+        isBanned = false;
         updateUIForUser();
+        
+        // Remove overlay de banido
+        document.getElementById('bannedOverlay').classList.remove('show');
+        document.querySelector('.main-container').style.opacity = '1';
+        document.querySelector('.main-container').style.pointerEvents = 'auto';
+        document.querySelector('.header').style.opacity = '1';
+        document.querySelector('.header').style.pointerEvents = 'auto';
+        document.querySelector('.footer').style.opacity = '1';
+        document.querySelector('.footer').style.pointerEvents = 'auto';
+        
         await handleRouting();
     }
 });
@@ -2037,6 +2249,7 @@ window.showLoginModal = showLoginModal;
 window.closeModal = closeModal;
 window.loginWithGoogle = loginWithGoogle;
 window.logout = logout;
+window.logoutBanned = logoutBanned;
 window.showCommentForm = showCommentForm;
 window.submitComment = submitComment;
 window.editPost = editPost;
