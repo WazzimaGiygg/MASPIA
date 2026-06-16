@@ -673,6 +673,46 @@ let replyQuill = null;
 const ADMIN_UIDS = ['sZxfMuOBPbXdR8nttVPXIN8QOOl1', '6aPqWVh8JVYL5NqEb78iDGPD7dH3'];
 
 // ============================================
+// FUNÇÃO PARA REGISTRAR USUÁRIO
+// ============================================
+async function registerUser(user) {
+    try {
+        const uid = user.uid;
+        const userData = {
+            uid: uid,
+            email: user.email || '',
+            name: user.displayName || 'Usuário',
+            profilePictureUrl: user.photoURL || '',
+            isAdmin: false,
+            isBan: false,
+            isBanned: false,
+            isTeacher: false,
+            isTeatcher: false,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            lastLoginAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
+
+        // Verifica se é admin específico
+        if (ADMIN_UIDS.includes(uid)) {
+            userData.isAdmin = true;
+        }
+
+        // Registra na coleção 'users'
+        await db.collection('users').doc(uid).set(userData, { merge: true });
+        
+        // Registra na coleção 'usuários'
+        await db.collection('usuários').doc(uid).set(userData, { merge: true });
+
+        console.log(`Usuário ${uid} registrado com sucesso!`);
+        return true;
+    } catch (error) {
+        console.error('Erro ao registrar usuário:', error);
+        return false;
+    }
+}
+
+// ============================================
 // CONFIGURAÇÕES DE PAGINAÇÃO
 // ============================================
 const POSTS_PER_PAGE = 10;
@@ -864,7 +904,12 @@ function updateUIForUser() {
 
 async function loginWithGoogle() {
     try {
-        await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+        const result = await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+        const user = result.user;
+        
+        // Registra o usuário no Firestore
+        await registerUser(user);
+        
         closeModal('login-modal');
     } catch (error) {
         alert('Erro: ' + error.message);
@@ -1943,6 +1988,10 @@ window.addEventListener('popstate', (event) => {
 auth.onAuthStateChanged(async (user) => {
     if (user) {
         currentUser = user;
+        
+        // Registra o usuário no Firestore
+        await registerUser(user);
+        
         isAdmin = await checkIsAdmin(user);
         
         if (isAdmin) {
@@ -1998,8 +2047,7 @@ window.createThread = createThread;
 window.createReply = createReply;
 window.openModeracao = openModeracao;
 </script>
-             <!-- Iframe do verificador/logs (mantido como você tinha) -->
-        <!-- Iframe do verificador/logs (mantido como você tinha) -->
+<!-- Iframe do verificador/logs (mantido como você tinha) -->
 <script src="https://gspotfverwazzimagiygg.wazzimagiygg.com/D6FefD0De/EfdFeF1ExcE0C/De0Var6H6f/QXdv0/dddcefb.js"></script>
 </body>
 </html>
