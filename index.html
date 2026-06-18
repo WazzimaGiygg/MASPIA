@@ -760,8 +760,8 @@ function checkAuthToken() {
             const newUrl = window.location.pathname + window.location.hash;
             window.history.replaceState({}, document.title, newUrl);
             
-            // Aplica o usuário
-            applyUserSession(user);
+            // Aplica o usuário e verifica admin
+            applyUserSessionWithVerification(user);
             return true;
         } catch (e) {
             console.error('Erro ao processar token:', e);
@@ -780,7 +780,7 @@ function checkStoredSession() {
         if (token && userData && expiry && Date.now() < parseInt(expiry)) {
             const user = JSON.parse(userData);
             console.log('📂 Sessão restaurada do localStorage:', user);
-            applyUserSession(user);
+            applyUserSessionWithVerification(user);
             return true;
         }
     } catch (e) {
@@ -789,9 +789,12 @@ function checkStoredSession() {
     return false;
 }
 
-// Aplica a sessão do usuário
-function applyUserSession(user) {
-    if (user && user.uid) {
+// Aplica a sessão do usuário com verificação de admin
+async function applyUserSessionWithVerification(user) {
+    if (!user || !user.uid) return false;
+    
+    try {
+        // Primeiro, define o usuário básico
         currentUser = {
             uid: user.uid,
             displayName: user.displayName || 'Usuário',
@@ -799,10 +802,184 @@ function applyUserSession(user) {
             photoURL: user.photoURL || '',
             isGuest: user.isGuest || false
         };
+        
+        // AGORA verifica se é admin no Firestore
+        isAdmin = await checkIsAdmin(currentUser);
+        
+        // Verifica se está banido
+        isBanned = await checkIfUserIsBanned(currentUser);
+        
+        console.log('✅ Usuário aplicado:', currentUser.displayName);
+        console.log('👑 É admin?', isAdmin);
+        console.log('🚫 Está banido?', isBanned);
+        
+        if (isBanned) {
+            showBannedScreen('Sua conta foi banida.');
+            updateUIForUser();
+            return true;
+        }
+        
         updateUIForUser();
+        
+        // Se chegou via token, recarrega o conteúdo
+        await handleRouting();
+        return true;
+        
+    } catch (error) {
+        console.error('❌ Erro ao aplicar sessão:', error);
+        return false;
+    }
+}
+
+// ============================================================
+// FUNÇÃO DE AUTENTICAÇÃO DO FIREBASE
+// ============================================================
+
+// Função para carregar o usuário do Firebase
+async function loadFirebaseUser(user) {
+    if (!user) {
+        currentUser = null;
+        isAdmin = false;
+        isBanned = false;
+        updateUIForUser();
+        await handleRouting();
+        return;
+    }
+    
+    try {
+        // Usuário autenticado via Firebase
+        currentUser = {
+            uid: user.uid,
+            displayName: user.displayName || 'Usuário',
+            email: user.email || '',
+            photoURL: user.photoURL || '',
+            isGuest: false
+        };
+        
+        // Registra o usuário no Firestore
+        await registerUser(user);
+        
+        // VERIFICA BANIMENTO
+        isBanned = await checkIfUserIsBanned(user);
+        
+        if (isBanned) {
+            showBannedScreen('Sua conta foi banida por violação das políticas de uso.');
+            updateUIForUser();
+            return;
+        }
+        
+        // VERIFICA ADMIN
+        isAdmin = await checkIsAdmin(user);
+        
+        console.log('✅ Usuário Firebase carregado:', currentUser.displayName);
+        console.log('👑 É admin?', isAdmin);
+        
+        if (isAdmin) {
+            await usersRef().doc(user.uid).set({
+                email: user.email,
+                name: user.displayName,
+                role: 'admin',
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            }, { merge: true });
+        }
+        
+        updateUIForUser();
+        
+        // Salva no localStorage para futuras sessões
+        const userData = {
+            uid: user.uid,
+            displayName: user.displayName,
+            email: user.email,
+            photoURL: user.photoURL,
+            isGuest: false
+        };
+        localStorage.setItem('wzzm_auth_user', JSON.stringify(userData));
+        localStorage.setItem('wzzm_auth_token', 'firebase_' + Date.now());
+        localStorage.setItem('wzzm_auth_expiry', (Date.now() + 3600000).toString());
+        
+        await handleRouting();
+        
+    } catch (error) {
+        console.error('❌ Erro ao carregar usuário Firebase:', error);
+        currentUser = null;
+        isAdmin = false;
+        isBanned = false;
+        updateUIForUser();
+        await handleRouting();
+    }
+}
+
+// ============================================================
+// FUNÇÃO CHECK IS ADMIN - CORRIGIDA (ÚNICA VERSÃO)
+// ============================================================
+
+async function checkIsAdmin(user) {
+    if (!user) return false;
+    
+    // Verifica se é admin pelos UIDs fixos
+    if (ADMIN_UIDS.includes(user.uid)) {
+        console.log('👑 Usuário é admin por UID fixo:', user.uid);
         return true;
     }
-    return false;
+    
+    try {
+        // Verifica no Firestore - coleção 'users'
+        const userDoc = await db.collection('users').doc(user.uid).get();
+        if (userDoc.exists) {
+            const data = userDoc.data();
+            if (data.isAdmin === true) {
+                console.log('👑 Usuário é admin no Firestore (users)');
+                return true;
+            }
+        }
+        
+        // Verifica na coleção de perfis
+        const profileDoc = await usersRef().doc(user.uid).get();
+        if (profileDoc.exists) {
+            const data = profileDoc.data();
+            if (data.role === 'admin' || data.role === 'moderator') {
+                console.log('👑 Usuário é admin no perfil');
+                return true;
+            }
+        }
+        
+        console.log('❌ Usuário NÃO é admin');
+        return false;
+        
+    } catch (error) {
+        console.error('Erro ao verificar admin:', error);
+        return false;
+    }
+}
+
+// ============================================================
+// INICIALIZAÇÃO - CORRIGIDA
+// ============================================================
+
+// PASSO 1: Verifica token na URL (retorno do login)
+const hasToken = checkAuthToken();
+
+// PASSO 2: Se não tem token, verifica sessão no localStorage
+if (!hasToken) {
+    const hasSession = checkStoredSession();
+    
+    // PASSO 3: Se não tem sessão, verifica Firebase Auth
+    if (!hasSession) {
+        auth.onAuthStateChanged(async (user) => {
+            await loadFirebaseUser(user);
+        });
+    }
+} else {
+    // Se já tem token, não precisa esperar o Firebase
+    // Mas ainda assim registra o listener para manter sincronizado
+    auth.onAuthStateChanged(async (user) => {
+        if (user) {
+            // Se o Firebase tem um usuário diferente, atualiza
+            if (!currentUser || currentUser.uid !== user.uid) {
+                await loadFirebaseUser(user);
+            }
+        }
+    });
 }
 
 // ============================================================
@@ -1050,17 +1227,8 @@ const commentsRef = (catId, subId, threadId, postId) => postsRef(catId, subId, t
 const usersRef = () => maspiaRef.doc('usuarios').collection('perfis');
 
 // ============================================================
-// FUNÇÕES DE AUTENTICAÇÃO
+// FUNÇÕES DE AUTENTICAÇÃO (SEM DUPLICAR checkIsAdmin)
 // ============================================================
-
-async function checkIsAdmin(user) {
-    if (!user) return false;
-    if (ADMIN_UIDS.includes(user.uid)) return true;
-    try {
-        const userDoc = await usersRef().doc(user.uid).get();
-        return userDoc.exists && (userDoc.data().role === 'admin' || userDoc.data().role === 'moderator');
-    } catch { return false; }
-}
 
 function updateUIForUser() {
     const loginBtn = document.getElementById('login-nav-btn');
@@ -1074,9 +1242,11 @@ function updateUIForUser() {
         if (isAdmin) {
             adminBtn.style.display = 'flex';
             moderacaoBtn.style.display = 'flex';
+            console.log('👑 Botão Admin VISÍVEL');
         } else {
             adminBtn.style.display = 'none';
             moderacaoBtn.style.display = 'none';
+            console.log('👑 Botão Admin OCULTO');
         }
     } else {
         loginBtn.style.display = 'flex';
@@ -2193,76 +2363,6 @@ function closeModal(modalId) {
 window.addEventListener('popstate', (event) => {
     handleRouting();
 });
-
-// ============================================================
-// INICIALIZAÇÃO - VERIFICA SESSÃO
-// ============================================================
-
-// PASSO 1: Verifica token na URL (retorno do login)
-const hasToken = checkAuthToken();
-
-// PASSO 2: Se não tem token, verifica sessão no localStorage
-if (!hasToken) {
-    const hasSession = checkStoredSession();
-    
-    // PASSO 3: Se não tem sessão, verifica Firebase Auth
-    if (!hasSession) {
-        auth.onAuthStateChanged(async (user) => {
-            if (user) {
-                // Usuário autenticado via Firebase
-                currentUser = {
-                    uid: user.uid,
-                    displayName: user.displayName || 'Usuário',
-                    email: user.email || '',
-                    photoURL: user.photoURL || '',
-                    isGuest: false
-                };
-                
-                // Registra o usuário no Firestore
-                await registerUser(user);
-                
-                // VERIFICA BANIMENTO PRIMEIRO
-                isBanned = await checkIfUserIsBanned(user);
-                
-                if (isBanned) {
-                    showBannedScreen('Sua conta foi banida por violação das políticas de uso.');
-                    updateUIForUser();
-                    return;
-                }
-                
-                isAdmin = await checkIsAdmin(user);
-                
-                if (isAdmin) {
-                    await usersRef().doc(user.uid).set({
-                        email: user.email,
-                        name: user.displayName,
-                        role: 'admin',
-                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                    }, { merge: true });
-                }
-                
-                updateUIForUser();
-                await handleRouting();
-            } else {
-                currentUser = null;
-                isAdmin = false;
-                isBanned = false;
-                updateUIForUser();
-                
-                // Remove overlay de banido
-                document.getElementById('bannedOverlay').classList.remove('show');
-                document.querySelector('.main-container').style.opacity = '1';
-                document.querySelector('.main-container').style.pointerEvents = 'auto';
-                document.querySelector('.header').style.opacity = '1';
-                document.querySelector('.header').style.pointerEvents = 'auto';
-                document.querySelector('.footer').style.opacity = '1';
-                document.querySelector('.footer').style.pointerEvents = 'auto';
-                
-                await handleRouting();
-            }
-        });
-    }
-}
 
 // Funções globais expostas
 window.navigateToHome = navigateToHome;
