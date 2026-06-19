@@ -8,7 +8,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Lato:wght@300;400;700;900&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
     <link rel="icon" href="https://gspotfverwazzimagiygg.wazzimagiygg.com/forum/Favicom.png" type="image/x-icon">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <!-- Editor de texto rico - Quill -->
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
@@ -28,7 +27,6 @@
             min-height: 100vh;
         }
 
-        /* ===== HEADER PADRONIZADO WAZZIMAGIYGG ===== */
         .header {
             background: linear-gradient(135deg, #1a1a2e, #16213e);
             color: white;
@@ -141,7 +139,6 @@
             text-transform: uppercase;
         }
 
-        /* NOTIFICATION BELL */
         .notification-bell {
             position: relative;
             cursor: pointer;
@@ -252,7 +249,6 @@
             opacity: 0.4;
         }
 
-        /* ===== BANNED OVERLAY ===== */
         .banned-overlay {
             position: fixed;
             top: 0;
@@ -302,7 +298,6 @@
             color: #888;
         }
 
-        /* ===== MAIN CONTAINER ===== */
         .main-container {
             max-width: 1400px;
             margin: 30px auto;
@@ -311,7 +306,6 @@
             width: 100%;
         }
 
-        /* ===== FOOTER PADRONIZADO WAZZIMAGIYGG ===== */
         .site-footer {
             background: linear-gradient(135deg, #0a0a0a 0%, #141414 100%);
             border-top: 1px solid #2a2a2a;
@@ -372,7 +366,6 @@
             margin-top: 8px;
         }
 
-        /* ===== ESTILOS DO FÓRUM ===== */
         .categories-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -770,7 +763,6 @@
             transition: background-color 0.5s;
         }
 
-        /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
             .header-content {
                 flex-direction: column;
@@ -828,21 +820,17 @@
 </head>
 <body>
 
-<!-- ===== BANNED OVERLAY ===== -->
 <div id="bannedOverlay" class="banned-overlay">
     <div class="banned-box">
         <div class="icon">🚫</div>
         <h2>⚠️ Conta Banida</h2>
         <p>Sua conta foi banida permanentemente do fórum.</p>
-        <div id="banDetails" class="ban-details">
-            Motivo: Violação das políticas de uso
-        </div>
+        <div id="banDetails" class="ban-details">Motivo: Violação das políticas de uso</div>
         <p style="font-size: 14px; color: #666;">Se você acredita que isso é um erro, entre em contato com o suporte.</p>
         <button class="btn-logout-banned" onclick="logoutBanned()">🚪 Sair da conta</button>
     </div>
 </div>
 
-<!-- ===== HEADER PADRONIZADO WAZZIMAGIYGG ===== -->
 <header class="header">
     <div class="header-content">
         <div class="logo-area-header" onclick="navigateToHome()">
@@ -860,7 +848,6 @@
             </div>
             <span id="userBadge"></span>
             
-            <!-- NOTIFICATION BELL -->
             <div class="notification-bell" id="notificationBell" onclick="toggleNotifications(event)">
                 <span class="material-icons">notifications</span>
                 <span class="notification-badge" id="notifBadge" style="display:none;">0</span>
@@ -886,12 +873,10 @@
     </div>
 </header>
 
-<!-- ===== MAIN CONTAINER ===== -->
 <div class="main-container" id="main-container">
     <div class="loading">Carregando fórum...</div>
 </div>
 
-<!-- ===== FOOTER PADRONIZADO WAZZIMAGIYGG ===== -->
 <footer class="site-footer">
     <div class="footer-content">
         <div class="footer-links">
@@ -909,13 +894,10 @@
             <span class="footer-divider">|</span>
             <a href="https://painel.wazzimagiygg.com/" class="footer-link highlight" target="_blank">👤 Sua conta</a>
         </div>
-        <div class="footer-copyright">
-            © 2026 WazzimaGiygg Forum - Comunidade e Discussão
-        </div>
+        <div class="footer-copyright">© 2026 WazzimaGiygg Forum - Comunidade e Discussão</div>
     </div>
 </footer>
 
-<!-- ===== MODAL LOGIN ===== -->
 <div id="login-modal" class="modal">
     <div class="modal-content" style="max-width: 400px;">
         <div class="modal-header">
@@ -932,8 +914,8 @@
             <div style="text-align:center; margin:20px 0; color:#999;">ou</div>
             
             <form id="login-form-modal">
-                <input type="email" id="modal-email" class="form-group" style="width:100%; padding:12px; border:1px solid #ddd; border-radius:8px; margin-bottom:10px;" placeholder="E-mail" required>
-                <input type="password" id="modal-password" class="form-group" style="width:100%; padding:12px; border:1px solid #ddd; border-radius:8px; margin-bottom:10px;" placeholder="Senha" required>
+                <input type="email" id="modal-email" style="width:100%; padding:12px; border:1px solid #ddd; border-radius:8px; margin-bottom:10px;" placeholder="E-mail" required>
+                <input type="password" id="modal-password" style="width:100%; padding:12px; border:1px solid #ddd; border-radius:8px; margin-bottom:10px;" placeholder="Senha" required>
                 <button type="submit" class="btn-primary" style="width:100%;">Entrar com e-mail</button>
             </form>
             <div style="text-align:center; margin-top:16px;">
@@ -943,7 +925,6 @@
     </div>
 </div>
 
-<!-- ===== MODAL POST ===== -->
 <div id="post-modal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
@@ -956,7 +937,6 @@
     </div>
 </div>
 
-<!-- ===== MODAL IMAGEM ===== -->
 <div id="image-modal" class="modal">
     <div class="modal-content" style="max-width: 500px;">
         <div class="modal-header">
@@ -966,11 +946,11 @@
         <div class="modal-body">
             <div class="form-group">
                 <label>URL da Imagem</label>
-                <input type="text" id="image-url" class="form-control" placeholder="https://exemplo.com/imagem.jpg">
+                <input type="text" id="image-url" placeholder="https://exemplo.com/imagem.jpg">
             </div>
             <div class="form-group">
                 <label>Texto alternativo (opcional)</label>
-                <input type="text" id="image-alt" class="form-control" placeholder="Descrição da imagem">
+                <input type="text" id="image-alt" placeholder="Descrição da imagem">
             </div>
             <button class="btn-primary" onclick="insertImageToEditor()" style="width:100%;">Inserir Imagem</button>
         </div>
@@ -1064,12 +1044,13 @@ function renderHtmlContent(html) {
 }
 
 // ============================================
-// REGISTRO DE USUÁRIO
+// REGISTRO DE USUÁRIO - CORRIGIDO
 // ============================================
 async function registerUser(user) {
     try {
         const uid = user.uid;
-        const userDoc = await db.collection('users').doc(uid).get();
+        const userRef = db.collection('users').doc(uid);
+        const userDoc = await userRef.get();
         const existingData = userDoc.exists ? userDoc.data() : {};
         
         let isAdminValue = ADMIN_UIDS.includes(uid) || existingData.isAdmin === true;
@@ -1090,9 +1071,7 @@ async function registerUser(user) {
             lastLoginAt: firebase.firestore.FieldValue.serverTimestamp()
         };
 
-        await db.collection('users').doc(uid).set(userData, { merge: true });
-        await db.collection('usuários').doc(uid).set(userData, { merge: true });
-
+        await userRef.set(userData, { merge: true });
         console.log(`Usuário ${uid} registrado com sucesso!`);
         return userData;
     } catch (error) {
@@ -1419,14 +1398,14 @@ function handlePostAnchor() {
 }
 
 // ============================================
-// REFERÊNCIAS FIRESTORE
+// REFERÊNCIAS FIRESTORE - CORRIGIDAS
 // ============================================
-const maspiaRef = db.collection('maspia');
-const categoriesRef = () => maspiaRef.doc('forum').collection('categories');
-const subcategoriesRef = (catId) => categoriesRef().doc(catId).collection('subcategories');
-const threadsRef = (catId, subId) => subcategoriesRef(catId).doc(subId).collection('threads');
-const postsRef = (catId, subId, threadId) => threadsRef(catId, subId).doc(threadId).collection('posts');
-const commentsRef = (catId, subId, threadId, postId) => postsRef(catId, subId, threadId).doc(postId).collection('comments');
+// Estrutura simplificada: categories -> subcategories -> threads -> posts -> comments
+const categoriesRef = () => db.collection('forum_categories');
+const subcategoriesRef = (catId) => db.collection('forum_subcategories').where('categoryId', '==', catId);
+const threadsRef = (subId) => db.collection('forum_threads').where('subcategoryId', '==', subId);
+const postsRef = (threadId) => db.collection('forum_posts').where('threadId', '==', threadId);
+const commentsRef = (postId) => db.collection('forum_comments').where('postId', '==', postId);
 
 // ============================================
 // CONTROLE ANTI-SPAM
@@ -1499,7 +1478,10 @@ async function showHome() {
     try {
         const snapshot = await categoriesRef().orderBy('order', 'asc').get();
         const categories = [];
-        snapshot.forEach(doc => categories.push({ id: doc.id, ...doc.data() }));
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            categories.push({ id: doc.id, ...data });
+        });
         
         if (categories.length === 0 && isAdmin) {
             container.innerHTML = `
@@ -1546,9 +1528,12 @@ async function showSubcategories(categoryId) {
     try {
         const catDoc = await categoriesRef().doc(categoryId).get();
         const category = catDoc.data();
-        const snapshot = await subcategoriesRef(categoryId).orderBy('order', 'asc').get();
+        const snapshot = await subcategoriesRef(categoryId).get();
         const subcategories = [];
-        snapshot.forEach(doc => subcategories.push({ id: doc.id, ...doc.data() }));
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            subcategories.push({ id: doc.id, ...data });
+        });
         
         container.innerHTML = `
             <div class="breadcrumb">
@@ -1590,12 +1575,15 @@ async function showThreads(categoryId, subcategoryId) {
     
     try {
         const catDoc = await categoriesRef().doc(categoryId).get();
-        const subDoc = await subcategoriesRef(categoryId).doc(subcategoryId).get();
+        const subDoc = await db.collection('forum_subcategories').doc(subcategoryId).get();
         const category = catDoc.data();
         const subcategory = subDoc.data();
-        const snapshot = await threadsRef(categoryId, subcategoryId).orderBy('lastActivity', 'desc').get();
+        const snapshot = await threadsRef(subcategoryId).orderBy('lastActivity', 'desc').get();
         const threads = [];
-        snapshot.forEach(doc => threads.push({ id: doc.id, ...doc.data() }));
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            threads.push({ id: doc.id, ...data });
+        });
         
         container.innerHTML = `
             <div class="breadcrumb">
@@ -1628,16 +1616,16 @@ async function showThreads(categoryId, subcategoryId) {
     }
 }
 
-async function loadPostsWithPagination(categoryId, subcategoryId, threadId, page = 1) {
+async function loadPostsWithPagination(threadId, page = 1) {
     currentPage = page;
     try {
-        const postsQuery = await postsRef(categoryId, subcategoryId, threadId).get();
+        const postsQuery = await postsRef(threadId).get();
         totalPosts = postsQuery.size;
         totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE);
         if (currentPage > totalPages && totalPages > 0) currentPage = totalPages;
         if (currentPage < 1) currentPage = 1;
         const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
-        const postsSnapshot = await postsRef(categoryId, subcategoryId, threadId).orderBy('createdAt', 'asc').get();
+        const postsSnapshot = await postsRef(threadId).orderBy('createdAt', 'asc').get();
         const allPosts = [];
         postsSnapshot.forEach(doc => allPosts.push({ id: doc.id, ...doc.data() }));
         const posts = allPosts.slice(startIndex, startIndex + POSTS_PER_PAGE);
@@ -1655,8 +1643,8 @@ async function showPostsWithPagination(categoryId, subcategoryId, threadId, page
     
     try {
         const catDoc = await categoriesRef().doc(categoryId).get();
-        const subDoc = await subcategoriesRef(categoryId).doc(subcategoryId).get();
-        const threadDoc = await threadsRef(categoryId, subcategoryId).doc(threadId).get();
+        const subDoc = await db.collection('forum_subcategories').doc(subcategoryId).get();
+        const threadDoc = await db.collection('forum_threads').doc(threadId).get();
         const category = catDoc.data();
         const subcategory = subDoc.data();
         const thread = threadDoc.data();
@@ -1664,7 +1652,7 @@ async function showPostsWithPagination(categoryId, subcategoryId, threadId, page
         if (!thread) { container.innerHTML = '<div class="loading">Tópico não encontrado!</div>'; return; }
         
         const { posts, totalPosts: total, totalPages: pages, currentPage: currPage } = 
-            await loadPostsWithPagination(categoryId, subcategoryId, threadId, page);
+            await loadPostsWithPagination(threadId, page);
         totalPosts = total; totalPages = pages; currentPage = currPage;
         
         updateURL(categoryId, subcategoryId, threadId, currentPage);
@@ -1743,7 +1731,7 @@ async function showPostsWithPagination(categoryId, subcategoryId, threadId, page
             });
         }
         
-        for (const post of posts) loadComments(categoryId, subcategoryId, threadId, post.id);
+        for (const post of posts) loadComments(post.id);
         addCopyLinkButton();
         handlePostAnchor();
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1782,9 +1770,9 @@ function renderPagination(categoryId, subcategoryId, threadId, currentPage, tota
     return html;
 }
 
-async function loadComments(categoryId, subcategoryId, threadId, postId) {
+async function loadComments(postId) {
     try {
-        const snapshot = await commentsRef(categoryId, subcategoryId, threadId, postId).orderBy('createdAt', 'asc').get();
+        const snapshot = await commentsRef(postId).orderBy('createdAt', 'asc').get();
         const comments = [];
         snapshot.forEach(doc => comments.push({ id: doc.id, ...doc.data() }));
         const commentsDiv = document.getElementById(`comments-${postId}`);
@@ -1807,7 +1795,7 @@ async function loadComments(categoryId, subcategoryId, threadId, postId) {
 }
 
 // ============================================
-// CRIAÇÃO DE POSTS E TÓPICOS
+// CRIAÇÃO DE POSTS E TÓPICOS - CORRIGIDO
 // ============================================
 function showCreateThread() {
     if (!currentUser || isBanned) { if (isBanned) alert('Sua conta está banida.'); else showLoginModal(); return; }
@@ -1830,7 +1818,7 @@ function showCreateThread() {
 async function createThread() {
     if (!threadQuill || isBanned) { if (isBanned) alert('Sua conta está banida.'); return; }
     if (isLocked(`createThread_${currentUser?.uid}`)) { alert('Aguarde um momento...'); return; }
-    const title = document.getElementById('thread-title').value;
+    const title = document.getElementById('thread-title').value.trim();
     const content = threadQuill.root.innerHTML;
     if (!title || !content || content === '<p><br></p>') { alert('Preencha título e conteúdo'); return; }
     lock(`createThread_${currentUser?.uid}`, 3000);
@@ -1839,23 +1827,42 @@ async function createThread() {
     if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Criando...'; }
     
     try {
-        const threadId = Date.now().toString();
-        const postId = Date.now().toString();
+        const threadId = db.collection('forum_threads').doc().id;
+        const postId = db.collection('forum_posts').doc().id;
         const batch = db.batch();
-        batch.set(threadsRef(currentCategoryId, currentSubcategoryId).doc(threadId), {
-            title, authorId: currentUser.uid, authorName: currentUser.displayName || currentUser.email,
+        
+        // Criar o tópico
+        const threadRef = db.collection('forum_threads').doc(threadId);
+        batch.set(threadRef, {
+            title: title,
+            subcategoryId: currentSubcategoryId,
+            categoryId: currentCategoryId,
+            authorId: currentUser.uid,
+            authorName: currentUser.displayName || currentUser.email,
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            lastActivity: firebase.firestore.FieldValue.serverTimestamp(), postsCount: 1
+            lastActivity: firebase.firestore.FieldValue.serverTimestamp(),
+            postsCount: 1
         });
-        batch.set(postsRef(currentCategoryId, currentSubcategoryId, threadId).doc(postId), {
-            content, authorId: currentUser.uid, authorName: currentUser.displayName || currentUser.email,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(), isAdmin: isAdmin
+        
+        // Criar o primeiro post
+        const postRef = db.collection('forum_posts').doc(postId);
+        batch.set(postRef, {
+            threadId: threadId,
+            content: content,
+            authorId: currentUser.uid,
+            authorName: currentUser.displayName || currentUser.email,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            isAdmin: isAdmin
         });
+        
         await batch.commit();
         await updateCounts(currentCategoryId, currentSubcategoryId);
         document.getElementById('post-modal').classList.remove('show');
         navigateToThreads(currentCategoryId, currentSubcategoryId);
-    } catch (error) { alert('Erro: ' + error.message); }
+    } catch (error) { 
+        alert('Erro ao criar tópico: ' + error.message); 
+        console.error(error);
+    }
     finally { if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Criar Tópico'; } submitLocks.delete(`createThread_${currentUser?.uid}`); }
 }
 
@@ -1871,22 +1878,34 @@ async function createReply() {
     if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Enviando...'; }
     
     try {
-        const postId = Date.now().toString();
+        const postId = db.collection('forum_posts').doc().id;
         const batch = db.batch();
-        batch.set(postsRef(currentCategoryId, currentSubcategoryId, currentThreadId).doc(postId), {
-            content, authorId: currentUser.uid, authorName: currentUser.displayName || currentUser.email,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(), isAdmin: isAdmin
+        
+        const postRef = db.collection('forum_posts').doc(postId);
+        batch.set(postRef, {
+            threadId: currentThreadId,
+            content: content,
+            authorId: currentUser.uid,
+            authorName: currentUser.displayName || currentUser.email,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            isAdmin: isAdmin
         });
-        batch.update(threadsRef(currentCategoryId, currentSubcategoryId).doc(currentThreadId), {
+        
+        const threadRef = db.collection('forum_threads').doc(currentThreadId);
+        batch.update(threadRef, {
             lastActivity: firebase.firestore.FieldValue.serverTimestamp(),
             postsCount: firebase.firestore.FieldValue.increment(1)
         });
+        
         await batch.commit();
         replyQuill.root.innerHTML = '';
-        const totalPostsAfter = (await postsRef(currentCategoryId, currentSubcategoryId, currentThreadId).get()).size;
+        const totalPostsAfter = (await postsRef(currentThreadId).get()).size;
         const lastPage = Math.ceil(totalPostsAfter / POSTS_PER_PAGE);
         await navigateToPosts(currentCategoryId, currentSubcategoryId, currentThreadId, lastPage);
-    } catch (error) { alert('Erro: ' + error.message); }
+    } catch (error) { 
+        alert('Erro ao responder: ' + error.message);
+        console.error(error);
+    }
     finally { if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Enviar Resposta'; } submitLocks.delete(`createReply_${currentThreadId}_${currentUser?.uid}`); }
 }
 
@@ -1904,15 +1923,21 @@ async function submitComment(postId) {
     if (isLocked(lockKey)) { alert('Aguarde um momento...'); return; }
     lock(lockKey, 2000);
     try {
-        const commentId = Date.now().toString();
-        await commentsRef(currentCategoryId, currentSubcategoryId, currentThreadId, postId).doc(commentId).set({
-            content, authorId: currentUser.uid, authorName: currentUser.displayName || currentUser.email,
+        const commentId = db.collection('forum_comments').doc().id;
+        await db.collection('forum_comments').doc(commentId).set({
+            postId: postId,
+            content: content,
+            authorId: currentUser.uid,
+            authorName: currentUser.displayName || currentUser.email,
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
         document.getElementById(`comment-content-${postId}`).value = '';
         document.getElementById(`comment-form-${postId}`).style.display = 'none';
-        await loadComments(currentCategoryId, currentSubcategoryId, currentThreadId, postId);
-    } catch (error) { alert('Erro: ' + error.message); }
+        await loadComments(postId);
+    } catch (error) { 
+        alert('Erro: ' + error.message);
+        console.error(error);
+    }
     finally { submitLocks.delete(lockKey); }
 }
 
@@ -1926,7 +1951,7 @@ async function editPost(postId) {
     const newContent = prompt('Editar conteúdo (HTML):');
     if (newContent && newContent !== 'null') {
         try {
-            await postsRef(currentCategoryId, currentSubcategoryId, currentThreadId).doc(postId).update({ content: newContent });
+            await db.collection('forum_posts').doc(postId).update({ content: newContent });
             await navigateToPosts(currentCategoryId, currentSubcategoryId, currentThreadId, currentPage);
         } catch (error) { alert('Erro: ' + error.message); }
     }
@@ -1937,8 +1962,8 @@ async function deletePost(postId) {
     if (isBanned) { alert('Sua conta está banida.'); return; }
     if (confirm('Tem certeza que deseja excluir este post?')) {
         try {
-            await postsRef(currentCategoryId, currentSubcategoryId, currentThreadId).doc(postId).delete();
-            const totalPostsAfter = (await postsRef(currentCategoryId, currentSubcategoryId, currentThreadId).get()).size;
+            await db.collection('forum_posts').doc(postId).delete();
+            const totalPostsAfter = (await postsRef(currentThreadId).get()).size;
             const newTotalPages = Math.ceil(totalPostsAfter / POSTS_PER_PAGE);
             let newPage = currentPage;
             if (currentPage > newTotalPages && newTotalPages > 0) newPage = newTotalPages;
@@ -1949,17 +1974,27 @@ async function deletePost(postId) {
 
 async function updateCounts(categoryId, subcategoryId) {
     try {
-        const threadsSnapshot = await threadsRef(categoryId, subcategoryId).get();
+        // Atualizar contagem de tópicos na subcategoria
+        const threadsSnapshot = await threadsRef(subcategoryId).get();
         const threadsCount = threadsSnapshot.size;
+        
         let postsCount = 0;
         for (const doc of threadsSnapshot.docs) {
-            const postsSnapshot = await postsRef(categoryId, subcategoryId, doc.id).get();
+            const postsSnapshot = await postsRef(doc.id).get();
             postsCount += postsSnapshot.size;
         }
-        await subcategoriesRef(categoryId).doc(subcategoryId).update({ threadsCount, postsCount });
+        
+        await db.collection('forum_subcategories').doc(subcategoryId).update({ 
+            threadsCount: threadsCount, 
+            postsCount: postsCount 
+        });
+        
+        // Atualizar contagem total na categoria
         const subcategoriesSnapshot = await subcategoriesRef(categoryId).get();
         let totalThreads = 0;
-        for (const doc of subcategoriesSnapshot.docs) totalThreads += (doc.data().threadsCount || 0);
+        for (const doc of subcategoriesSnapshot.docs) {
+            totalThreads += (doc.data().threadsCount || 0);
+        }
         await categoriesRef().doc(categoryId).update({ threadsCount: totalThreads });
     } catch (error) { console.error('Erro ao atualizar contagens:', error); }
 }
@@ -1992,10 +2027,10 @@ async function showAdminStats() {
             const subSnapshot = await subcategoriesRef(catDoc.id).get();
             subcategories += subSnapshot.size;
             for (const subDoc of subSnapshot.docs) {
-                const threadsSnapshot = await threadsRef(catDoc.id, subDoc.id).get();
+                const threadsSnapshot = await threadsRef(subDoc.id).get();
                 threads += threadsSnapshot.size;
                 for (const threadDoc of threadsSnapshot.docs) {
-                    const postsSnapshot = await postsRef(catDoc.id, subDoc.id, threadDoc.id).get();
+                    const postsSnapshot = await postsRef(threadDoc.id).get();
                     posts += postsSnapshot.size;
                 }
             }
@@ -2072,7 +2107,8 @@ function showCreateSubcategory(categoryId) {
         const submitBtn = e.target.querySelector('.btn-primary');
         if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Criando...'; }
         try {
-            await subcategoriesRef(categoryId).add({
+            const subRef = await db.collection('forum_subcategories').add({
+                categoryId: categoryId,
                 name: document.getElementById('sub-name').value,
                 description: document.getElementById('sub-description').value,
                 icon: document.getElementById('sub-icon').value || '📌',
@@ -2080,6 +2116,7 @@ function showCreateSubcategory(categoryId) {
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                 threadsCount: 0, postsCount: 0
             });
+            
             const subcategoriesSnapshot = await subcategoriesRef(categoryId).get();
             await categoriesRef().doc(categoryId).update({ subcategoriesCount: subcategoriesSnapshot.size });
             alert('Subcategoria criada com sucesso!');
@@ -2100,6 +2137,27 @@ function showProfile() {
 
 function closeModal(modalId) {
     document.getElementById(modalId).classList.remove('show');
+}
+
+function insertImageToEditor() {
+    const url = document.getElementById('image-url').value;
+    const alt = document.getElementById('image-alt').value || 'imagem';
+    if (!url) { alert('Digite uma URL de imagem'); return; }
+    if (threadQuill) {
+        const range = threadQuill.getSelection();
+        if (range) threadQuill.insertEmbed(range.index, 'image', url);
+        else threadQuill.insertEmbed(threadQuill.getLength() - 1, 'image', url);
+    } else if (replyQuill) {
+        const range = replyQuill.getSelection();
+        if (range) replyQuill.insertEmbed(range.index, 'image', url);
+        else replyQuill.insertEmbed(replyQuill.getLength() - 1, 'image', url);
+    } else {
+        alert('Editor não encontrado');
+        return;
+    }
+    closeModal('image-modal');
+    document.getElementById('image-url').value = '';
+    document.getElementById('image-alt').value = '';
 }
 
 // ============================================
@@ -2129,8 +2187,8 @@ async function handleRouting() {
     if (isBanned) return;
     const params = getURLParams();
     if (params.threadId && params.subcategoryId && params.categoryId) {
-        currentCategoryId = params.categoryId; currentSubcategoryId = params.subcategoryId; currentThreadId = params.threadId; currentPage = params.page;
-        await showPostsWithPagination(params.categoryId, params.subcategoryId, params.threadId, params.page);
+        currentCategoryId = params.categoryId; currentSubcategoryId = params.subcategoryId; currentThreadId = params.threadId; currentPage = params.page || 1;
+        await showPostsWithPagination(params.categoryId, params.subcategoryId, params.threadId, params.page || 1);
     } else if (params.subcategoryId && params.categoryId) {
         currentCategoryId = params.categoryId; currentSubcategoryId = params.subcategoryId;
         await showThreads(params.categoryId, params.subcategoryId);
@@ -2197,6 +2255,7 @@ window.createReply = createReply;
 window.toggleNotifications = toggleNotifications;
 window.markAllAsRead = markAllAsRead;
 window.copyCurrentLink = copyCurrentLink;
+window.insertImageToEditor = insertImageToEditor;
 
 console.log('📚 Maspia Forum inicializado com sucesso!');
 console.log('🔔 Notificações integradas via coleção "notifications"');
