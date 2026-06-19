@@ -1044,7 +1044,7 @@ function renderHtmlContent(html) {
 }
 
 // ============================================
-// REGISTRO DE USUÁRIO - CORRIGIDO
+// REGISTRO DE USUÁRIO
 // ============================================
 async function registerUser(user) {
     try {
@@ -1398,9 +1398,8 @@ function handlePostAnchor() {
 }
 
 // ============================================
-// REFERÊNCIAS FIRESTORE - CORRIGIDAS
+// REFERÊNCIAS FIRESTORE
 // ============================================
-// Estrutura simplificada: categories -> subcategories -> threads -> posts -> comments
 const categoriesRef = () => db.collection('forum_categories');
 const subcategoriesRef = (catId) => db.collection('forum_subcategories').where('categoryId', '==', catId);
 const threadsRef = (subId) => db.collection('forum_threads').where('subcategoryId', '==', subId);
@@ -1468,7 +1467,7 @@ function copyPostLink(postId, postNumber) {
 }
 
 // ============================================
-// TELAS PRINCIPAIS
+// TELAS PRINCIPAIS - CORRIGIDAS PARA LEITURA PÚBLICA
 // ============================================
 async function showHome() {
     if (isBanned) return;
@@ -1476,19 +1475,26 @@ async function showHome() {
     container.innerHTML = '<div class="loading">Carregando categorias...</div>';
     
     try {
-        const snapshot = await categoriesRef().orderBy('order', 'asc').get();
+        let snapshot;
+        try {
+            snapshot = await categoriesRef().orderBy('order', 'asc').get();
+        } catch (error) {
+            console.warn('Erro ao ler categorias com orderBy:', error);
+            snapshot = await categoriesRef().get();
+        }
+        
         const categories = [];
         snapshot.forEach(doc => {
             const data = doc.data();
             categories.push({ id: doc.id, ...data });
         });
         
-        if (categories.length === 0 && isAdmin) {
+        if (categories.length === 0) {
             container.innerHTML = `
                 <div class="admin-panel" style="text-align:center;">
-                    <h3>Nenhuma categoria criada ainda</h3>
-                    <p>Clique no botão abaixo para criar sua primeira categoria</p>
-                    <button class="btn-primary" onclick="showCreateCategory()">Criar Categoria</button>
+                    <h3>📭 Nenhuma categoria disponível</h3>
+                    <p style="color:#666; margin:15px 0;">Seja o primeiro a criar uma categoria no fórum!</p>
+                    ${isAdmin ? `<button class="btn-primary" onclick="showCreateCategory()">Criar Categoria</button>` : '<p style="color:#999; font-size:0.9em;">Faça login como administrador para criar categorias.</p>'}
                 </div>
             `;
             return;
@@ -1516,7 +1522,15 @@ async function showHome() {
         `;
         addCopyLinkButton();
     } catch (error) {
-        container.innerHTML = `<div class="loading">Erro: ${error.message}</div>`;
+        console.error('Erro ao carregar categorias:', error);
+        container.innerHTML = `
+            <div class="admin-panel" style="text-align:center; padding:40px;">
+                <h3>⚠️ Erro ao carregar o fórum</h3>
+                <p style="color:#666; margin:15px 0;">${escapeHtml(error.message)}</p>
+                <p style="color:#999; font-size:0.9em;">Verifique sua conexão e tente novamente.</p>
+                <button class="btn-primary" onclick="navigateToHome()" style="margin-top:15px;">🔄 Tentar novamente</button>
+            </div>
+        `;
     }
 }
 
@@ -1528,7 +1542,14 @@ async function showSubcategories(categoryId) {
     try {
         const catDoc = await categoriesRef().doc(categoryId).get();
         const category = catDoc.data();
-        const snapshot = await subcategoriesRef(categoryId).get();
+        let snapshot;
+        try {
+            snapshot = await subcategoriesRef(categoryId).get();
+        } catch (error) {
+            console.warn('Erro ao ler subcategorias:', error);
+            snapshot = await db.collection('forum_subcategories').where('categoryId', '==', categoryId).get();
+        }
+        
         const subcategories = [];
         snapshot.forEach(doc => {
             const data = doc.data();
@@ -1578,7 +1599,13 @@ async function showThreads(categoryId, subcategoryId) {
         const subDoc = await db.collection('forum_subcategories').doc(subcategoryId).get();
         const category = catDoc.data();
         const subcategory = subDoc.data();
-        const snapshot = await threadsRef(subcategoryId).orderBy('lastActivity', 'desc').get();
+        let snapshot;
+        try {
+            snapshot = await threadsRef(subcategoryId).orderBy('lastActivity', 'desc').get();
+        } catch (error) {
+            console.warn('Erro ao ler tópicos com orderBy:', error);
+            snapshot = await db.collection('forum_threads').where('subcategoryId', '==', subcategoryId).get();
+        }
         const threads = [];
         snapshot.forEach(doc => {
             const data = doc.data();
@@ -1625,7 +1652,13 @@ async function loadPostsWithPagination(threadId, page = 1) {
         if (currentPage > totalPages && totalPages > 0) currentPage = totalPages;
         if (currentPage < 1) currentPage = 1;
         const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
-        const postsSnapshot = await postsRef(threadId).orderBy('createdAt', 'asc').get();
+        let postsSnapshot;
+        try {
+            postsSnapshot = await postsRef(threadId).orderBy('createdAt', 'asc').get();
+        } catch (error) {
+            console.warn('Erro ao ler posts com orderBy:', error);
+            postsSnapshot = await db.collection('forum_posts').where('threadId', '==', threadId).get();
+        }
         const allPosts = [];
         postsSnapshot.forEach(doc => allPosts.push({ id: doc.id, ...doc.data() }));
         const posts = allPosts.slice(startIndex, startIndex + POSTS_PER_PAGE);
@@ -1770,9 +1803,18 @@ function renderPagination(categoryId, subcategoryId, threadId, currentPage, tota
     return html;
 }
 
+// ============================================
+// FUNÇÃO LOAD COMMENTS CORRIGIDA
+// ============================================
 async function loadComments(postId) {
     try {
-        const snapshot = await commentsRef(postId).orderBy('createdAt', 'asc').get();
+        let snapshot;
+        try {
+            snapshot = await commentsRef(postId).orderBy('createdAt', 'asc').get();
+        } catch (error) {
+            console.warn('Erro ao ler comentários com orderBy:', error);
+            snapshot = await db.collection('forum_comments').where('postId', '==', postId).get();
+        }
         const comments = [];
         snapshot.forEach(doc => comments.push({ id: doc.id, ...doc.data() }));
         const commentsDiv = document.getElementById(`comments-${postId}`);
@@ -1791,11 +1833,17 @@ async function loadComments(postId) {
                 `).join('');
             }
         }
-    } catch (error) { console.error('Erro ao carregar comentários:', error); }
+    } catch (error) { 
+        console.error('Erro ao carregar comentários:', error);
+        const commentsDiv = document.getElementById(`comments-${postId}`);
+        if (commentsDiv) {
+            commentsDiv.innerHTML = '<div style="padding: 10px; text-align:center; color:#999;">Comentários indisponíveis no momento.</div>';
+        }
+    }
 }
 
 // ============================================
-// CRIAÇÃO DE POSTS E TÓPICOS - CORRIGIDO
+// CRIAÇÃO DE POSTS E TÓPICOS
 // ============================================
 function showCreateThread() {
     if (!currentUser || isBanned) { if (isBanned) alert('Sua conta está banida.'); else showLoginModal(); return; }
@@ -1831,7 +1879,6 @@ async function createThread() {
         const postId = db.collection('forum_posts').doc().id;
         const batch = db.batch();
         
-        // Criar o tópico
         const threadRef = db.collection('forum_threads').doc(threadId);
         batch.set(threadRef, {
             title: title,
@@ -1844,7 +1891,6 @@ async function createThread() {
             postsCount: 1
         });
         
-        // Criar o primeiro post
         const postRef = db.collection('forum_posts').doc(postId);
         batch.set(postRef, {
             threadId: threadId,
@@ -1974,7 +2020,6 @@ async function deletePost(postId) {
 
 async function updateCounts(categoryId, subcategoryId) {
     try {
-        // Atualizar contagem de tópicos na subcategoria
         const threadsSnapshot = await threadsRef(subcategoryId).get();
         const threadsCount = threadsSnapshot.size;
         
@@ -1989,7 +2034,6 @@ async function updateCounts(categoryId, subcategoryId) {
             postsCount: postsCount 
         });
         
-        // Atualizar contagem total na categoria
         const subcategoriesSnapshot = await subcategoriesRef(categoryId).get();
         let totalThreads = 0;
         for (const doc of subcategoriesSnapshot.docs) {
