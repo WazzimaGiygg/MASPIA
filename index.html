@@ -12,6 +12,7 @@
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
     <style>
+        /* ===== TODOS OS ESTILOS PERMANECEM IGUAIS ===== */
         * {
             margin: 0;
             padding: 0;
@@ -1398,13 +1399,36 @@ function handlePostAnchor() {
 }
 
 // ============================================
-// REFERÊNCIAS FIRESTORE
+// REFERÊNCIAS FIRESTORE - ESTRUTURA ORIGINAL
 // ============================================
-const categoriesRef = () => db.collection('forum_categories');
-const subcategoriesRef = (catId) => db.collection('forum_subcategories').where('categoryId', '==', catId);
-const threadsRef = (subId) => db.collection('forum_threads').where('subcategoryId', '==', subId);
-const postsRef = (threadId) => db.collection('forum_posts').where('threadId', '==', threadId);
-const commentsRef = (postId) => db.collection('forum_comments').where('postId', '==', postId);
+// Usando a estrutura original que funcionava antes da padronização
+const maspiaRef = db.collection('maspia');
+const forumDocRef = maspiaRef.doc('forum');
+
+// Funções para garantir que o documento pai existe
+async function ensureForumDoc() {
+    try {
+        const doc = await forumDocRef.get();
+        if (!doc.exists) {
+            await forumDocRef.set({
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                name: 'Maspia Forum'
+            });
+            console.log('📁 Documento forum criado com sucesso!');
+        }
+        return true;
+    } catch (error) {
+        console.error('Erro ao criar documento forum:', error);
+        return false;
+    }
+}
+
+// Referências usando a estrutura aninhada
+const categoriesRef = () => forumDocRef.collection('categories');
+const subcategoriesRef = (catId) => categoriesRef().doc(catId).collection('subcategories');
+const threadsRef = (catId, subId) => subcategoriesRef(catId).doc(subId).collection('threads');
+const postsRef = (catId, subId, threadId) => threadsRef(catId, subId).doc(threadId).collection('posts');
+const commentsRef = (catId, subId, threadId, postId) => postsRef(catId, subId, threadId).doc(postId).collection('comments');
 
 // ============================================
 // CONTROLE ANTI-SPAM
@@ -1467,7 +1491,7 @@ function copyPostLink(postId, postNumber) {
 }
 
 // ============================================
-// TELAS PRINCIPAIS - CORRIGIDAS PARA LEITURA PÚBLICA
+// TELAS PRINCIPAIS
 // ============================================
 async function showHome() {
     if (isBanned) return;
@@ -1475,26 +1499,22 @@ async function showHome() {
     container.innerHTML = '<div class="loading">Carregando categorias...</div>';
     
     try {
-        let snapshot;
-        try {
-            snapshot = await categoriesRef().orderBy('order', 'asc').get();
-        } catch (error) {
-            console.warn('Erro ao ler categorias com orderBy:', error);
-            snapshot = await categoriesRef().get();
-        }
+        // Garantir que o documento forum existe
+        await ensureForumDoc();
         
+        const snapshot = await categoriesRef().orderBy('order', 'asc').get();
         const categories = [];
         snapshot.forEach(doc => {
             const data = doc.data();
             categories.push({ id: doc.id, ...data });
         });
         
-        if (categories.length === 0) {
+        if (categories.length === 0 && isAdmin) {
             container.innerHTML = `
                 <div class="admin-panel" style="text-align:center;">
-                    <h3>📭 Nenhuma categoria disponível</h3>
-                    <p style="color:#666; margin:15px 0;">Seja o primeiro a criar uma categoria no fórum!</p>
-                    ${isAdmin ? `<button class="btn-primary" onclick="showCreateCategory()">Criar Categoria</button>` : '<p style="color:#999; font-size:0.9em;">Faça login como administrador para criar categorias.</p>'}
+                    <h3>Nenhuma categoria criada ainda</h3>
+                    <p>Clique no botão abaixo para criar sua primeira categoria</p>
+                    <button class="btn-primary" onclick="showCreateCategory()">Criar Categoria</button>
                 </div>
             `;
             return;
@@ -1523,14 +1543,7 @@ async function showHome() {
         addCopyLinkButton();
     } catch (error) {
         console.error('Erro ao carregar categorias:', error);
-        container.innerHTML = `
-            <div class="admin-panel" style="text-align:center; padding:40px;">
-                <h3>⚠️ Erro ao carregar o fórum</h3>
-                <p style="color:#666; margin:15px 0;">${escapeHtml(error.message)}</p>
-                <p style="color:#999; font-size:0.9em;">Verifique sua conexão e tente novamente.</p>
-                <button class="btn-primary" onclick="navigateToHome()" style="margin-top:15px;">🔄 Tentar novamente</button>
-            </div>
-        `;
+        container.innerHTML = `<div class="loading">Erro: ${error.message}</div>`;
     }
 }
 
@@ -1542,14 +1555,7 @@ async function showSubcategories(categoryId) {
     try {
         const catDoc = await categoriesRef().doc(categoryId).get();
         const category = catDoc.data();
-        let snapshot;
-        try {
-            snapshot = await subcategoriesRef(categoryId).get();
-        } catch (error) {
-            console.warn('Erro ao ler subcategorias:', error);
-            snapshot = await db.collection('forum_subcategories').where('categoryId', '==', categoryId).get();
-        }
-        
+        const snapshot = await subcategoriesRef(categoryId).orderBy('order', 'asc').get();
         const subcategories = [];
         snapshot.forEach(doc => {
             const data = doc.data();
@@ -1596,16 +1602,10 @@ async function showThreads(categoryId, subcategoryId) {
     
     try {
         const catDoc = await categoriesRef().doc(categoryId).get();
-        const subDoc = await db.collection('forum_subcategories').doc(subcategoryId).get();
+        const subDoc = await subcategoriesRef(categoryId).doc(subcategoryId).get();
         const category = catDoc.data();
         const subcategory = subDoc.data();
-        let snapshot;
-        try {
-            snapshot = await threadsRef(subcategoryId).orderBy('lastActivity', 'desc').get();
-        } catch (error) {
-            console.warn('Erro ao ler tópicos com orderBy:', error);
-            snapshot = await db.collection('forum_threads').where('subcategoryId', '==', subcategoryId).get();
-        }
+        const snapshot = await threadsRef(categoryId, subcategoryId).orderBy('lastActivity', 'desc').get();
         const threads = [];
         snapshot.forEach(doc => {
             const data = doc.data();
@@ -1643,22 +1643,16 @@ async function showThreads(categoryId, subcategoryId) {
     }
 }
 
-async function loadPostsWithPagination(threadId, page = 1) {
+async function loadPostsWithPagination(categoryId, subcategoryId, threadId, page = 1) {
     currentPage = page;
     try {
-        const postsQuery = await postsRef(threadId).get();
+        const postsQuery = await postsRef(categoryId, subcategoryId, threadId).get();
         totalPosts = postsQuery.size;
         totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE);
         if (currentPage > totalPages && totalPages > 0) currentPage = totalPages;
         if (currentPage < 1) currentPage = 1;
         const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
-        let postsSnapshot;
-        try {
-            postsSnapshot = await postsRef(threadId).orderBy('createdAt', 'asc').get();
-        } catch (error) {
-            console.warn('Erro ao ler posts com orderBy:', error);
-            postsSnapshot = await db.collection('forum_posts').where('threadId', '==', threadId).get();
-        }
+        const postsSnapshot = await postsRef(categoryId, subcategoryId, threadId).orderBy('createdAt', 'asc').get();
         const allPosts = [];
         postsSnapshot.forEach(doc => allPosts.push({ id: doc.id, ...doc.data() }));
         const posts = allPosts.slice(startIndex, startIndex + POSTS_PER_PAGE);
@@ -1676,8 +1670,8 @@ async function showPostsWithPagination(categoryId, subcategoryId, threadId, page
     
     try {
         const catDoc = await categoriesRef().doc(categoryId).get();
-        const subDoc = await db.collection('forum_subcategories').doc(subcategoryId).get();
-        const threadDoc = await db.collection('forum_threads').doc(threadId).get();
+        const subDoc = await subcategoriesRef(categoryId).doc(subcategoryId).get();
+        const threadDoc = await threadsRef(categoryId, subcategoryId).doc(threadId).get();
         const category = catDoc.data();
         const subcategory = subDoc.data();
         const thread = threadDoc.data();
@@ -1685,7 +1679,7 @@ async function showPostsWithPagination(categoryId, subcategoryId, threadId, page
         if (!thread) { container.innerHTML = '<div class="loading">Tópico não encontrado!</div>'; return; }
         
         const { posts, totalPosts: total, totalPages: pages, currentPage: currPage } = 
-            await loadPostsWithPagination(threadId, page);
+            await loadPostsWithPagination(categoryId, subcategoryId, threadId, page);
         totalPosts = total; totalPages = pages; currentPage = currPage;
         
         updateURL(categoryId, subcategoryId, threadId, currentPage);
@@ -1764,7 +1758,7 @@ async function showPostsWithPagination(categoryId, subcategoryId, threadId, page
             });
         }
         
-        for (const post of posts) loadComments(post.id);
+        for (const post of posts) loadComments(categoryId, subcategoryId, threadId, post.id);
         addCopyLinkButton();
         handlePostAnchor();
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1803,18 +1797,9 @@ function renderPagination(categoryId, subcategoryId, threadId, currentPage, tota
     return html;
 }
 
-// ============================================
-// FUNÇÃO LOAD COMMENTS CORRIGIDA
-// ============================================
-async function loadComments(postId) {
+async function loadComments(categoryId, subcategoryId, threadId, postId) {
     try {
-        let snapshot;
-        try {
-            snapshot = await commentsRef(postId).orderBy('createdAt', 'asc').get();
-        } catch (error) {
-            console.warn('Erro ao ler comentários com orderBy:', error);
-            snapshot = await db.collection('forum_comments').where('postId', '==', postId).get();
-        }
+        const snapshot = await commentsRef(categoryId, subcategoryId, threadId, postId).orderBy('createdAt', 'asc').get();
         const comments = [];
         snapshot.forEach(doc => comments.push({ id: doc.id, ...doc.data() }));
         const commentsDiv = document.getElementById(`comments-${postId}`);
@@ -1833,13 +1818,7 @@ async function loadComments(postId) {
                 `).join('');
             }
         }
-    } catch (error) { 
-        console.error('Erro ao carregar comentários:', error);
-        const commentsDiv = document.getElementById(`comments-${postId}`);
-        if (commentsDiv) {
-            commentsDiv.innerHTML = '<div style="padding: 10px; text-align:center; color:#999;">Comentários indisponíveis no momento.</div>';
-        }
-    }
+    } catch (error) { console.error('Erro ao carregar comentários:', error); }
 }
 
 // ============================================
@@ -1875,15 +1854,14 @@ async function createThread() {
     if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Criando...'; }
     
     try {
-        const threadId = db.collection('forum_threads').doc().id;
-        const postId = db.collection('forum_posts').doc().id;
+        const threadId = Date.now().toString();
+        const postId = Date.now().toString();
         const batch = db.batch();
         
-        const threadRef = db.collection('forum_threads').doc(threadId);
+        // Criar o tópico
+        const threadRef = threadsRef(currentCategoryId, currentSubcategoryId).doc(threadId);
         batch.set(threadRef, {
             title: title,
-            subcategoryId: currentSubcategoryId,
-            categoryId: currentCategoryId,
             authorId: currentUser.uid,
             authorName: currentUser.displayName || currentUser.email,
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -1891,9 +1869,9 @@ async function createThread() {
             postsCount: 1
         });
         
-        const postRef = db.collection('forum_posts').doc(postId);
+        // Criar o primeiro post
+        const postRef = postsRef(currentCategoryId, currentSubcategoryId, threadId).doc(postId);
         batch.set(postRef, {
-            threadId: threadId,
             content: content,
             authorId: currentUser.uid,
             authorName: currentUser.displayName || currentUser.email,
@@ -1924,12 +1902,11 @@ async function createReply() {
     if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Enviando...'; }
     
     try {
-        const postId = db.collection('forum_posts').doc().id;
+        const postId = Date.now().toString();
         const batch = db.batch();
         
-        const postRef = db.collection('forum_posts').doc(postId);
+        const postRef = postsRef(currentCategoryId, currentSubcategoryId, currentThreadId).doc(postId);
         batch.set(postRef, {
-            threadId: currentThreadId,
             content: content,
             authorId: currentUser.uid,
             authorName: currentUser.displayName || currentUser.email,
@@ -1937,7 +1914,7 @@ async function createReply() {
             isAdmin: isAdmin
         });
         
-        const threadRef = db.collection('forum_threads').doc(currentThreadId);
+        const threadRef = threadsRef(currentCategoryId, currentSubcategoryId).doc(currentThreadId);
         batch.update(threadRef, {
             lastActivity: firebase.firestore.FieldValue.serverTimestamp(),
             postsCount: firebase.firestore.FieldValue.increment(1)
@@ -1945,7 +1922,7 @@ async function createReply() {
         
         await batch.commit();
         replyQuill.root.innerHTML = '';
-        const totalPostsAfter = (await postsRef(currentThreadId).get()).size;
+        const totalPostsAfter = (await postsRef(currentCategoryId, currentSubcategoryId, currentThreadId).get()).size;
         const lastPage = Math.ceil(totalPostsAfter / POSTS_PER_PAGE);
         await navigateToPosts(currentCategoryId, currentSubcategoryId, currentThreadId, lastPage);
     } catch (error) { 
@@ -1969,9 +1946,8 @@ async function submitComment(postId) {
     if (isLocked(lockKey)) { alert('Aguarde um momento...'); return; }
     lock(lockKey, 2000);
     try {
-        const commentId = db.collection('forum_comments').doc().id;
-        await db.collection('forum_comments').doc(commentId).set({
-            postId: postId,
+        const commentId = Date.now().toString();
+        await commentsRef(currentCategoryId, currentSubcategoryId, currentThreadId, postId).doc(commentId).set({
             content: content,
             authorId: currentUser.uid,
             authorName: currentUser.displayName || currentUser.email,
@@ -1979,7 +1955,7 @@ async function submitComment(postId) {
         });
         document.getElementById(`comment-content-${postId}`).value = '';
         document.getElementById(`comment-form-${postId}`).style.display = 'none';
-        await loadComments(postId);
+        await loadComments(currentCategoryId, currentSubcategoryId, currentThreadId, postId);
     } catch (error) { 
         alert('Erro: ' + error.message);
         console.error(error);
@@ -1997,7 +1973,7 @@ async function editPost(postId) {
     const newContent = prompt('Editar conteúdo (HTML):');
     if (newContent && newContent !== 'null') {
         try {
-            await db.collection('forum_posts').doc(postId).update({ content: newContent });
+            await postsRef(currentCategoryId, currentSubcategoryId, currentThreadId).doc(postId).update({ content: newContent });
             await navigateToPosts(currentCategoryId, currentSubcategoryId, currentThreadId, currentPage);
         } catch (error) { alert('Erro: ' + error.message); }
     }
@@ -2008,8 +1984,8 @@ async function deletePost(postId) {
     if (isBanned) { alert('Sua conta está banida.'); return; }
     if (confirm('Tem certeza que deseja excluir este post?')) {
         try {
-            await db.collection('forum_posts').doc(postId).delete();
-            const totalPostsAfter = (await postsRef(currentThreadId).get()).size;
+            await postsRef(currentCategoryId, currentSubcategoryId, currentThreadId).doc(postId).delete();
+            const totalPostsAfter = (await postsRef(currentCategoryId, currentSubcategoryId, currentThreadId).get()).size;
             const newTotalPages = Math.ceil(totalPostsAfter / POSTS_PER_PAGE);
             let newPage = currentPage;
             if (currentPage > newTotalPages && newTotalPages > 0) newPage = newTotalPages;
@@ -2020,25 +1996,17 @@ async function deletePost(postId) {
 
 async function updateCounts(categoryId, subcategoryId) {
     try {
-        const threadsSnapshot = await threadsRef(subcategoryId).get();
+        const threadsSnapshot = await threadsRef(categoryId, subcategoryId).get();
         const threadsCount = threadsSnapshot.size;
-        
         let postsCount = 0;
         for (const doc of threadsSnapshot.docs) {
-            const postsSnapshot = await postsRef(doc.id).get();
+            const postsSnapshot = await postsRef(categoryId, subcategoryId, doc.id).get();
             postsCount += postsSnapshot.size;
         }
-        
-        await db.collection('forum_subcategories').doc(subcategoryId).update({ 
-            threadsCount: threadsCount, 
-            postsCount: postsCount 
-        });
-        
+        await subcategoriesRef(categoryId).doc(subcategoryId).update({ threadsCount, postsCount });
         const subcategoriesSnapshot = await subcategoriesRef(categoryId).get();
         let totalThreads = 0;
-        for (const doc of subcategoriesSnapshot.docs) {
-            totalThreads += (doc.data().threadsCount || 0);
-        }
+        for (const doc of subcategoriesSnapshot.docs) totalThreads += (doc.data().threadsCount || 0);
         await categoriesRef().doc(categoryId).update({ threadsCount: totalThreads });
     } catch (error) { console.error('Erro ao atualizar contagens:', error); }
 }
@@ -2071,10 +2039,10 @@ async function showAdminStats() {
             const subSnapshot = await subcategoriesRef(catDoc.id).get();
             subcategories += subSnapshot.size;
             for (const subDoc of subSnapshot.docs) {
-                const threadsSnapshot = await threadsRef(subDoc.id).get();
+                const threadsSnapshot = await threadsRef(catDoc.id, subDoc.id).get();
                 threads += threadsSnapshot.size;
                 for (const threadDoc of threadsSnapshot.docs) {
-                    const postsSnapshot = await postsRef(threadDoc.id).get();
+                    const postsSnapshot = await postsRef(catDoc.id, subDoc.id, threadDoc.id).get();
                     posts += postsSnapshot.size;
                 }
             }
@@ -2151,8 +2119,7 @@ function showCreateSubcategory(categoryId) {
         const submitBtn = e.target.querySelector('.btn-primary');
         if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Criando...'; }
         try {
-            const subRef = await db.collection('forum_subcategories').add({
-                categoryId: categoryId,
+            await subcategoriesRef(categoryId).add({
                 name: document.getElementById('sub-name').value,
                 description: document.getElementById('sub-description').value,
                 icon: document.getElementById('sub-icon').value || '📌',
@@ -2160,7 +2127,6 @@ function showCreateSubcategory(categoryId) {
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                 threadsCount: 0, postsCount: 0
             });
-            
             const subcategoriesSnapshot = await subcategoriesRef(categoryId).get();
             await categoriesRef().doc(categoryId).update({ subcategoriesCount: subcategoriesSnapshot.size });
             alert('Subcategoria criada com sucesso!');
