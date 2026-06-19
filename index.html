@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Maspia Forum - Comunidade</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Lato:wght@300;400;700;900&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
     <link rel="icon" href="https://gspotfverwazzimagiygg.wazzimagiygg.com/forum/Favicom.png" type="image/x-icon">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <!-- Editor de texto rico - Quill -->
@@ -19,7 +20,7 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Lato', 'Inter', sans-serif;
             background: #f5f5f5;
             color: #333;
             display: flex;
@@ -27,116 +28,231 @@
             min-height: 100vh;
         }
 
+        /* ===== HEADER PADRONIZADO WAZZIMAGIYGG ===== */
         .header {
             background: linear-gradient(135deg, #1a1a2e, #16213e);
             color: white;
-            padding: 20px 40px;
+            padding: 12px 24px;
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.3);
         }
-
-        .header-container {
+        .header-content {
             max-width: 1400px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 20px;
+            gap: 12px;
+        }
+        .logo-area-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+        .logo-area-header img {
+            height: 36px;
+            border-radius: 8px;
+        }
+        .logo-area-header h1 {
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+        .logo-area-header small {
+            font-size: 0.65em;
+            opacity: 0.7;
+            display: block;
+            font-weight: 300;
+        }
+        .user-info-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e94560, #ff6b6b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1em;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.2s;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .user-avatar:hover { transform: scale(1.05); }
+        .user-name { font-weight: 500; font-size: 0.85em; }
+        .user-email { font-size: 0.7em; opacity: 0.7; }
+        .btn-logout {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.75em;
+            transition: all 0.2s;
+        }
+        .btn-logout:hover { background: rgba(255,255,255,0.2); }
+        .btn-login {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.25);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.75em;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-login:hover { background: rgba(255,255,255,0.25); }
+        .badge-admin {
+            background: #e94560;
+            color: white;
+            font-size: 0.55em;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .badge-banned {
+            background: #dc3545;
+            color: white;
+            font-size: 0.55em;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
         }
 
-        .logo {
-            font-size: 1.5em;
+        /* NOTIFICATION BELL */
+        .notification-bell {
+            position: relative;
+            cursor: pointer;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border-radius: 30px;
+            transition: background 0.2s;
+        }
+        .notification-bell:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        .notification-bell .material-icons {
+            font-size: 20px;
+        }
+        .notification-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: #e94560;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 9px;
             font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 10px;
-            cursor: pointer;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .nav-btn {
-            background: rgba(255,255,255,0.1);
-            border: none;
-            padding: 10px 20px;
-            border-radius: 30px;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .nav-btn:hover {
-            background: linear-gradient(135deg, #e94560, #ff6b6b);
-        }
-
-        .main-container {
-            max-width: 1400px;
-            margin: 30px auto;
-            padding: 0 20px;
-            flex: 1;
-        }
-
-        /* Footer */
-        .footer {
-            background: #1a1a2e;
-            color: white;
-            text-align: center;
-            padding: 20px;
-            font-size: 0.8em;
-            margin-top: 30px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .footer a {
-            color: white;
-            text-decoration: none;
-        }
-
-        .footer a:hover {
-            text-decoration: underline;
-        }
-
-        .footer-ticket {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            background: rgba(255,255,255,0.15);
-            padding: 5px 12px;
-            border-radius: 20px;
-            transition: all 0.2s;
-        }
-
-        .footer-ticket:hover {
-            background: rgba(255,255,255,0.25);
-            transform: scale(1.02);
-            text-decoration: none;
-        }
-
-        .footer-divider {
-            margin: 0 10px;
-            opacity: 0.5;
-        }
-
-        .footer-links {
-            display: flex;
             justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 5px;
+            border: 2px solid #1a1a2e;
         }
 
-        /* BANNED OVERLAY */
+        .notification-dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            width: 340px;
+            max-height: 350px;
+            overflow-y: auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+            display: none;
+            z-index: 200;
+            color: #1a1a2e;
+        }
+        .notification-dropdown.show {
+            display: block;
+        }
+        .notification-dropdown-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .notification-dropdown-header h3 {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+        .notification-dropdown-header button {
+            background: none;
+            border: none;
+            color: #4a6cf7;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        .notification-item {
+            padding: 10px 16px;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background 0.2s;
+            cursor: pointer;
+        }
+        .notification-item:hover {
+            background: #f8f9fa;
+        }
+        .notification-item.unread {
+            background: #eef2ff;
+            border-left: 3px solid #4a6cf7;
+        }
+        .notification-item .notif-title {
+            font-weight: 600;
+            font-size: 12px;
+            color: #1a1a2e;
+        }
+        .notification-item .notif-message {
+            font-size: 11px;
+            color: #666;
+            margin-top: 3px;
+        }
+        .notification-item .notif-time {
+            font-size: 10px;
+            color: #999;
+            margin-top: 3px;
+        }
+        .notification-empty {
+            padding: 20px;
+            text-align: center;
+            color: #999;
+            font-size: 13px;
+        }
+        .notification-empty .material-icons {
+            font-size: 36px;
+            opacity: 0.4;
+        }
+
+        /* ===== BANNED OVERLAY ===== */
         .banned-overlay {
             position: fixed;
             top: 0;
@@ -151,11 +267,7 @@
             flex-direction: column;
             padding: 20px;
         }
-
-        .banned-overlay.show {
-            display: flex;
-        }
-
+        .banned-overlay.show { display: flex; }
         .banned-box {
             background: #1a1a1a;
             border: 2px solid #e94560;
@@ -166,23 +278,9 @@
             text-align: center;
             color: white;
         }
-
-        .banned-box .icon {
-            font-size: 80px;
-            margin-bottom: 20px;
-        }
-
-        .banned-box h2 {
-            color: #e94560;
-            margin-bottom: 15px;
-        }
-
-        .banned-box p {
-            color: #aaa;
-            margin-bottom: 20px;
-            line-height: 1.6;
-        }
-
+        .banned-box .icon { font-size: 80px; margin-bottom: 20px; }
+        .banned-box h2 { color: #e94560; margin-bottom: 15px; }
+        .banned-box p { color: #aaa; margin-bottom: 20px; line-height: 1.6; }
         .banned-box .btn-logout-banned {
             background: #e94560;
             color: white;
@@ -194,11 +292,7 @@
             font-weight: 600;
             transition: background 0.3s;
         }
-
-        .banned-box .btn-logout-banned:hover {
-            background: #c0392b;
-        }
-
+        .banned-box .btn-logout-banned:hover { background: #c0392b; }
         .banned-box .ban-details {
             background: #2a2a2a;
             padding: 15px;
@@ -208,7 +302,77 @@
             color: #888;
         }
 
-        /* Restante dos estilos do fórum */
+        /* ===== MAIN CONTAINER ===== */
+        .main-container {
+            max-width: 1400px;
+            margin: 30px auto;
+            padding: 0 20px;
+            flex: 1;
+            width: 100%;
+        }
+
+        /* ===== FOOTER PADRONIZADO WAZZIMAGIYGG ===== */
+        .site-footer {
+            background: linear-gradient(135deg, #0a0a0a 0%, #141414 100%);
+            border-top: 1px solid #2a2a2a;
+            margin-top: 40px;
+            padding: 25px 20px 20px;
+            font-family: 'Lato', sans-serif;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 8px 12px;
+            margin-bottom: 15px;
+        }
+
+        .footer-link {
+            color: #aaa !important;
+            text-decoration: none;
+            font-size: 12px;
+            transition: all 0.3s ease;
+            padding: 4px 0;
+            display: inline-block;
+        }
+
+        .footer-link:hover {
+            color: #667eea !important;
+            transform: translateY(-1px);
+        }
+
+        .footer-link.highlight {
+            color: #ffb347 !important;
+        }
+
+        .footer-link.highlight:hover {
+            color: #ff9500 !important;
+            text-shadow: 0 0 8px rgba(255, 180, 71, 0.3);
+        }
+
+        .footer-divider {
+            color: #444;
+            font-size: 11px;
+            margin: 0 2px;
+        }
+
+        .footer-copyright {
+            color: #666;
+            font-size: 11px;
+            padding-top: 12px;
+            border-top: 1px solid #222;
+            margin-top: 8px;
+        }
+
+        /* ===== ESTILOS DO FÓRUM ===== */
         .categories-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -295,6 +459,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .post-author {
@@ -457,6 +623,10 @@
             align-items: center;
         }
 
+        .modal.show {
+            display: flex;
+        }
+
         .modal-content {
             background: white;
             border-radius: 16px;
@@ -475,6 +645,7 @@
             position: sticky;
             top: 0;
             background: white;
+            border-radius: 16px 16px 0 0;
         }
 
         .modal-body {
@@ -485,6 +656,8 @@
             cursor: pointer;
             font-size: 24px;
             color: #999;
+            background: none;
+            border: none;
         }
 
         .admin-panel {
@@ -549,7 +722,6 @@
             color: #e94560;
         }
 
-        /* Estilos para paginação */
         .pagination {
             display: flex;
             justify-content: center;
@@ -598,9 +770,19 @@
             transition: background-color 0.5s;
         }
 
+        /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
-            .header-container {
+            .header-content {
                 flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
+            .user-info-header {
+                justify-content: space-between;
+            }
+            .notification-dropdown {
+                width: 300px;
+                right: -20px;
             }
             .categories-grid {
                 grid-template-columns: 1fr;
@@ -622,12 +804,31 @@
             .banned-box {
                 padding: 30px 20px;
             }
+            .modal-content {
+                max-width: 95%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .user-name, .user-email { display: none; }
+            .notification-dropdown {
+                width: calc(100vw - 40px);
+                right: -10px;
+            }
+            .post-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .post-actions {
+                flex-direction: column;
+                gap: 8px;
+            }
         }
     </style>
 </head>
 <body>
 
-<!-- BANNED OVERLAY -->
+<!-- ===== BANNED OVERLAY ===== -->
 <div id="bannedOverlay" class="banned-overlay">
     <div class="banned-box">
         <div class="icon">🚫</div>
@@ -641,69 +842,113 @@
     </div>
 </div>
 
-<div class="header">
-    <div class="header-container">
-        <div class="logo" onclick="navigateToHome()">
-            <span class="material-icons">forum</span>
-            Maspia Forum
+<!-- ===== HEADER PADRONIZADO WAZZIMAGIYGG ===== -->
+<header class="header">
+    <div class="header-content">
+        <div class="logo-area-header" onclick="navigateToHome()">
+            <img src="https://wazzimagiygg.com/favicom.png" alt="Logo">
+            <div>
+                <h1>WazzimaGiygg</h1>
+                <small>Forum</small>
+            </div>
         </div>
-        <div class="nav-links">
-            <button class="nav-btn" onclick="navigateToHome()">🏠 Início</button>
-            <button class="nav-btn" onclick="showRecentPosts()">📰 Recentes</button>
-            <button class="nav-btn" id="admin-btn" style="display: none;" onclick="showAdminPanel()">👑 Admin</button>
-            <button class="nav-btn" onclick="showProfile()">👤 Perfil</button>
-            <button class="nav-btn" id="moderacao-btn" style="display: none;" onclick="openModeracao()">⚖️ Moderação</button>
-            <button class="nav-btn" id="login-nav-btn" onclick="showLoginModal()">🔑 Entrar</button>
-            <button class="nav-btn" id="logout-nav-btn" style="display: none;" onclick="logout()">🚪 Sair</button>
+        <div class="user-info-header" id="userInfo">
+            <div class="user-avatar" id="userAvatar">👤</div>
+            <div>
+                <div class="user-name" id="userName">Carregando...</div>
+                <div class="user-email" id="userEmail">aguarde</div>
+            </div>
+            <span id="userBadge"></span>
+            
+            <!-- NOTIFICATION BELL -->
+            <div class="notification-bell" id="notificationBell" onclick="toggleNotifications(event)">
+                <span class="material-icons">notifications</span>
+                <span class="notification-badge" id="notifBadge" style="display:none;">0</span>
+                <div class="notification-dropdown" id="notifDropdown">
+                    <div class="notification-dropdown-header">
+                        <h3>🔔 Notificações</h3>
+                        <button onclick="markAllAsRead(event)">Marcar todas como lidas</button>
+                    </div>
+                    <div id="notificationList">
+                        <div class="notification-empty">
+                            <span class="material-icons">notifications_off</span>
+                            <p>Nenhuma notificação</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="btn-logout" id="btnLogout" style="display:none;" onclick="logout()">Sair</button>
+            <button class="btn-login" id="btnLogin" onclick="showLoginModal()">
+                <span class="material-icons" style="font-size:16px;">person</span> Entrar
+            </button>
         </div>
     </div>
-</div>
+</header>
 
+<!-- ===== MAIN CONTAINER ===== -->
 <div class="main-container" id="main-container">
     <div class="loading">Carregando fórum...</div>
 </div>
 
-<!-- FOOTER COM CONTATO POR TICKET ADICIONADO -->
-<div class="footer">
-    <div class="footer-links">
-        <a href="https://wazzimagiygg.com/donate/" style="color:white;">💝 Faça sua doação!</a>
-        <span class="footer-divider">|</span>
-        <a href="https://wazzimagiygg.com/desktop.html" target="_blank">🖥️ Acessar Desktop</a>
-        <span class="footer-divider">|</span>
-        <a href="https://wazzimagiygg.com/LGPD" style="color:white;">🔒 LGPD</a>
-        <span class="footer-divider">|</span>
-        <a href="https://wazzimagiygg.com/MarcoCivil" style="color:white;">📜 Marco Civil</a>
-        <span class="footer-divider">|</span>
-        <a href="https://wazzimagiygg.com/relatorio-wikipedia.html" target="_blank" style="color:#ffb347;">📄 Relatório Wikipédia</a>
-        <span class="footer-divider">|</span>
-        <a href="https://support.wazzimagiygg.com/" target="_blank" class="footer-ticket">
-            🎫 Contato por Ticket
-        </a>
-        <span class="footer-divider">|</span>
-        <a href="https://wazzimagiygg.com/produtos" target="_blank" style="color:#ffb347;">🛍️ Produtos WazzimaGiygg</a>
+<!-- ===== FOOTER PADRONIZADO WAZZIMAGIYGG ===== -->
+<footer class="site-footer">
+    <div class="footer-content">
+        <div class="footer-links">
+            <a href="https://wazzimagiygg.com/donate/" class="footer-link" target="_blank">💝 Doação</a>
+            <span class="footer-divider">|</span>
+            <a href="https://wazzimagiygg.com/desktop.html" class="footer-link" target="_blank">🖥️ Desktop</a>
+            <span class="footer-divider">|</span>
+            <a href="https://wazzimagiygg.com/LGPD" class="footer-link" target="_blank">🔒 LGPD</a>
+            <span class="footer-divider">|</span>
+            <a href="https://wazzimagiygg.com/MarcoCivil" class="footer-link" target="_blank">📜 Marco Civil</a>
+            <span class="footer-divider">|</span>
+            <a href="https://support.wazzimagiygg.com/" class="footer-link" target="_blank">🎫 Ticket</a>
+            <span class="footer-divider">|</span>
+            <a href="https://wazzimagiygg.com/produtos" class="footer-link highlight" target="_blank">🛍️ Produtos</a>
+            <span class="footer-divider">|</span>
+            <a href="https://painel.wazzimagiygg.com/" class="footer-link highlight" target="_blank">👤 Sua conta</a>
+        </div>
+        <div class="footer-copyright">
+            © 2026 WazzimaGiygg Forum - Comunidade e Discussão
+        </div>
     </div>
-</div>
+</footer>
 
-<!-- Login Modal -->
+<!-- ===== MODAL LOGIN ===== -->
 <div id="login-modal" class="modal">
-    <div class="modal-content">
+    <div class="modal-content" style="max-width: 400px;">
         <div class="modal-header">
-            <h3>🔐 Entrar no Fórum</h3>
-            <span class="close-modal" onclick="closeModal('login-modal')">&times;</span>
+            <h3><i class="material-icons">login</i> Entrar no Fórum</h3>
+            <button class="close-modal" onclick="closeModal('login-modal')">&times;</button>
         </div>
         <div class="modal-body">
-            <p>Faça login para participar do fórum</p>
-            <button id="google-login-btn" class="btn-primary" style="width:100%; margin-top:20px;">🔑 Entrar com Google</button>
+            <p style="margin-bottom: 20px;">Faça login para participar do fórum</p>
+            <button id="google-login-btn" class="btn-primary" style="width:100%; margin-bottom:10px; display:flex; align-items:center; justify-content:center; gap:10px;">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style="width:20px; height:20px;">
+                Entrar com Google
+            </button>
+            
+            <div style="text-align:center; margin:20px 0; color:#999;">ou</div>
+            
+            <form id="login-form-modal">
+                <input type="email" id="modal-email" class="form-group" style="width:100%; padding:12px; border:1px solid #ddd; border-radius:8px; margin-bottom:10px;" placeholder="E-mail" required>
+                <input type="password" id="modal-password" class="form-group" style="width:100%; padding:12px; border:1px solid #ddd; border-radius:8px; margin-bottom:10px;" placeholder="Senha" required>
+                <button type="submit" class="btn-primary" style="width:100%;">Entrar com e-mail</button>
+            </form>
+            <div style="text-align:center; margin-top:16px;">
+                <a href="#" onclick="showRegister()" style="color: #e94560; text-decoration:none;">Criar nova conta</a>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- Create Post Modal -->
+<!-- ===== MODAL POST ===== -->
 <div id="post-modal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
             <h3 id="post-modal-title">Criar Novo Tópico</h3>
-            <span class="close-modal" onclick="closeModal('post-modal')">&times;</span>
+            <button class="close-modal" onclick="closeModal('post-modal')">&times;</button>
         </div>
         <div class="modal-body">
             <div id="post-modal-body"></div>
@@ -711,23 +956,23 @@
     </div>
 </div>
 
-<!-- Image Modal -->
+<!-- ===== MODAL IMAGEM ===== -->
 <div id="image-modal" class="modal">
-    <div class="modal-content">
+    <div class="modal-content" style="max-width: 500px;">
         <div class="modal-header">
-            <h3>🖼️ Inserir Imagem</h3>
-            <span class="close-modal" onclick="closeModal('image-modal')">&times;</span>
+            <h3><i class="material-icons">image</i> Inserir Imagem</h3>
+            <button class="close-modal" onclick="closeModal('image-modal')">&times;</button>
         </div>
         <div class="modal-body">
             <div class="form-group">
                 <label>URL da Imagem</label>
-                <input type="text" id="image-url" placeholder="https://exemplo.com/imagem.jpg">
+                <input type="text" id="image-url" class="form-control" placeholder="https://exemplo.com/imagem.jpg">
             </div>
             <div class="form-group">
                 <label>Texto alternativo (opcional)</label>
-                <input type="text" id="image-alt" placeholder="Descrição da imagem">
+                <input type="text" id="image-alt" class="form-control" placeholder="Descrição da imagem">
             </div>
-            <button class="btn-primary" onclick="insertImageToEditor()">Inserir Imagem</button>
+            <button class="btn-primary" onclick="insertImageToEditor()" style="width:100%;">Inserir Imagem</button>
         </div>
     </div>
 </div>
@@ -737,7 +982,9 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 
 <script>
-// Firebase Config
+// ============================================
+// FIREBASE CONFIG
+// ============================================
 const firebaseConfig = {
     apiKey: "AIzaSyB9GkSqTIZ0kbVsba_WOdQeVAETrF9qna0",
     authDomain: "wzzm-ce3fc.firebaseapp.com",
@@ -751,6 +998,9 @@ if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const auth = firebase.auth();
 
+// ============================================
+// VARIÁVEIS GLOBAIS
+// ============================================
 let currentUser = null;
 let isAdmin = false;
 let isBanned = false;
@@ -759,47 +1009,91 @@ let currentSubcategoryId = null;
 let currentThreadId = null;
 let threadQuill = null;
 let replyQuill = null;
+let notifications = [];
+let unreadCount = 0;
+let notificationListener = null;
 
 const ADMIN_UIDS = ['sZxfMuOBPbXdR8nttVPXIN8QOOl1', '6aPqWVh8JVYL5NqEb78iDGPD7dH3'];
 
 // ============================================
-// FUNÇÃO PARA REGISTRAR USUÁRIO
+// FUNÇÕES DE UTILIDADE
+// ============================================
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+function getInitials(name) {
+    if (!name) return '?';
+    const parts = name.trim().split(' ');
+    if (parts.length >= 2) return (parts[0][0] + parts[parts.length-1][0]).toUpperCase();
+    return name.substring(0, 2).toUpperCase();
+}
+
+function formatDate(timestamp) {
+    if (!timestamp) return 'Data desconhecida';
+    if (timestamp.toDate) timestamp = timestamp.toDate();
+    return timestamp.toLocaleDateString('pt-BR') + ' ' + timestamp.toLocaleTimeString('pt-BR');
+}
+
+function getTimeAgo(date) {
+    if (!date) return '';
+    if (date.toDate) date = date.toDate();
+    const seconds = Math.floor((new Date() - date) / 1000);
+    if (seconds < 60) return 'agora';
+    const minutes = Math.floor(seconds / 60);
+    if (minutes < 60) return `${minutes}m`;
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours}h`;
+    const days = Math.floor(hours / 24);
+    return `${days}d`;
+}
+
+function renderHtmlContent(html) {
+    if (!html) return '';
+    if (typeof DOMPurify !== 'undefined') {
+        return DOMPurify.sanitize(html, {
+            ALLOWED_TAGS: ['h1','h2','h3','h4','h5','h6','p','br','hr','b','i','strong','em',
+                           'ul','ol','li','a','img','table','thead','tbody','tr','th','td',
+                           'pre','code','blockquote','div','span','figure','figcaption','iframe']
+        });
+    }
+    return html;
+}
+
+// ============================================
+// REGISTRO DE USUÁRIO
 // ============================================
 async function registerUser(user) {
     try {
         const uid = user.uid;
-        
-        // Verifica se o usuário já existe para preservar o status de ban
         const userDoc = await db.collection('users').doc(uid).get();
         const existingData = userDoc.exists ? userDoc.data() : {};
+        
+        let isAdminValue = ADMIN_UIDS.includes(uid) || existingData.isAdmin === true;
+        let isBannedValue = existingData.isBanned || existingData.isBan || false;
         
         const userData = {
             uid: uid,
             email: user.email || '',
             name: user.displayName || 'Usuário',
             profilePictureUrl: user.photoURL || '',
-            isAdmin: false,
+            isAdmin: isAdminValue,
             isBan: existingData.isBan || false,
-            isBanned: existingData.isBanned || false,
-            isTeacher: false,
-            isTeatcher: false,
+            isBanned: isBannedValue,
+            isTeacher: existingData.isTeacher || false,
+            isTeatcher: existingData.isTeatcher || false,
             createdAt: existingData.createdAt || firebase.firestore.FieldValue.serverTimestamp(),
             updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
             lastLoginAt: firebase.firestore.FieldValue.serverTimestamp()
         };
 
-        // Verifica se é admin específico
-        if (ADMIN_UIDS.includes(uid)) {
-            userData.isAdmin = true;
-        }
-
-        // Registra na coleção 'users'
         await db.collection('users').doc(uid).set(userData, { merge: true });
-        
-        // Registra na coleção 'usuários'
         await db.collection('usuários').doc(uid).set(userData, { merge: true });
 
-        console.log(`Usuário ${uid} registrado com sucesso! isBanned: ${userData.isBanned}`);
+        console.log(`Usuário ${uid} registrado com sucesso!`);
         return userData;
     } catch (error) {
         console.error('Erro ao registrar usuário:', error);
@@ -808,11 +1102,10 @@ async function registerUser(user) {
 }
 
 // ============================================
-// FUNÇÃO PARA VERIFICAR SE USUÁRIO ESTÁ BANIDO
+// VERIFICAÇÃO DE BANIMENTO
 // ============================================
 async function checkIfUserIsBanned(user) {
     if (!user) return false;
-    
     try {
         const userDoc = await db.collection('users').doc(user.uid).get();
         if (userDoc.exists) {
@@ -822,45 +1115,240 @@ async function checkIfUserIsBanned(user) {
     } catch (error) {
         console.log("Erro ao verificar banimento:", error);
     }
-    
     return false;
 }
 
-// ============================================
-// FUNÇÃO PARA USUÁRIO BANIDO
-// ============================================
 function showBannedScreen(reason = 'Violação das políticas de uso') {
     const overlay = document.getElementById('bannedOverlay');
     const details = document.getElementById('banDetails');
     details.textContent = `Motivo: ${reason}`;
     overlay.classList.add('show');
-    
-    // Esconde o conteúdo principal
     document.querySelector('.main-container').style.opacity = '0.3';
     document.querySelector('.main-container').style.pointerEvents = 'none';
     document.querySelector('.header').style.opacity = '0.3';
     document.querySelector('.header').style.pointerEvents = 'none';
-    document.querySelector('.footer').style.opacity = '0.3';
-    document.querySelector('.footer').style.pointerEvents = 'none';
+    document.querySelector('.site-footer').style.opacity = '0.3';
+    document.querySelector('.site-footer').style.pointerEvents = 'none';
 }
 
-function logoutBanned() {
-    auth.signOut().then(() => {
-        location.reload();
-    });
+async function logoutBanned() {
+    try { await auth.signOut(); location.reload(); } catch (e) { location.reload(); }
 }
 
 // ============================================
-// CONFIGURAÇÕES DE PAGINAÇÃO
+// NOTIFICAÇÕES
+// ============================================
+async function loadNotifications() {
+    if (!currentUser) return;
+    try {
+        const snapshot = await db.collection('notifications')
+            .where('userId', '==', currentUser.uid)
+            .orderBy('timestamp', 'desc')
+            .limit(50)
+            .get();
+        notifications = [];
+        snapshot.forEach(doc => {
+            notifications.push({ 
+                id: doc.id, 
+                ...doc.data(),
+                timestamp: doc.data().timestamp || new Date()
+            });
+        });
+        unreadCount = notifications.filter(n => !n.lida).length;
+        updateNotificationBadge();
+        renderNotifications();
+    } catch (error) {
+        console.error('Erro ao carregar notificações:', error);
+    }
+}
+
+function updateNotificationBadge() {
+    const badge = document.getElementById('notifBadge');
+    if (unreadCount > 0) {
+        badge.style.display = 'flex';
+        badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+    } else {
+        badge.style.display = 'none';
+    }
+}
+
+function renderNotifications() {
+    const list = document.getElementById('notificationList');
+    if (!list) return;
+    if (notifications.length === 0) {
+        list.innerHTML = `<div class="notification-empty"><span class="material-icons">notifications_off</span><p>Nenhuma notificação</p></div>`;
+        return;
+    }
+    list.innerHTML = notifications.slice(0, 10).map(notif => `
+        <div class="notification-item ${notif.lida ? '' : 'unread'}" onclick="markAsRead('${notif.id}')">
+            <div class="notif-title">${escapeHtml(notif.titulo || 'Notificação')}</div>
+            <div class="notif-message">${escapeHtml(notif.mensagem || '')}</div>
+            <div class="notif-time">${getTimeAgo(notif.timestamp)}</div>
+        </div>
+    `).join('');
+}
+
+async function markAsRead(id) {
+    if (!id) return;
+    try {
+        await db.collection('notifications').doc(id).update({ lida: true });
+        const notif = notifications.find(n => n.id === id);
+        if (notif && !notif.lida) { notif.lida = true; unreadCount--; updateNotificationBadge(); renderNotifications(); }
+    } catch (error) { console.error('Erro:', error); }
+}
+
+async function markAllAsRead(event) {
+    if (event) event.stopPropagation();
+    if (unreadCount === 0) return;
+    try {
+        const batch = db.batch();
+        notifications.filter(n => !n.lida).forEach(n => batch.update(db.collection('notifications').doc(n.id), { lida: true }));
+        await batch.commit();
+        notifications.forEach(n => n.lida = true);
+        unreadCount = 0;
+        updateNotificationBadge();
+        renderNotifications();
+    } catch (error) { console.error('Erro:', error); }
+}
+
+function toggleNotifications(event) {
+    if (event) event.stopPropagation();
+    const dropdown = document.getElementById('notifDropdown');
+    if (dropdown) {
+        dropdown.classList.toggle('show');
+        if (dropdown.classList.contains('show')) loadNotifications();
+    }
+}
+
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.notification-bell')) {
+        const dropdown = document.getElementById('notifDropdown');
+        if (dropdown) dropdown.classList.remove('show');
+    }
+});
+
+function listenNotifications() {
+    if (notificationListener) { notificationListener(); notificationListener = null; }
+    if (!currentUser) return;
+    notificationListener = db.collection('notifications')
+        .where('userId', '==', currentUser.uid)
+        .orderBy('timestamp', 'desc')
+        .limit(50)
+        .onSnapshot((snapshot) => {
+            notifications = [];
+            snapshot.forEach(doc => notifications.push({ id: doc.id, ...doc.data(), timestamp: doc.data().timestamp || new Date() }));
+            unreadCount = notifications.filter(n => !n.lida).length;
+            updateNotificationBadge();
+            renderNotifications();
+        }, (error) => console.error('Erro no listener:', error));
+}
+
+// ============================================
+// AUTENTICAÇÃO - UI
+// ============================================
+function updateUI() {
+    const avatar = document.getElementById('userAvatar');
+    const name = document.getElementById('userName');
+    const email = document.getElementById('userEmail');
+    const badge = document.getElementById('userBadge');
+    const btnLogin = document.getElementById('btnLogin');
+    const btnLogout = document.getElementById('btnLogout');
+    
+    if (currentUser && !isBanned) {
+        let displayName = currentUser.displayName || (currentUser.email ? currentUser.email.split('@')[0] : 'Usuário');
+        if (currentUser.photoURL) {
+            avatar.innerHTML = `<img src="${currentUser.photoURL}" alt="Avatar">`;
+        } else {
+            avatar.textContent = getInitials(displayName);
+        }
+        name.textContent = displayName.length > 20 ? displayName.substring(0,17)+'...' : displayName;
+        email.textContent = currentUser.email || '';
+        let badges = '';
+        if (isBanned) badges += '<span class="badge-banned">🚫 Banido</span> ';
+        if (isAdmin) badges += '<span class="badge-admin">Admin</span> ';
+        badge.innerHTML = badges;
+        btnLogin.style.display = 'none';
+        btnLogout.style.display = 'inline-block';
+    } else {
+        avatar.innerHTML = '👤';
+        name.textContent = 'Visitante';
+        email.textContent = '';
+        badge.innerHTML = '';
+        btnLogin.style.display = 'inline-block';
+        btnLogout.style.display = 'none';
+    }
+}
+
+function showLoginModal() { document.getElementById('login-modal').classList.add('show'); }
+function closeLoginModal() { document.getElementById('login-modal').classList.remove('show'); }
+
+async function loginWithGoogle() {
+    try {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        const result = await auth.signInWithPopup(provider);
+        currentUser = result.user;
+        await registerUser(currentUser);
+        isBanned = await checkIfUserIsBanned(currentUser);
+        if (isBanned) { showBannedScreen('Sua conta foi banida.'); await auth.signOut(); updateUI(); return; }
+        isAdmin = ADMIN_UIDS.includes(currentUser.uid) || (await db.collection('users').doc(currentUser.uid).get()).data()?.isAdmin === true;
+        updateUI();
+        closeLoginModal();
+        await loadNotifications();
+        listenNotifications();
+        navigateToHome();
+    } catch (error) {
+        console.error('Erro no login:', error);
+        alert('Erro ao fazer login: ' + error.message);
+    }
+}
+
+async function logout() {
+    try {
+        await auth.signOut();
+        currentUser = null;
+        isBanned = false;
+        isAdmin = false;
+        if (notificationListener) { notificationListener(); notificationListener = null; }
+        notifications = [];
+        unreadCount = 0;
+        updateNotificationBadge();
+        updateUI();
+        navigateToHome();
+    } catch (error) {
+        console.error('Erro no logout:', error);
+        alert('Erro ao sair: ' + error.message);
+    }
+}
+
+function showRegister() {
+    const email = prompt('Digite seu e-mail:');
+    if (!email) return;
+    const password = prompt('Digite sua senha (mínimo 6 caracteres):');
+    if (!password || password.length < 6) { alert('A senha deve ter pelo menos 6 caracteres'); return; }
+    registerUserEmail(email, password);
+}
+
+async function registerUserEmail(email, password) {
+    try {
+        const result = await auth.createUserWithEmailAndPassword(email, password);
+        currentUser = result.user;
+        await registerUser(currentUser);
+        updateUI();
+        closeLoginModal();
+        alert('Conta criada com sucesso!');
+    } catch (error) {
+        console.error('Erro ao criar conta:', error);
+        alert('Erro ao criar conta: ' + error.message);
+    }
+}
+
+// ============================================
+// CONFIGURAÇÕES DE PAGINAÇÃO E ROTAS
 // ============================================
 const POSTS_PER_PAGE = 10;
 let currentPage = 1;
 let totalPosts = 0;
 let totalPages = 0;
-
-// ============================================
-// SISTEMA DE ROTAS BASEADO EM URL
-// ============================================
 
 function updateURL(categoryId, subcategoryId, threadId, page = null) {
     const params = new URLSearchParams();
@@ -868,7 +1356,6 @@ function updateURL(categoryId, subcategoryId, threadId, page = null) {
     if (subcategoryId) params.set('sub', subcategoryId);
     if (threadId) params.set('thread', threadId);
     if (page && page > 1) params.set('page', page);
-    
     const newURL = `${window.location.origin}${window.location.pathname}${params.toString() ? '?' + params.toString() : ''}`;
     window.history.pushState({ categoryId, subcategoryId, threadId, page }, '', newURL);
 }
@@ -891,44 +1378,75 @@ function getCurrentLink() {
     if (params.subcategoryId) queryParams.push(`sub=${params.subcategoryId}`);
     if (params.threadId) queryParams.push(`thread=${params.threadId}`);
     if (params.page > 1) queryParams.push(`page=${params.page}`);
-    
-    if (queryParams.length > 0) {
-        link += '?' + queryParams.join('&');
-    }
+    if (queryParams.length > 0) link += '?' + queryParams.join('&');
     return link;
 }
 
-async function handleRouting() {
-    // Se estiver banido, não carrega conteúdo
-    if (isBanned) return;
-    
-    const params = getURLParams();
-    
-    if (params.threadId && params.subcategoryId && params.categoryId) {
-        currentCategoryId = params.categoryId;
-        currentSubcategoryId = params.subcategoryId;
-        currentThreadId = params.threadId;
-        currentPage = params.page;
-        await showPostsWithPagination(params.categoryId, params.subcategoryId, params.threadId, params.page);
-    } 
-    else if (params.subcategoryId && params.categoryId) {
-        currentCategoryId = params.categoryId;
-        currentSubcategoryId = params.subcategoryId;
-        await showThreads(params.categoryId, params.subcategoryId);
+function copyCurrentLink() {
+    const link = getCurrentLink();
+    navigator.clipboard.writeText(link).then(() => {
+        const btn = event.target;
+        const originalText = btn.textContent;
+        btn.textContent = '✅ Link copiado!';
+        setTimeout(() => { btn.textContent = originalText; }, 2000);
+    }).catch(() => alert('Link: ' + link));
+}
+
+function addCopyLinkButton() {
+    const breadcrumb = document.querySelector('.breadcrumb');
+    if (breadcrumb && !breadcrumb.querySelector('.copy-link-btn')) {
+        const copyBtn = document.createElement('button');
+        copyBtn.className = 'copy-link-btn';
+        copyBtn.innerHTML = '🔗 Copiar link';
+        copyBtn.onclick = copyCurrentLink;
+        breadcrumb.appendChild(copyBtn);
     }
-    else if (params.categoryId) {
-        currentCategoryId = params.categoryId;
-        await showSubcategories(params.categoryId);
-    }
-    else {
-        await showHome();
+}
+
+function handlePostAnchor() {
+    const hash = window.location.hash;
+    if (hash && hash.startsWith('#post-')) {
+        const postId = hash.substring(1);
+        setTimeout(() => {
+            const postElement = document.getElementById(postId);
+            if (postElement) {
+                postElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                postElement.classList.add('post-highlight');
+                setTimeout(() => postElement.classList.remove('post-highlight'), 2000);
+            }
+        }, 500);
     }
 }
 
 // ============================================
-// FUNÇÕES DE NAVEGAÇÃO COM ATUALIZAÇÃO DE URL
+// REFERÊNCIAS FIRESTORE
 // ============================================
+const maspiaRef = db.collection('maspia');
+const categoriesRef = () => maspiaRef.doc('forum').collection('categories');
+const subcategoriesRef = (catId) => categoriesRef().doc(catId).collection('subcategories');
+const threadsRef = (catId, subId) => subcategoriesRef(catId).doc(subId).collection('threads');
+const postsRef = (catId, subId, threadId) => threadsRef(catId, subId).doc(threadId).collection('posts');
+const commentsRef = (catId, subId, threadId, postId) => postsRef(catId, subId, threadId).doc(postId).collection('comments');
 
+// ============================================
+// CONTROLE ANTI-SPAM
+// ============================================
+const submitLocks = new Map();
+function isLocked(key, timeout = 2000) {
+    if (submitLocks.has(key)) {
+        if (Date.now() - submitLocks.get(key) < timeout) return true;
+        submitLocks.delete(key);
+    }
+    return false;
+}
+function lock(key, timeout = 2000) {
+    submitLocks.set(key, Date.now());
+    setTimeout(() => submitLocks.delete(key), timeout);
+}
+
+// ============================================
+// NAVEGAÇÃO
+// ============================================
 async function navigateToHome() {
     if (isBanned) return;
     updateURL(null, null, null);
@@ -953,246 +1471,6 @@ async function navigateToPosts(categoryId, subcategoryId, threadId, page = 1) {
     await showPostsWithPagination(categoryId, subcategoryId, threadId, page);
 }
 
-function copyCurrentLink() {
-    const link = getCurrentLink();
-    navigator.clipboard.writeText(link).then(() => {
-        const btn = event.target;
-        const originalText = btn.textContent;
-        btn.textContent = '✅ Link copiado!';
-        setTimeout(() => {
-            btn.textContent = originalText;
-        }, 2000);
-    }).catch(() => {
-        alert('Link: ' + link);
-    });
-}
-
-function addCopyLinkButton() {
-    const breadcrumb = document.querySelector('.breadcrumb');
-    if (breadcrumb && !breadcrumb.querySelector('.copy-link-btn')) {
-        const copyBtn = document.createElement('button');
-        copyBtn.className = 'copy-link-btn';
-        copyBtn.innerHTML = '🔗 Copiar link';
-        copyBtn.onclick = copyCurrentLink;
-        breadcrumb.appendChild(copyBtn);
-    }
-}
-
-// ============================================
-// CONTROLE ANTI-SPAM
-// ============================================
-const submitLocks = new Map();
-
-function isLocked(key, timeout = 2000) {
-    if (submitLocks.has(key)) {
-        const lockTime = submitLocks.get(key);
-        if (Date.now() - lockTime < timeout) {
-            return true;
-        }
-        submitLocks.delete(key);
-    }
-    return false;
-}
-
-function lock(key, timeout = 2000) {
-    submitLocks.set(key, Date.now());
-    setTimeout(() => {
-        submitLocks.delete(key);
-    }, timeout);
-}
-
-// Referências Firestore
-const maspiaRef = db.collection('maspia');
-const categoriesRef = () => maspiaRef.doc('forum').collection('categories');
-const subcategoriesRef = (catId) => categoriesRef().doc(catId).collection('subcategories');
-const threadsRef = (catId, subId) => subcategoriesRef(catId).doc(subId).collection('threads');
-const postsRef = (catId, subId, threadId) => threadsRef(catId, subId).doc(threadId).collection('posts');
-const commentsRef = (catId, subId, threadId, postId) => postsRef(catId, subId, threadId).doc(postId).collection('comments');
-const usersRef = () => maspiaRef.doc('usuarios').collection('perfis');
-
-// ============================================
-// FUNÇÕES DE AUTENTICAÇÃO
-// ============================================
-
-async function checkIsAdmin(user) {
-    if (!user) return false;
-    if (ADMIN_UIDS.includes(user.uid)) return true;
-    try {
-        const userDoc = await usersRef().doc(user.uid).get();
-        return userDoc.exists && (userDoc.data().role === 'admin' || userDoc.data().role === 'moderator');
-    } catch { return false; }
-}
-
-function updateUIForUser() {
-    const loginBtn = document.getElementById('login-nav-btn');
-    const logoutBtn = document.getElementById('logout-nav-btn');
-    const adminBtn = document.getElementById('admin-btn');
-    const moderacaoBtn = document.getElementById('moderacao-btn');
-    
-    if (currentUser && !isBanned) {
-        loginBtn.style.display = 'none';
-        logoutBtn.style.display = 'flex';
-        if (isAdmin) {
-            adminBtn.style.display = 'flex';
-            moderacaoBtn.style.display = 'flex';
-        } else {
-            adminBtn.style.display = 'none';
-            moderacaoBtn.style.display = 'none';
-        }
-    } else {
-        loginBtn.style.display = 'flex';
-        logoutBtn.style.display = 'none';
-        adminBtn.style.display = 'none';
-        moderacaoBtn.style.display = 'none';
-    }
-}
-
-async function loginWithGoogle() {
-    try {
-        const result = await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
-        const user = result.user;
-        
-        // Registra o usuário no Firestore
-        await registerUser(user);
-        
-        closeModal('login-modal');
-    } catch (error) {
-        alert('Erro: ' + error.message);
-    }
-}
-
-async function logout() {
-    try {
-        await auth.signOut();
-        navigateToHome();
-    } catch (e) {}
-    currentUser = null;
-    isAdmin = false;
-    isBanned = false;
-    updateUIForUser();
-}
-
-function openModeracao() {
-    window.open('moderacao.html', '_blank');
-}
-
-// ============================================
-// FUNÇÕES DE FORMATAÇÃO
-// ============================================
-
-function formatDate(timestamp) {
-    if (!timestamp) return 'Data desconhecida';
-    if (timestamp.toDate) timestamp = timestamp.toDate();
-    return timestamp.toLocaleDateString('pt-BR') + ' ' + timestamp.toLocaleTimeString('pt-BR');
-}
-
-function escapeHtml(text) {
-    if (!text) return '';
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
-
-function renderHtmlContent(html) {
-    if (!html) return '';
-    if (typeof DOMPurify !== 'undefined') {
-        return DOMPurify.sanitize(html, {
-            ALLOWED_TAGS: ['h1','h2','h3','h4','h5','h6','p','br','hr','b','i','strong','em',
-                           'ul','ol','li','a','img','table','thead','tbody','tr','th','td',
-                           'pre','code','blockquote','div','span','figure','figcaption','iframe']
-        });
-    }
-    return html;
-}
-
-// ============================================
-// FUNÇÕES DE PAGINAÇÃO
-// ============================================
-
-async function loadPostsWithPagination(categoryId, subcategoryId, threadId, page = 1) {
-    currentPage = page;
-    
-    try {
-        const postsQuery = await postsRef(categoryId, subcategoryId, threadId).get();
-        totalPosts = postsQuery.size;
-        totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE);
-        
-        if (currentPage > totalPages && totalPages > 0) {
-            currentPage = totalPages;
-        }
-        if (currentPage < 1) currentPage = 1;
-        
-        const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
-        
-        const postsSnapshot = await postsRef(categoryId, subcategoryId, threadId)
-            .orderBy('createdAt', 'asc')
-            .get();
-        
-        const allPosts = [];
-        postsSnapshot.forEach(doc => {
-            allPosts.push({ id: doc.id, ...doc.data() });
-        });
-        
-        const posts = allPosts.slice(startIndex, startIndex + POSTS_PER_PAGE);
-        
-        return { posts, totalPosts, totalPages, currentPage };
-        
-    } catch (error) {
-        console.error('Erro ao carregar posts:', error);
-        throw error;
-    }
-}
-
-function renderPagination(categoryId, subcategoryId, threadId, currentPage, totalPages) {
-    if (totalPages <= 1) return '';
-    
-    let paginationHTML = '<div class="pagination">';
-    
-    if (currentPage > 1) {
-        paginationHTML += `<button class="pagination-btn" onclick="goToPage('${categoryId}', '${subcategoryId}', '${threadId}', 1)">« Primeira</button>`;
-        paginationHTML += `<button class="pagination-btn" onclick="goToPage('${categoryId}', '${subcategoryId}', '${threadId}', ${currentPage - 1})">‹ Anterior</button>`;
-    }
-    
-    let startPage = Math.max(1, currentPage - 2);
-    let endPage = Math.min(totalPages, currentPage + 2);
-    
-    if (endPage - startPage < 4) {
-        if (startPage === 1) {
-            endPage = Math.min(totalPages, startPage + 4);
-        } else if (endPage === totalPages) {
-            startPage = Math.max(1, endPage - 4);
-        }
-    }
-    
-    if (startPage > 1) {
-        paginationHTML += `<span class="pagination-dots">...</span>`;
-    }
-    
-    for (let i = startPage; i <= endPage; i++) {
-        if (i === currentPage) {
-            paginationHTML += `<button class="pagination-btn active" disabled>${i}</button>`;
-        } else {
-            paginationHTML += `<button class="pagination-btn" onclick="goToPage('${categoryId}', '${subcategoryId}', '${threadId}', ${i})">${i}</button>`;
-        }
-    }
-    
-    if (endPage < totalPages) {
-        paginationHTML += `<span class="pagination-dots">...</span>`;
-    }
-    
-    if (currentPage < totalPages) {
-        paginationHTML += `<button class="pagination-btn" onclick="goToPage('${categoryId}', '${subcategoryId}', '${threadId}', ${currentPage + 1})">Próxima ›</button>`;
-        paginationHTML += `<button class="pagination-btn" onclick="goToPage('${categoryId}', '${subcategoryId}', '${threadId}', ${totalPages})">Última »</button>`;
-    }
-    
-    paginationHTML += `</div>`;
-    paginationHTML += `<div style="text-align: center; margin-top: 10px; margin-bottom: 20px; color: #666; font-size: 0.9em;">
-        Mostrando ${((currentPage - 1) * POSTS_PER_PAGE) + 1} - ${Math.min(currentPage * POSTS_PER_PAGE, totalPosts)} de ${totalPosts} posts
-    </div>`;
-    
-    return paginationHTML;
-}
-
 async function goToPage(categoryId, subcategoryId, threadId, page) {
     if (!categoryId || !subcategoryId || !threadId) return;
     await navigateToPosts(categoryId, subcategoryId, threadId, page);
@@ -1202,56 +1480,26 @@ function copyPostLink(postId, postNumber) {
     const baseUrl = window.location.origin + window.location.pathname;
     const params = getURLParams();
     let link = `${baseUrl}?cat=${params.categoryId}&sub=${params.subcategoryId}&thread=${params.threadId}&page=${currentPage}#post-${postId}`;
-    
     navigator.clipboard.writeText(link).then(() => {
         const btn = event.target;
         const originalHTML = btn.innerHTML;
         btn.innerHTML = '<span class="material-icons">check</span> Link copiado!';
-        setTimeout(() => {
-            btn.innerHTML = originalHTML;
-        }, 2000);
-    }).catch(() => {
-        alert('Link do post: ' + link);
-    });
-}
-
-function handlePostAnchor() {
-    const hash = window.location.hash;
-    if (hash && hash.startsWith('#post-')) {
-        const postId = hash.substring(1);
-        setTimeout(() => {
-            const postElement = document.getElementById(postId);
-            if (postElement) {
-                postElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                postElement.classList.add('post-highlight');
-                setTimeout(() => {
-                    postElement.classList.remove('post-highlight');
-                }, 2000);
-            }
-        }, 500);
-    }
+        setTimeout(() => { btn.innerHTML = originalHTML; }, 2000);
+    }).catch(() => alert('Link do post: ' + link));
 }
 
 // ============================================
 // TELAS PRINCIPAIS
 // ============================================
-
 async function showHome() {
     if (isBanned) return;
-    currentCategoryId = null;
-    currentSubcategoryId = null;
-    currentThreadId = null;
-    currentPage = 1;
-    
     const container = document.getElementById('main-container');
     container.innerHTML = '<div class="loading">Carregando categorias...</div>';
     
     try {
         const snapshot = await categoriesRef().orderBy('order', 'asc').get();
         const categories = [];
-        snapshot.forEach(doc => {
-            categories.push({ id: doc.id, ...doc.data() });
-        });
+        snapshot.forEach(doc => categories.push({ id: doc.id, ...doc.data() }));
         
         if (categories.length === 0 && isAdmin) {
             container.innerHTML = `
@@ -1265,9 +1513,7 @@ async function showHome() {
         }
         
         container.innerHTML = `
-            <div class="breadcrumb">
-                <a onclick="navigateToHome()">Fórum</a>
-            </div>
+            <div class="breadcrumb"><a onclick="navigateToHome()">Fórum</a></div>
             <div class="categories-grid">
                 ${categories.map(cat => `
                     <div class="category-card" onclick="navigateToSubcategories('${cat.id}')">
@@ -1294,23 +1540,15 @@ async function showHome() {
 
 async function showSubcategories(categoryId) {
     if (isBanned) return;
-    currentCategoryId = categoryId;
-    currentSubcategoryId = null;
-    currentThreadId = null;
-    currentPage = 1;
-    
     const container = document.getElementById('main-container');
     container.innerHTML = '<div class="loading">Carregando...</div>';
     
     try {
         const catDoc = await categoriesRef().doc(categoryId).get();
         const category = catDoc.data();
-        
         const snapshot = await subcategoriesRef(categoryId).orderBy('order', 'asc').get();
         const subcategories = [];
-        snapshot.forEach(doc => {
-            subcategories.push({ id: doc.id, ...doc.data() });
-        });
+        snapshot.forEach(doc => subcategories.push({ id: doc.id, ...doc.data() }));
         
         container.innerHTML = `
             <div class="breadcrumb">
@@ -1347,11 +1585,6 @@ async function showSubcategories(categoryId) {
 
 async function showThreads(categoryId, subcategoryId) {
     if (isBanned) return;
-    currentCategoryId = categoryId;
-    currentSubcategoryId = subcategoryId;
-    currentThreadId = null;
-    currentPage = 1;
-    
     const container = document.getElementById('main-container');
     container.innerHTML = '<div class="loading">Carregando tópicos...</div>';
     
@@ -1360,12 +1593,9 @@ async function showThreads(categoryId, subcategoryId) {
         const subDoc = await subcategoriesRef(categoryId).doc(subcategoryId).get();
         const category = catDoc.data();
         const subcategory = subDoc.data();
-        
         const snapshot = await threadsRef(categoryId, subcategoryId).orderBy('lastActivity', 'desc').get();
         const threads = [];
-        snapshot.forEach(doc => {
-            threads.push({ id: doc.id, ...doc.data() });
-        });
+        snapshot.forEach(doc => threads.push({ id: doc.id, ...doc.data() }));
         
         container.innerHTML = `
             <div class="breadcrumb">
@@ -1375,7 +1605,7 @@ async function showThreads(categoryId, subcategoryId) {
             </div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
                 <h2>${escapeHtml(subcategory?.icon || '📌')} ${escapeHtml(subcategory?.name)}</h2>
-                <button class="btn-primary" onclick="showCreateThread()">Criar Novo Tópico</button>
+                ${currentUser && !isBanned ? `<button class="btn-primary" onclick="showCreateThread()">Criar Novo Tópico</button>` : ''}
             </div>
             <div class="threads-list">
                 ${threads.length === 0 ? '<div style="padding: 40px; text-align: center;">Nenhum tópico ainda. Seja o primeiro a criar um!</div>' : 
@@ -1398,13 +1628,28 @@ async function showThreads(categoryId, subcategoryId) {
     }
 }
 
+async function loadPostsWithPagination(categoryId, subcategoryId, threadId, page = 1) {
+    currentPage = page;
+    try {
+        const postsQuery = await postsRef(categoryId, subcategoryId, threadId).get();
+        totalPosts = postsQuery.size;
+        totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE);
+        if (currentPage > totalPages && totalPages > 0) currentPage = totalPages;
+        if (currentPage < 1) currentPage = 1;
+        const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
+        const postsSnapshot = await postsRef(categoryId, subcategoryId, threadId).orderBy('createdAt', 'asc').get();
+        const allPosts = [];
+        postsSnapshot.forEach(doc => allPosts.push({ id: doc.id, ...doc.data() }));
+        const posts = allPosts.slice(startIndex, startIndex + POSTS_PER_PAGE);
+        return { posts, totalPosts, totalPages, currentPage };
+    } catch (error) {
+        console.error('Erro ao carregar posts:', error);
+        throw error;
+    }
+}
+
 async function showPostsWithPagination(categoryId, subcategoryId, threadId, page = 1) {
     if (isBanned) return;
-    currentCategoryId = categoryId;
-    currentSubcategoryId = subcategoryId;
-    currentThreadId = threadId;
-    currentPage = page;
-    
     const container = document.getElementById('main-container');
     container.innerHTML = '<div class="loading">Carregando posts...</div>';
     
@@ -1412,22 +1657,15 @@ async function showPostsWithPagination(categoryId, subcategoryId, threadId, page
         const catDoc = await categoriesRef().doc(categoryId).get();
         const subDoc = await subcategoriesRef(categoryId).doc(subcategoryId).get();
         const threadDoc = await threadsRef(categoryId, subcategoryId).doc(threadId).get();
-        
         const category = catDoc.data();
         const subcategory = subDoc.data();
         const thread = threadDoc.data();
         
-        if (!thread) {
-            container.innerHTML = '<div class="loading">Tópico não encontrado!</div>';
-            return;
-        }
+        if (!thread) { container.innerHTML = '<div class="loading">Tópico não encontrado!</div>'; return; }
         
         const { posts, totalPosts: total, totalPages: pages, currentPage: currPage } = 
             await loadPostsWithPagination(categoryId, subcategoryId, threadId, page);
-        
-        totalPosts = total;
-        totalPages = pages;
-        currentPage = currPage;
+        totalPosts = total; totalPages = pages; currentPage = currPage;
         
         updateURL(categoryId, subcategoryId, threadId, currentPage);
         
@@ -1453,9 +1691,7 @@ async function showPostsWithPagination(categoryId, subcategoryId, threadId, page
                             </div>
                             <div class="post-date">${formatDate(post.createdAt)}</div>
                         </div>
-                        <div class="post-content">
-                            ${renderHtmlContent(post.content)}
-                        </div>
+                        <div class="post-content">${renderHtmlContent(post.content)}</div>
                         <div class="post-actions">
                             <button class="action-btn" onclick="showCommentForm('${post.id}')">
                                 <span class="material-icons">comment</span> Responder
@@ -1481,11 +1717,13 @@ async function showPostsWithPagination(categoryId, subcategoryId, threadId, page
                 `).join('')}
             </div>
             ${renderPagination(categoryId, subcategoryId, threadId, currentPage, totalPages)}
-            <div class="form-container" style="margin-top: 20px;">
-                <h3>Responder ao Tópico</h3>
-                <div id="reply-editor" style="height: 200px; margin-bottom: 10px;"></div>
-                <button class="btn-primary" onclick="createReply()">Enviar Resposta</button>
-            </div>
+            ${currentUser && !isBanned ? `
+                <div class="form-container" style="margin-top: 20px;">
+                    <h3>Responder ao Tópico</h3>
+                    <div id="reply-editor" style="height: 200px; margin-bottom: 10px;"></div>
+                    <button class="btn-primary" onclick="createReply()">Enviar Resposta</button>
+                </div>
+            ` : ''}
         `;
         
         if (typeof Quill !== 'undefined') {
@@ -1505,32 +1743,50 @@ async function showPostsWithPagination(categoryId, subcategoryId, threadId, page
             });
         }
         
-        for (const post of posts) {
-            loadComments(categoryId, subcategoryId, threadId, post.id);
-        }
-        
+        for (const post of posts) loadComments(categoryId, subcategoryId, threadId, post.id);
         addCopyLinkButton();
         handlePostAnchor();
         window.scrollTo({ top: 0, behavior: 'smooth' });
-        
     } catch (error) {
         container.innerHTML = `<div class="loading">Erro: ${error.message}</div>`;
     }
 }
 
-// Função original showPosts mantida para compatibilidade
-async function showPosts(categoryId, subcategoryId, threadId) {
-    await showPostsWithPagination(categoryId, subcategoryId, threadId, 1);
+function renderPagination(categoryId, subcategoryId, threadId, currentPage, totalPages) {
+    if (totalPages <= 1) return '';
+    let html = '<div class="pagination">';
+    if (currentPage > 1) {
+        html += `<button class="pagination-btn" onclick="goToPage('${categoryId}', '${subcategoryId}', '${threadId}', 1)">« Primeira</button>`;
+        html += `<button class="pagination-btn" onclick="goToPage('${categoryId}', '${subcategoryId}', '${threadId}', ${currentPage - 1})">‹ Anterior</button>`;
+    }
+    let startPage = Math.max(1, currentPage - 2);
+    let endPage = Math.min(totalPages, currentPage + 2);
+    if (endPage - startPage < 4) {
+        if (startPage === 1) endPage = Math.min(totalPages, startPage + 4);
+        else if (endPage === totalPages) startPage = Math.max(1, endPage - 4);
+    }
+    if (startPage > 1) html += `<span class="pagination-dots">...</span>`;
+    for (let i = startPage; i <= endPage; i++) {
+        if (i === currentPage) html += `<button class="pagination-btn active" disabled>${i}</button>`;
+        else html += `<button class="pagination-btn" onclick="goToPage('${categoryId}', '${subcategoryId}', '${threadId}', ${i})">${i}</button>`;
+    }
+    if (endPage < totalPages) html += `<span class="pagination-dots">...</span>`;
+    if (currentPage < totalPages) {
+        html += `<button class="pagination-btn" onclick="goToPage('${categoryId}', '${subcategoryId}', '${threadId}', ${currentPage + 1})">Próxima ›</button>`;
+        html += `<button class="pagination-btn" onclick="goToPage('${categoryId}', '${subcategoryId}', '${threadId}', ${totalPages})">Última »</button>`;
+    }
+    html += `</div>`;
+    html += `<div style="text-align:center; margin-top:10px; margin-bottom:20px; color:#666; font-size:0.9em;">
+        Mostrando ${((currentPage - 1) * POSTS_PER_PAGE) + 1} - ${Math.min(currentPage * POSTS_PER_PAGE, totalPosts)} de ${totalPosts} posts
+    </div>`;
+    return html;
 }
 
 async function loadComments(categoryId, subcategoryId, threadId, postId) {
     try {
         const snapshot = await commentsRef(categoryId, subcategoryId, threadId, postId).orderBy('createdAt', 'asc').get();
         const comments = [];
-        snapshot.forEach(doc => {
-            comments.push({ id: doc.id, ...doc.data() });
-        });
-        
+        snapshot.forEach(doc => comments.push({ id: doc.id, ...doc.data() }));
         const commentsDiv = document.getElementById(`comments-${postId}`);
         if (commentsDiv) {
             if (comments.length === 0) {
@@ -1547,358 +1803,147 @@ async function loadComments(categoryId, subcategoryId, threadId, postId) {
                 `).join('');
             }
         }
-    } catch (error) {
-        console.error('Erro ao carregar comentários:', error);
-    }
+    } catch (error) { console.error('Erro ao carregar comentários:', error); }
 }
 
 // ============================================
-// FUNÇÕES DE CRIAÇÃO COM PROTEÇÃO ANTI-SPAM
+// CRIAÇÃO DE POSTS E TÓPICOS
 // ============================================
-
 function showCreateThread() {
-    if (!currentUser || isBanned) { 
-        if (isBanned) {
-            alert('Sua conta está banida. Não é possível criar tópicos.');
-        } else {
-            showLoginModal();
-        }
-        return; 
-    }
-    
+    if (!currentUser || isBanned) { if (isBanned) alert('Sua conta está banida.'); else showLoginModal(); return; }
     document.getElementById('post-modal-title').innerHTML = 'Criar Novo Tópico';
     document.getElementById('post-modal-body').innerHTML = `
-        <div class="form-group">
-            <label>Título</label>
-            <input type="text" id="thread-title" class="form-control" placeholder="Título do tópico">
-        </div>
-        <div class="form-group">
-            <label>Conteúdo</label>
-            <div id="thread-editor" style="height: 300px; margin-bottom: 10px;"></div>
-        </div>
+        <div class="form-group"><label>Título</label><input type="text" id="thread-title" placeholder="Título do tópico"></div>
+        <div class="form-group"><label>Conteúdo</label><div id="thread-editor" style="height: 300px; margin-bottom: 10px;"></div></div>
         <button class="btn-primary" onclick="createThread()">Criar Tópico</button>
     `;
-    
     if (typeof Quill !== 'undefined') {
         threadQuill = new Quill('#thread-editor', {
             theme: 'snow',
-            placeholder: 'Digite o conteúdo do seu tópico aqui... Use as ferramentas de formatação!',
-            modules: {
-                toolbar: [
-                    ['bold', 'italic', 'underline', 'strike'],
-                    ['blockquote', 'code-block'],
-                    [{ 'header': [1, 2, 3, false] }],
-                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                    ['link', 'image'],
-                    ['clean']
-                ]
-            }
+            placeholder: 'Digite o conteúdo do seu tópico aqui...',
+            modules: { toolbar: [['bold','italic','underline','strike'],['blockquote','code-block'],[{'header':[1,2,3,false]}],[{'list':'ordered'},{'list':'bullet'}],['link','image'],['clean']] }
         });
     }
-    
-    document.getElementById('post-modal').style.display = 'flex';
-}
-
-function openImageModal(editorType) {
-    window.currentEditorType = editorType;
-    document.getElementById('image-modal').style.display = 'flex';
-}
-
-function insertImageToEditor() {
-    const url = document.getElementById('image-url').value;
-    const alt = document.getElementById('image-alt').value || 'imagem';
-    
-    if (!url) {
-        alert('Digite uma URL de imagem válida');
-        return;
-    }
-    
-    if (window.currentEditorType === 'thread' && threadQuill) {
-        const range = threadQuill.getSelection();
-        if (range) {
-            threadQuill.insertEmbed(range.index, 'image', url);
-        } else {
-            threadQuill.insertEmbed(threadQuill.getLength() - 1, 'image', url);
-        }
-    } else if (replyQuill) {
-        const range = replyQuill.getSelection();
-        if (range) {
-            replyQuill.insertEmbed(range.index, 'image', url);
-        } else {
-            replyQuill.insertEmbed(replyQuill.getLength() - 1, 'image', url);
-        }
-    } else {
-        alert('Editor não encontrado');
-        return;
-    }
-    
-    closeModal('image-modal');
-    document.getElementById('image-url').value = '';
-    document.getElementById('image-alt').value = '';
+    document.getElementById('post-modal').classList.add('show');
 }
 
 async function createThread() {
-    if (!threadQuill || isBanned) {
-        if (isBanned) alert('Sua conta está banida.');
-        return;
-    }
-    
-    if (isLocked(`createThread_${currentUser?.uid}`)) {
-        alert('Aguarde um momento antes de criar outro tópico...');
-        return;
-    }
-    
+    if (!threadQuill || isBanned) { if (isBanned) alert('Sua conta está banida.'); return; }
+    if (isLocked(`createThread_${currentUser?.uid}`)) { alert('Aguarde um momento...'); return; }
     const title = document.getElementById('thread-title').value;
     const content = threadQuill.root.innerHTML;
-    
-    if (!title || !content || content === '<p><br></p>') {
-        alert('Preencha título e conteúdo');
-        return;
-    }
-    
+    if (!title || !content || content === '<p><br></p>') { alert('Preencha título e conteúdo'); return; }
     lock(`createThread_${currentUser?.uid}`, 3000);
     
     const submitBtn = document.querySelector('#post-modal .btn-primary');
-    let originalText = '';
-    if (submitBtn) {
-        originalText = submitBtn.textContent;
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Criando...';
-    }
+    if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Criando...'; }
     
     try {
         const threadId = Date.now().toString();
         const postId = Date.now().toString();
-        
         const batch = db.batch();
-        
-        const threadRef = threadsRef(currentCategoryId, currentSubcategoryId).doc(threadId);
-        batch.set(threadRef, {
-            title: title,
-            authorId: currentUser.uid,
-            authorName: currentUser.displayName || currentUser.email,
+        batch.set(threadsRef(currentCategoryId, currentSubcategoryId).doc(threadId), {
+            title, authorId: currentUser.uid, authorName: currentUser.displayName || currentUser.email,
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            lastActivity: firebase.firestore.FieldValue.serverTimestamp(),
-            postsCount: 1
+            lastActivity: firebase.firestore.FieldValue.serverTimestamp(), postsCount: 1
         });
-        
-        const postRef = postsRef(currentCategoryId, currentSubcategoryId, threadId).doc(postId);
-        batch.set(postRef, {
-            content: content,
-            authorId: currentUser.uid,
-            authorName: currentUser.displayName || currentUser.email,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            isAdmin: isAdmin
+        batch.set(postsRef(currentCategoryId, currentSubcategoryId, threadId).doc(postId), {
+            content, authorId: currentUser.uid, authorName: currentUser.displayName || currentUser.email,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(), isAdmin: isAdmin
         });
-        
         await batch.commit();
         await updateCounts(currentCategoryId, currentSubcategoryId);
-        
-        closeModal('post-modal');
+        document.getElementById('post-modal').classList.remove('show');
         navigateToThreads(currentCategoryId, currentSubcategoryId);
-        
-    } catch (error) {
-        alert('Erro: ' + error.message);
-    } finally {
-        if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.textContent = originalText || 'Criar Tópico';
-        }
-        submitLocks.delete(`createThread_${currentUser?.uid}`);
-    }
+    } catch (error) { alert('Erro: ' + error.message); }
+    finally { if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Criar Tópico'; } submitLocks.delete(`createThread_${currentUser?.uid}`); }
 }
 
 async function createReply() {
-    if (!currentUser || isBanned) {
-        if (isBanned) {
-            alert('Sua conta está banida. Não é possível responder.');
-        } else {
-            showLoginModal();
-        }
-        return;
-    }
+    if (!currentUser || isBanned) { if (isBanned) alert('Sua conta está banida.'); else showLoginModal(); return; }
     if (!replyQuill) return;
-    
-    if (isLocked(`createReply_${currentThreadId}_${currentUser?.uid}`)) {
-        alert('Aguarde um momento antes de enviar outra resposta...');
-        return;
-    }
-    
+    if (isLocked(`createReply_${currentThreadId}_${currentUser?.uid}`)) { alert('Aguarde um momento...'); return; }
     const content = replyQuill.root.innerHTML;
-    if (!content || content === '<p><br></p>') {
-        alert('Digite o conteúdo do post');
-        return;
-    }
-    
+    if (!content || content === '<p><br></p>') { alert('Digite o conteúdo'); return; }
     lock(`createReply_${currentThreadId}_${currentUser?.uid}`, 3000);
     
     const submitBtn = document.querySelector('#reply-editor')?.parentElement?.querySelector('.btn-primary');
-    let originalText = '';
-    if (submitBtn) {
-        originalText = submitBtn.textContent;
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Enviando...';
-    }
+    if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Enviando...'; }
     
     try {
         const postId = Date.now().toString();
-        
         const batch = db.batch();
-        
-        const postRef = postsRef(currentCategoryId, currentSubcategoryId, currentThreadId).doc(postId);
-        batch.set(postRef, {
-            content: content,
-            authorId: currentUser.uid,
-            authorName: currentUser.displayName || currentUser.email,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            isAdmin: isAdmin
+        batch.set(postsRef(currentCategoryId, currentSubcategoryId, currentThreadId).doc(postId), {
+            content, authorId: currentUser.uid, authorName: currentUser.displayName || currentUser.email,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(), isAdmin: isAdmin
         });
-        
-        const threadRef = threadsRef(currentCategoryId, currentSubcategoryId).doc(currentThreadId);
-        batch.update(threadRef, {
+        batch.update(threadsRef(currentCategoryId, currentSubcategoryId).doc(currentThreadId), {
             lastActivity: firebase.firestore.FieldValue.serverTimestamp(),
             postsCount: firebase.firestore.FieldValue.increment(1)
         });
-        
         await batch.commit();
-        
         replyQuill.root.innerHTML = '';
-        
         const totalPostsAfter = (await postsRef(currentCategoryId, currentSubcategoryId, currentThreadId).get()).size;
         const lastPage = Math.ceil(totalPostsAfter / POSTS_PER_PAGE);
-        
         await navigateToPosts(currentCategoryId, currentSubcategoryId, currentThreadId, lastPage);
-        
-    } catch (error) {
-        alert('Erro: ' + error.message);
-    } finally {
-        if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.textContent = originalText || 'Enviar Resposta';
-        }
-        submitLocks.delete(`createReply_${currentThreadId}_${currentUser?.uid}`);
-    }
+    } catch (error) { alert('Erro: ' + error.message); }
+    finally { if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Enviar Resposta'; } submitLocks.delete(`createReply_${currentThreadId}_${currentUser?.uid}`); }
 }
 
 function showCommentForm(postId) {
-    if (isBanned) {
-        alert('Sua conta está banida. Não é possível comentar.');
-        return;
-    }
+    if (isBanned) { alert('Sua conta está banida.'); return; }
     const formDiv = document.getElementById(`comment-form-${postId}`);
-    if (formDiv) {
-        formDiv.style.display = formDiv.style.display === 'none' ? 'block' : 'none';
-    }
+    if (formDiv) formDiv.style.display = formDiv.style.display === 'none' ? 'block' : 'none';
 }
 
 async function submitComment(postId) {
-    if (!currentUser || isBanned) {
-        if (isBanned) {
-            alert('Sua conta está banida. Não é possível comentar.');
-        } else {
-            showLoginModal();
-        }
-        return;
-    }
-    
+    if (!currentUser || isBanned) { if (isBanned) alert('Sua conta está banida.'); else showLoginModal(); return; }
     const content = document.getElementById(`comment-content-${postId}`).value;
-    if (!content.trim()) {
-        alert('Digite o comentário');
-        return;
-    }
-    
+    if (!content.trim()) { alert('Digite o comentário'); return; }
     const lockKey = `comment_${currentThreadId}_${postId}_${currentUser?.uid}`;
-    if (isLocked(lockKey)) {
-        alert('Aguarde um momento antes de enviar outro comentário...');
-        return;
-    }
-    
+    if (isLocked(lockKey)) { alert('Aguarde um momento...'); return; }
     lock(lockKey, 2000);
-    
-    const submitBtn = document.querySelector(`#comment-form-${postId} .btn-primary`);
-    let originalText = '';
-    if (submitBtn) {
-        originalText = submitBtn.textContent;
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Enviando...';
-    }
-    
     try {
         const commentId = Date.now().toString();
-        
         await commentsRef(currentCategoryId, currentSubcategoryId, currentThreadId, postId).doc(commentId).set({
-            content: content,
-            authorId: currentUser.uid,
-            authorName: currentUser.displayName || currentUser.email,
+            content, authorId: currentUser.uid, authorName: currentUser.displayName || currentUser.email,
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
-        
         document.getElementById(`comment-content-${postId}`).value = '';
         document.getElementById(`comment-form-${postId}`).style.display = 'none';
         await loadComments(currentCategoryId, currentSubcategoryId, currentThreadId, postId);
-        
-    } catch (error) {
-        alert('Erro: ' + error.message);
-    } finally {
-        if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.textContent = originalText || 'Enviar Comentário';
-        }
-        submitLocks.delete(lockKey);
-    }
+    } catch (error) { alert('Erro: ' + error.message); }
+    finally { submitLocks.delete(lockKey); }
 }
 
 // ============================================
-// FUNÇÕES DE EDIÇÃO E EXCLUSÃO
+// EDIÇÃO E EXCLUSÃO
 // ============================================
-
 async function editPost(postId) {
-    if (isBanned) {
-        alert('Sua conta está banida. Não é possível editar.');
-        return;
-    }
-    if (isLocked(`editPost_${postId}_${currentUser?.uid}`)) {
-        alert('Aguarde um momento...');
-        return;
-    }
-    
+    if (isBanned) { alert('Sua conta está banida.'); return; }
+    if (isLocked(`editPost_${postId}_${currentUser?.uid}`)) { alert('Aguarde um momento...'); return; }
     lock(`editPost_${postId}_${currentUser?.uid}`, 1000);
-    
     const newContent = prompt('Editar conteúdo (HTML):');
     if (newContent && newContent !== 'null') {
         try {
-            await postsRef(currentCategoryId, currentSubcategoryId, currentThreadId).doc(postId).update({
-                content: newContent
-            });
+            await postsRef(currentCategoryId, currentSubcategoryId, currentThreadId).doc(postId).update({ content: newContent });
             await navigateToPosts(currentCategoryId, currentSubcategoryId, currentThreadId, currentPage);
-        } catch (error) {
-            alert('Erro: ' + error.message);
-        }
+        } catch (error) { alert('Erro: ' + error.message); }
     }
     submitLocks.delete(`editPost_${postId}_${currentUser?.uid}`);
 }
 
 async function deletePost(postId) {
-    if (isBanned) {
-        alert('Sua conta está banida. Não é possível excluir.');
-        return;
-    }
+    if (isBanned) { alert('Sua conta está banida.'); return; }
     if (confirm('Tem certeza que deseja excluir este post?')) {
         try {
             await postsRef(currentCategoryId, currentSubcategoryId, currentThreadId).doc(postId).delete();
-            
             const totalPostsAfter = (await postsRef(currentCategoryId, currentSubcategoryId, currentThreadId).get()).size;
             const newTotalPages = Math.ceil(totalPostsAfter / POSTS_PER_PAGE);
-            
             let newPage = currentPage;
-            if (currentPage > newTotalPages && newTotalPages > 0) {
-                newPage = newTotalPages;
-            }
-            
+            if (currentPage > newTotalPages && newTotalPages > 0) newPage = newTotalPages;
             await navigateToPosts(currentCategoryId, currentSubcategoryId, currentThreadId, newPage);
-        } catch (error) {
-            alert('Erro: ' + error.message);
-        }
+        } catch (error) { alert('Erro: ' + error.message); }
     }
 }
 
@@ -1906,39 +1951,24 @@ async function updateCounts(categoryId, subcategoryId) {
     try {
         const threadsSnapshot = await threadsRef(categoryId, subcategoryId).get();
         const threadsCount = threadsSnapshot.size;
-        
         let postsCount = 0;
         for (const doc of threadsSnapshot.docs) {
             const postsSnapshot = await postsRef(categoryId, subcategoryId, doc.id).get();
             postsCount += postsSnapshot.size;
         }
-        
-        await subcategoriesRef(categoryId).doc(subcategoryId).update({
-            threadsCount: threadsCount,
-            postsCount: postsCount
-        });
-        
+        await subcategoriesRef(categoryId).doc(subcategoryId).update({ threadsCount, postsCount });
         const subcategoriesSnapshot = await subcategoriesRef(categoryId).get();
         let totalThreads = 0;
-        for (const doc of subcategoriesSnapshot.docs) {
-            totalThreads += (doc.data().threadsCount || 0);
-        }
-        
-        await categoriesRef().doc(categoryId).update({
-            threadsCount: totalThreads
-        });
-    } catch (error) {
-        console.error('Erro ao atualizar contagens:', error);
-    }
+        for (const doc of subcategoriesSnapshot.docs) totalThreads += (doc.data().threadsCount || 0);
+        await categoriesRef().doc(categoryId).update({ threadsCount: totalThreads });
+    } catch (error) { console.error('Erro ao atualizar contagens:', error); }
 }
 
 // ============================================
 // ADMIN
 // ============================================
-
 function showAdminPanel() {
     if (!isAdmin) { alert('Acesso restrito a administradores'); return; }
-    
     const container = document.getElementById('main-container');
     container.innerHTML = `
         <div class="admin-panel">
@@ -1956,96 +1986,56 @@ function showAdminPanel() {
 async function showAdminStats() {
     try {
         const categoriesSnapshot = await categoriesRef().get();
-        const categories = categoriesSnapshot.size;
-        
-        let subcategories = 0;
-        let threads = 0;
-        let posts = 0;
-        
+        let categories = categoriesSnapshot.size;
+        let subcategories = 0, threads = 0, posts = 0;
         for (const catDoc of categoriesSnapshot.docs) {
             const subSnapshot = await subcategoriesRef(catDoc.id).get();
             subcategories += subSnapshot.size;
-            
             for (const subDoc of subSnapshot.docs) {
                 const threadsSnapshot = await threadsRef(catDoc.id, subDoc.id).get();
                 threads += threadsSnapshot.size;
-                
                 for (const threadDoc of threadsSnapshot.docs) {
                     const postsSnapshot = await postsRef(catDoc.id, subDoc.id, threadDoc.id).get();
                     posts += postsSnapshot.size;
                 }
             }
         }
-        
         document.getElementById('admin-stats').innerHTML = `
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap:15px; margin-top:15px;">
                 <div style="background:#f8f9fa; padding:20px; border-radius:12px; text-align:center;">
-                    <div style="font-size:2em;">📁</div>
-                    <div style="font-size:1.5em; font-weight:bold;">${categories}</div>
-                    <div>Categorias</div>
+                    <div style="font-size:2em;">📁</div><div style="font-size:1.5em; font-weight:bold;">${categories}</div><div>Categorias</div>
                 </div>
                 <div style="background:#f8f9fa; padding:20px; border-radius:12px; text-align:center;">
-                    <div style="font-size:2em;">📌</div>
-                    <div style="font-size:1.5em; font-weight:bold;">${subcategories}</div>
-                    <div>Subcategorias</div>
+                    <div style="font-size:2em;">📌</div><div style="font-size:1.5em; font-weight:bold;">${subcategories}</div><div>Subcategorias</div>
                 </div>
                 <div style="background:#f8f9fa; padding:20px; border-radius:12px; text-align:center;">
-                    <div style="font-size:2em;">💬</div>
-                    <div style="font-size:1.5em; font-weight:bold;">${threads}</div>
-                    <div>Tópicos</div>
+                    <div style="font-size:2em;">💬</div><div style="font-size:1.5em; font-weight:bold;">${threads}</div><div>Tópicos</div>
                 </div>
                 <div style="background:#f8f9fa; padding:20px; border-radius:12px; text-align:center;">
-                    <div style="font-size:2em;">📝</div>
-                    <div style="font-size:1.5em; font-weight:bold;">${posts}</div>
-                    <div>Posts</div>
+                    <div style="font-size:2em;">📝</div><div style="font-size:1.5em; font-weight:bold;">${posts}</div><div>Posts</div>
                 </div>
             </div>
         `;
-    } catch (error) {
-        document.getElementById('admin-stats').innerHTML = `<p>Erro: ${error.message}</p>`;
-    }
+    } catch (error) { document.getElementById('admin-stats').innerHTML = `<p>Erro: ${error.message}</p>`; }
 }
 
 function showCreateCategory() {
     document.getElementById('post-modal-title').innerHTML = 'Criar Categoria';
     document.getElementById('post-modal-body').innerHTML = `
         <form id="create-category-form">
-            <div class="form-group">
-                <label>Nome da Categoria</label>
-                <input type="text" id="cat-name" required>
-            </div>
-            <div class="form-group">
-                <label>Descrição</label>
-                <textarea id="cat-description" rows="3" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;"></textarea>
-            </div>
-            <div class="form-group">
-                <label>Ícone (emoji)</label>
-                <input type="text" id="cat-icon" placeholder="📁">
-            </div>
-            <div class="form-group">
-                <label>Ordem</label>
-                <input type="number" id="cat-order" value="0">
-            </div>
+            <div class="form-group"><label>Nome da Categoria</label><input type="text" id="cat-name" required></div>
+            <div class="form-group"><label>Descrição</label><textarea id="cat-description" rows="3" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;"></textarea></div>
+            <div class="form-group"><label>Ícone (emoji)</label><input type="text" id="cat-icon" placeholder="📁"></div>
+            <div class="form-group"><label>Ordem</label><input type="number" id="cat-order" value="0"></div>
             <button type="submit" class="btn-primary" style="width:100%">Criar Categoria</button>
         </form>
     `;
-    
     let isSubmitting = false;
-    
     document.getElementById('create-category-form').onsubmit = async (e) => {
         e.preventDefault();
-        
-        if (isSubmitting) return;
-        isSubmitting = true;
-        
+        if (isSubmitting) return; isSubmitting = true;
         const submitBtn = e.target.querySelector('.btn-primary');
-        let originalText = '';
-        if (submitBtn) {
-            originalText = submitBtn.textContent;
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Criando...';
-        }
-        
+        if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Criando...'; }
         try {
             await categoriesRef().add({
                 name: document.getElementById('cat-name').value,
@@ -2053,65 +2043,34 @@ function showCreateCategory() {
                 icon: document.getElementById('cat-icon').value || '📁',
                 order: parseInt(document.getElementById('cat-order').value) || 0,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                subcategoriesCount: 0,
-                threadsCount: 0
+                subcategoriesCount: 0, threadsCount: 0
             });
             alert('Categoria criada com sucesso!');
-            closeModal('post-modal');
+            document.getElementById('post-modal').classList.remove('show');
             navigateToHome();
-        } catch (error) {
-            alert('Erro: ' + error.message);
-        } finally {
-            isSubmitting = false;
-            if (submitBtn) {
-                submitBtn.disabled = false;
-                submitBtn.textContent = originalText || 'Criar Categoria';
-            }
-        }
+        } catch (error) { alert('Erro: ' + error.message); }
+        finally { isSubmitting = false; if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Criar Categoria'; } }
     };
-    document.getElementById('post-modal').style.display = 'flex';
+    document.getElementById('post-modal').classList.add('show');
 }
 
 function showCreateSubcategory(categoryId) {
     document.getElementById('post-modal-title').innerHTML = 'Criar Subcategoria';
     document.getElementById('post-modal-body').innerHTML = `
         <form id="create-subcategory-form">
-            <div class="form-group">
-                <label>Nome da Subcategoria</label>
-                <input type="text" id="sub-name" required>
-            </div>
-            <div class="form-group">
-                <label>Descrição</label>
-                <textarea id="sub-description" rows="3" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;"></textarea>
-            </div>
-            <div class="form-group">
-                <label>Ícone (emoji)</label>
-                <input type="text" id="sub-icon" placeholder="📌">
-            </div>
-            <div class="form-group">
-                <label>Ordem</label>
-                <input type="number" id="sub-order" value="0">
-            </div>
+            <div class="form-group"><label>Nome da Subcategoria</label><input type="text" id="sub-name" required></div>
+            <div class="form-group"><label>Descrição</label><textarea id="sub-description" rows="3" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;"></textarea></div>
+            <div class="form-group"><label>Ícone (emoji)</label><input type="text" id="sub-icon" placeholder="📌"></div>
+            <div class="form-group"><label>Ordem</label><input type="number" id="sub-order" value="0"></div>
             <button type="submit" class="btn-primary" style="width:100%">Criar Subcategoria</button>
         </form>
     `;
-    
     let isSubmitting = false;
-    
     document.getElementById('create-subcategory-form').onsubmit = async (e) => {
         e.preventDefault();
-        
-        if (isSubmitting) return;
-        isSubmitting = true;
-        
+        if (isSubmitting) return; isSubmitting = true;
         const submitBtn = e.target.querySelector('.btn-primary');
-        let originalText = '';
-        if (submitBtn) {
-            originalText = submitBtn.textContent;
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Criando...';
-        }
-        
+        if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Criando...'; }
         try {
             await subcategoriesRef(categoryId).add({
                 name: document.getElementById('sub-name').value,
@@ -2119,125 +2078,104 @@ function showCreateSubcategory(categoryId) {
                 icon: document.getElementById('sub-icon').value || '📌',
                 order: parseInt(document.getElementById('sub-order').value) || 0,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                threadsCount: 0,
-                postsCount: 0
+                threadsCount: 0, postsCount: 0
             });
-            
             const subcategoriesSnapshot = await subcategoriesRef(categoryId).get();
-            await categoriesRef().doc(categoryId).update({
-                subcategoriesCount: subcategoriesSnapshot.size
-            });
-            
+            await categoriesRef().doc(categoryId).update({ subcategoriesCount: subcategoriesSnapshot.size });
             alert('Subcategoria criada com sucesso!');
-            closeModal('post-modal');
+            document.getElementById('post-modal').classList.remove('show');
             navigateToSubcategories(categoryId);
-        } catch (error) {
-            alert('Erro: ' + error.message);
-        } finally {
-            isSubmitting = false;
-            if (submitBtn) {
-                submitBtn.disabled = false;
-                submitBtn.textContent = originalText || 'Criar Subcategoria';
-            }
-        }
+        } catch (error) { alert('Erro: ' + error.message); }
+        finally { isSubmitting = false; if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Criar Subcategoria'; } }
     };
-    document.getElementById('post-modal').style.display = 'flex';
+    document.getElementById('post-modal').classList.add('show');
 }
 
-function showRecentPosts() {
-    alert('Posts recentes - Funcionalidade em desenvolvimento');
-}
-
+function showRecentPosts() { alert('Posts recentes - Funcionalidade em desenvolvimento'); }
 function showProfile() {
     if (!currentUser) { showLoginModal(); return; }
-    if (isBanned) {
-        alert('Sua conta está banida.');
-        return;
-    }
+    if (isBanned) { alert('Sua conta está banida.'); return; }
     alert(`Perfil de ${currentUser.displayName || currentUser.email}\nFunção: ${isAdmin ? 'Administrador' : 'Membro'}`);
 }
 
-function showLoginModal() {
-    document.getElementById('login-modal').style.display = 'flex';
-}
-
 function closeModal(modalId) {
-    document.getElementById(modalId).style.display = 'none';
+    document.getElementById(modalId).classList.remove('show');
 }
 
 // ============================================
 // INICIALIZAÇÃO
 // ============================================
-
 document.getElementById('google-login-btn')?.addEventListener('click', loginWithGoogle);
-
-window.addEventListener('popstate', (event) => {
-    handleRouting();
+document.getElementById('login-form-modal')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('modal-email').value;
+    const password = document.getElementById('modal-password').value;
+    try {
+        const result = await auth.signInWithEmailAndPassword(email, password);
+        currentUser = result.user;
+        await registerUser(currentUser);
+        updateUI();
+        closeModal('login-modal');
+    } catch (error) { alert('Erro ao fazer login: ' + error.message); }
 });
+
+document.querySelectorAll('.modal').forEach(modal => {
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('show'); });
+});
+
+window.addEventListener('popstate', () => { handleRouting(); });
+
+async function handleRouting() {
+    if (isBanned) return;
+    const params = getURLParams();
+    if (params.threadId && params.subcategoryId && params.categoryId) {
+        currentCategoryId = params.categoryId; currentSubcategoryId = params.subcategoryId; currentThreadId = params.threadId; currentPage = params.page;
+        await showPostsWithPagination(params.categoryId, params.subcategoryId, params.threadId, params.page);
+    } else if (params.subcategoryId && params.categoryId) {
+        currentCategoryId = params.categoryId; currentSubcategoryId = params.subcategoryId;
+        await showThreads(params.categoryId, params.subcategoryId);
+    } else if (params.categoryId) {
+        currentCategoryId = params.categoryId;
+        await showSubcategories(params.categoryId);
+    } else {
+        await showHome();
+    }
+}
 
 auth.onAuthStateChanged(async (user) => {
     if (user) {
         currentUser = user;
-        
-        // Registra o usuário no Firestore
-        const userData = await registerUser(user);
-        
-        // VERIFICA BANIMENTO PRIMEIRO
+        await registerUser(user);
         isBanned = await checkIfUserIsBanned(user);
-        
-        if (isBanned) {
-            // Usuário banido - mostra tela de bloqueio
-            showBannedScreen('Sua conta foi banida por violação das políticas de uso.');
-            // Não carrega o conteúdo
-            updateUIForUser();
-            return;
-        }
-        
-        isAdmin = await checkIsAdmin(user);
-        
-        if (isAdmin) {
-            await usersRef().doc(user.uid).set({
-                email: user.email,
-                name: user.displayName,
-                role: 'admin',
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-            }, { merge: true });
-        }
-        
-        updateUIForUser();
+        if (isBanned) { showBannedScreen('Sua conta foi banida por violação das políticas de uso.'); await auth.signOut(); updateUI(); return; }
+        isAdmin = ADMIN_UIDS.includes(user.uid) || (await db.collection('users').doc(user.uid).get()).data()?.isAdmin === true;
+        updateUI();
+        await loadNotifications();
+        listenNotifications();
         await handleRouting();
     } else {
-        currentUser = null;
-        isAdmin = false;
-        isBanned = false;
-        updateUIForUser();
-        
-        // Remove overlay de banido
+        currentUser = null; isBanned = false; isAdmin = false;
+        updateUI();
+        if (notificationListener) { notificationListener(); notificationListener = null; }
+        notifications = []; unreadCount = 0; updateNotificationBadge();
         document.getElementById('bannedOverlay').classList.remove('show');
         document.querySelector('.main-container').style.opacity = '1';
         document.querySelector('.main-container').style.pointerEvents = 'auto';
         document.querySelector('.header').style.opacity = '1';
         document.querySelector('.header').style.pointerEvents = 'auto';
-        document.querySelector('.footer').style.opacity = '1';
-        document.querySelector('.footer').style.pointerEvents = 'auto';
-        
+        document.querySelector('.site-footer').style.opacity = '1';
+        document.querySelector('.site-footer').style.pointerEvents = 'auto';
         await handleRouting();
     }
 });
 
-// Funções globais expostas
+// Expor funções globalmente
 window.navigateToHome = navigateToHome;
 window.navigateToSubcategories = navigateToSubcategories;
 window.navigateToThreads = navigateToThreads;
 window.navigateToPosts = navigateToPosts;
-window.copyCurrentLink = copyCurrentLink;
 window.goToPage = goToPage;
 window.copyPostLink = copyPostLink;
-window.showHome = showHome;
-window.showSubcategories = showSubcategories;
-window.showThreads = showThreads;
-window.showPosts = showPosts;
-window.showPostsWithPagination = showPostsWithPagination;
 window.showCreateThread = showCreateThread;
 window.showCreateCategory = showCreateCategory;
 window.showCreateSubcategory = showCreateSubcategory;
@@ -2254,13 +2192,14 @@ window.showCommentForm = showCommentForm;
 window.submitComment = submitComment;
 window.editPost = editPost;
 window.deletePost = deletePost;
-window.insertImageToEditor = insertImageToEditor;
-window.openImageModal = openImageModal;
 window.createThread = createThread;
 window.createReply = createReply;
-window.openModeracao = openModeracao;
+window.toggleNotifications = toggleNotifications;
+window.markAllAsRead = markAllAsRead;
+window.copyCurrentLink = copyCurrentLink;
+
+console.log('📚 Maspia Forum inicializado com sucesso!');
+console.log('🔔 Notificações integradas via coleção "notifications"');
 </script>
-<!-- Iframe do verificador/logs (mantido como você tinha) -->
-<script src="https://gspotfverwazzimagiygg.wazzimagiygg.com/D6FefD0De/EfdFeF1ExcE0C/De0Var6H6f/QXdv0/dddcefb.js"></script>
 </body>
 </html>
