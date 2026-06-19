@@ -1467,15 +1467,19 @@ async function navigateToThreads(categoryId, subcategoryId) {
     await showThreads(categoryId, subcategoryId);
 }
 
+// ============================================
+// FUNÇÃO NAVIGATE TO POSTS CORRIGIDA
+// ============================================
 async function navigateToPosts(categoryId, subcategoryId, threadId, page = 1) {
     if (isBanned) return;
+    
+    // SALVA OS IDs NAS VARIÁVEIS GLOBAIS
+    currentCategoryId = categoryId;
+    currentSubcategoryId = subcategoryId;
+    currentThreadId = threadId;
+    
     updateURL(categoryId, subcategoryId, threadId, page);
     await showPostsWithPagination(categoryId, subcategoryId, threadId, page);
-}
-
-async function goToPage(categoryId, subcategoryId, threadId, page) {
-    if (!categoryId || !subcategoryId || !threadId) return;
-    await navigateToPosts(categoryId, subcategoryId, threadId, page);
 }
 
 function copyPostLink(postId, postNumber) {
@@ -1797,11 +1801,28 @@ function renderPagination(categoryId, subcategoryId, threadId, currentPage, tota
     return html;
 }
 
+// ============================================
+// FUNÇÃO LOAD COMMENTS CORRIGIDA
+// ============================================
 async function loadComments(categoryId, subcategoryId, threadId, postId) {
+    // VERIFICA SE TODOS OS PARÂMETROS ESTÃO DEFINIDOS
+    if (!categoryId || !subcategoryId || !threadId || !postId) {
+        console.warn('Parâmetros faltando para carregar comentários:', { categoryId, subcategoryId, threadId, postId });
+        const commentsDiv = document.getElementById(`comments-${postId}`);
+        if (commentsDiv) {
+            commentsDiv.innerHTML = '<div style="padding: 10px; text-align:center; color:#999;">Comentários indisponíveis.</div>';
+        }
+        return;
+    }
+    
     try {
-        const snapshot = await commentsRef(categoryId, subcategoryId, threadId, postId).orderBy('createdAt', 'asc').get();
+        const snapshot = await commentsRef(categoryId, subcategoryId, threadId, postId)
+            .orderBy('createdAt', 'asc')
+            .get();
+            
         const comments = [];
         snapshot.forEach(doc => comments.push({ id: doc.id, ...doc.data() }));
+        
         const commentsDiv = document.getElementById(`comments-${postId}`);
         if (commentsDiv) {
             if (comments.length === 0) {
@@ -1818,7 +1839,13 @@ async function loadComments(categoryId, subcategoryId, threadId, postId) {
                 `).join('');
             }
         }
-    } catch (error) { console.error('Erro ao carregar comentários:', error); }
+    } catch (error) { 
+        console.error('Erro ao carregar comentários:', error);
+        const commentsDiv = document.getElementById(`comments-${postId}`);
+        if (commentsDiv) {
+            commentsDiv.innerHTML = '<div style="padding: 10px; text-align:center; color:#999;">Erro ao carregar comentários.</div>';
+        }
+    }
 }
 
 // ============================================
@@ -1938,29 +1965,77 @@ function showCommentForm(postId) {
     if (formDiv) formDiv.style.display = formDiv.style.display === 'none' ? 'block' : 'none';
 }
 
+// ============================================
+// FUNÇÃO SUBMIT COMMENT CORRIGIDA
+// ============================================
 async function submitComment(postId) {
-    if (!currentUser || isBanned) { if (isBanned) alert('Sua conta está banida.'); else showLoginModal(); return; }
+    if (!currentUser || isBanned) { 
+        if (isBanned) alert('Sua conta está banida.'); 
+        else showLoginModal(); 
+        return; 
+    }
+    
+    // VERIFICA SE TODOS OS IDs ESTÃO DEFINIDOS
+    if (!currentCategoryId || !currentSubcategoryId || !currentThreadId || !postId) {
+        alert('Erro: Dados do tópico não encontrados. Recarregue a página e tente novamente.');
+        console.error('IDs faltando:', { currentCategoryId, currentSubcategoryId, currentThreadId, postId });
+        return;
+    }
+    
     const content = document.getElementById(`comment-content-${postId}`).value;
-    if (!content.trim()) { alert('Digite o comentário'); return; }
+    if (!content.trim()) { 
+        alert('Digite o comentário'); 
+        return; 
+    }
+    
     const lockKey = `comment_${currentThreadId}_${postId}_${currentUser?.uid}`;
-    if (isLocked(lockKey)) { alert('Aguarde um momento...'); return; }
+    if (isLocked(lockKey)) { 
+        alert('Aguarde um momento antes de enviar outro comentário...'); 
+        return; 
+    }
     lock(lockKey, 2000);
+    
+    const submitBtn = document.querySelector(`#comment-form-${postId} .btn-primary`);
+    let originalText = '';
+    if (submitBtn) {
+        originalText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Enviando...';
+    }
+    
     try {
         const commentId = Date.now().toString();
-        await commentsRef(currentCategoryId, currentSubcategoryId, currentThreadId, postId).doc(commentId).set({
+        
+        // Usar a referência correta com todos os parâmetros
+        const commentRef = commentsRef(
+            currentCategoryId, 
+            currentSubcategoryId, 
+            currentThreadId, 
+            postId
+        ).doc(commentId);
+        
+        await commentRef.set({
             content: content,
             authorId: currentUser.uid,
             authorName: currentUser.displayName || currentUser.email,
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
+        
         document.getElementById(`comment-content-${postId}`).value = '';
         document.getElementById(`comment-form-${postId}`).style.display = 'none';
         await loadComments(currentCategoryId, currentSubcategoryId, currentThreadId, postId);
+        
     } catch (error) { 
-        alert('Erro: ' + error.message);
-        console.error(error);
+        alert('Erro ao enviar comentário: ' + error.message);
+        console.error('Erro detalhado:', error);
     }
-    finally { submitLocks.delete(lockKey); }
+    finally { 
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText || 'Enviar Comentário';
+        }
+        submitLocks.delete(lockKey); 
+    }
 }
 
 // ============================================
