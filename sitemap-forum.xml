@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <!-- ====================================================== -->
+  <!-- SITEMAP DO FÓRUM - forum.wazzimagiygg.com             -->
+  <!-- ====================================================== -->
+  
+  <url>
+    <loc>https://forum.wazzimagiygg.com/</loc>
+    <lastmod>2026-06-22</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <!-- Categorias do Fórum -->
+  <url>
+    <loc>https://forum.wazzimagiygg.com/?cat=tecnologia</loc>
+    <lastmod>2026-06-22</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://forum.wazzimagiygg.com/?cat=programacao</loc>
+    <lastmod>2026-06-22</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://forum.wazzimagiygg.com/?cat=design</loc>
+    <lastmod>2026-06-22</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://forum.wazzimagiygg.com/?cat=ciencia</loc>
+    <lastmod>2026-06-22</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://forum.wazzimagiygg.com/?cat=educacao</loc>
+    <lastmod>2026-06-22</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Subcategorias (exemplos) -->
+  <url>
+    <loc>https://forum.wazzimagiygg.com/?cat=tecnologia&sub=javascript</loc>
+    <lastmod>2026-06-22</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <url>
+    <loc>https://forum.wazzimagiygg.com/?cat=tecnologia&sub=python</loc>
+    <lastmod>2026-06-22</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <url>
+    <loc>https://forum.wazzimagiygg.com/?cat=programacao&sub=frontend</loc>
+    <lastmod>2026-06-22</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <url>
+    <loc>https://forum.wazzimagiygg.com/?cat=programacao&sub=backend</loc>
+    <lastmod>2026-06-22</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+</urlset>
