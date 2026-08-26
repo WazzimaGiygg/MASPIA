@@ -1,0 +1,142 @@
+{
+  "meta": {
+    "title": "Maspia Forum - Comunidade",
+    "description": "Comunidade e discussão Maspia"
+  },
+  "header": {
+    "forum": "Fórum",
+    "login": "Entrar",
+    "logout": "Sair",
+    "visitante": "Visitante",
+    "aguarde": "aguarde",
+    "carregando": "Carregando..."
+  },
+  "footer": {
+    "donation": "💝 Doação",
+    "desktop": "🖥️ Desktop",
+    "lgpd": "🔒 LGPD",
+    "marcoCivil": "📜 Marco Civil",
+    "ticket": "🎫 Ticket",
+    "products": "🛍️ Produtos",
+    "account": "👤 Sua conta",
+    "copyright": "© 2026 WazzimaGiygg Forum - Comunidade e Discussão",
+    "allRights": "Todos os direitos reservados"
+  },
+  "cookie": {
+    "title": "🍪 Nós usamos cookies",
+    "description": "Este site utiliza cookies para melhorar sua experiência, analisar tráfego e exibir anúncios personalizados. Ao continuar navegando, você concorda com nossa",
+    "privacyPolicy": "Política de Privacidade",
+    "essential": "🔒 Essenciais (obrigatórios)",
+    "analytics": "📊 Análise de dados",
+    "advertising": "🎯 Publicidade personalizada",
+    "acceptAll": "✅ Aceitar Todos",
+    "rejectAll": "❌ Recusar Todos",
+    "customize": "⚙️ Personalizar"
+  },
+  "login": {
+    "title": "Entrar no Fórum",
+    "subtitle": "Faça login para participar do fórum",
+    "google": "Entrar com Google",
+    "email": "E-mail",
+    "password": "Senha",
+    "submit": "Entrar com e-mail",
+    "createAccount": "Criar nova conta",
+    "or": "ou"
+  },
+  "banned": {
+    "title": "⚠️ Conta Banida",
+    "description": "Sua conta foi banida permanentemente do fórum.",
+    "reason": "Motivo: Violação das políticas de uso",
+    "appeal": "Se você acredita que isso é um erro, entre em contato com o suporte.",
+    "logout": "🚪 Sair da conta"
+  },
+  "categories": {
+    "title": "Categorias",
+    "noCategories": "Nenhuma categoria criada ainda",
+    "createFirst": "Clique no botão abaixo para criar sua primeira categoria",
+    "createCategory": "Criar Categoria",
+    "createSubcategory": "Criar Subcategoria",
+    "subcategories": "Subcategorias",
+    "topics": "Tópicos",
+    "posts": "Posts"
+  },
+  "threads": {
+    "title": "Tópicos",
+    "noThreads": "Nenhum tópico ainda. Seja o primeiro a criar um!",
+    "createThread": "Criar Novo Tópico",
+    "by": "Por",
+    "replies": "Respostas",
+    "totalReplies": "Total de respostas",
+    "lastActivity": "Última atividade"
+  },
+  "posts": {
+    "title": "Posts",
+    "noPosts": "Nenhum post encontrado",
+    "createdBy": "Criado por",
+    "anonymous": "Anônimo",
+    "reply": "Responder",
+    "edit": "Editar",
+    "delete": "Excluir",
+    "copyLink": "Copiar link",
+    "confirmDelete": "Tem certeza que deseja excluir este post?",
+    "copied": "Link copiado!",
+    "showing": "Mostrando",
+    "of": "de",
+    "totalPosts": "posts",
+    "page": "Página"
+  },
+  "pagination": {
+    "first": "« Primeira",
+    "last": "Última »",
+    "previous": "‹ Anterior",
+    "next": "Próxima ›"
+  },
+  "comments": {
+    "title": "Comentários",
+    "noComments": "Nenhum comentário ainda.",
+    "writeComment": "Escreva seu comentário...",
+    "submit": "Enviar Comentário",
+    "placeholder": "Digite seu comentário aqui..."
+  },
+  "editor": {
+    "placeholder": "Digite sua resposta aqui... Use as ferramentas de formatação!",
+    "threadPlaceholder": "Digite o conteúdo do seu tópico aqui..."
+  },
+  "admin": {
+    "title": "Painel Administrativo",
+    "createCategory": "Criar Categoria",
+    "createSubcategory": "Criar Subcategoria",
+    "stats": "Ver Estatísticas",
+    "categories": "Categorias",
+    "subcategories": "Subcategorias",
+    "threads": "Tópicos",
+    "posts": "Posts",
+    "name": "Nome da Categoria",
+    "description": "Descrição",
+    "icon": "Ícone (emoji)",
+    "order": "Ordem"
+  },
+  "notifications": {
+    "title": "🔔 Notificações",
+    "noNotifications": "Nenhuma notificação",
+    "markAllRead": "Marcar todas como lidas"
+  },
+  "imageModal": {
+    "title": "Inserir Imagem",
+    "urlLabel": "URL da Imagem",
+    "altLabel": "Texto alternativo (opcional)",
+    "insert": "Inserir Imagem"
+  },
+  "errors": {
+    "fillFields": "Preencha todos os campos obrigatórios",
+    "banned": "Sua conta está banida.",
+    "loginRequired": "Faça login para continuar",
+    "waitMoment": "Aguarde um momento...",
+    "threadNotFound": "Tópico não encontrado!",
+    "commentsUnavailable": "Comentários indisponíveis.",
+    "loadCommentsError": "Erro ao carregar comentários.",
+    "loadPostsError": "Erro ao carregar posts",
+    "createError": "Erro ao criar",
+    "updateError": "Erro ao atualizar"
+  }
+}
