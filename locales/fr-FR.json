@@ -1,0 +1,137 @@
+{
+  "meta": {
+    "title": "Maspia Forum - Communauté",
+    "description": "Communauté et discussion"
+  },
+  "header": {
+    "forum": "Forum",
+    "login": "Se connecter",
+    "logout": "Se déconnecter",
+    "visitante": "Visiteur",
+    "aguarde": "attendez",
+    "carregando": "Chargement..."
+  },
+  "footer": {
+    "donation": "💝 Don",
+    "desktop": "🖥️ Bureau",
+    "lgpd": "🔒 Confidentialité",
+    "marcoCivil": "📜 Droits Civils",
+    "ticket": "🎫 Support",
+    "products": "🛍️ Produits",
+    "account": "👤 Votre Compte",
+    "copyright": "© 2026 WazzimaGiygg Forum - Communauté et Discussion"
+  },
+  "cookie": {
+    "title": "🍪 Nous utilisons des cookies",
+    "description": "Ce site utilise des cookies pour améliorer votre expérience, analyser le trafic et afficher des publicités personnalisées. En continuant à naviguer, vous acceptez notre",
+    "privacyPolicy": "Politique de Confidentialité",
+    "essential": "🔒 Essentiels (obligatoires)",
+    "analytics": "📊 Analyse de données",
+    "advertising": "🎯 Publicité personnalisée",
+    "acceptAll": "✅ Tout accepter",
+    "rejectAll": "❌ Tout refuser",
+    "customize": "⚙️ Personnaliser"
+  },
+  "login": {
+    "title": "Se connecter au Forum",
+    "subtitle": "Connectez-vous pour participer au forum",
+    "google": "Se connecter avec Google",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "submit": "Se connecter avec e-mail",
+    "createAccount": "Créer un nouveau compte",
+    "or": "ou"
+  },
+  "banned": {
+    "title": "⚠️ Compte Banni",
+    "description": "Votre compte a été banni définitivement du forum.",
+    "reason": "Motif : Violation des politiques d'utilisation",
+    "appeal": "Si vous pensez qu'il s'agit d'une erreur, contactez le support.",
+    "logout": "🚪 Se déconnecter"
+  },
+  "categories": {
+    "noCategories": "Aucune catégorie créée pour l'instant",
+    "createFirst": "Cliquez sur le bouton ci-dessous pour créer votre première catégorie",
+    "createCategory": "Créer une Catégorie",
+    "createSubcategory": "Créer une Sous-catégorie",
+    "subcategories": "Sous-catégories",
+    "topics": "Sujets",
+    "posts": "Publications"
+  },
+  "threads": {
+    "noThreads": "Aucun sujet pour l'instant. Soyez le premier à en créer un !",
+    "createThread": "Créer un Nouveau Sujet",
+    "by": "Par",
+    "replies": "Réponses",
+    "totalReplies": "Total des réponses",
+    "lastActivity": "Dernière activité"
+  },
+  "posts": {
+    "noPosts": "Aucune publication trouvée",
+    "createdBy": "Créé par",
+    "anonymous": "Anonyme",
+    "reply": "Répondre",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "copyLink": "Copier le lien",
+    "confirmDelete": "Êtes-vous sûr de vouloir supprimer cette publication ?",
+    "copied": "Lien copié !",
+    "showing": "Affichage",
+    "of": "de",
+    "totalPosts": "publications",
+    "page": "Page"
+  },
+  "pagination": {
+    "first": "« Première",
+    "last": "Dernière »",
+    "previous": "‹ Précédent",
+    "next": "Suivant ›"
+  },
+  "comments": {
+    "noComments": "Aucun commentaire pour l'instant.",
+    "writeComment": "Écrivez votre commentaire...",
+    "submit": "Envoyer le Commentaire",
+    "placeholder": "Écrivez votre commentaire ici..."
+  },
+  "editor": {
+    "placeholder": "Écrivez votre réponse ici... Utilisez les outils de mise en forme !",
+    "threadPlaceholder": "Écrivez le contenu de votre sujet ici..."
+  },
+  "admin": {
+    "title": "Panneau d'Administration",
+    "createCategory": "Créer une Catégorie",
+    "createSubcategory": "Créer une Sous-catégorie",
+    "stats": "Voir les Statistiques",
+    "categories": "Catégories",
+    "subcategories": "Sous-catégories",
+    "threads": "Sujets",
+    "posts": "Publications",
+    "name": "Nom de la Catégorie",
+    "description": "Description",
+    "icon": "Icône (emoji)",
+    "order": "Ordre"
+  },
+  "notifications": {
+    "title": "🔔 Notifications",
+    "noNotifications": "Aucune notification",
+    "markAllRead": "Tout marquer comme lu"
+  },
+  "imageModal": {
+    "title": "Insérer une Image",
+    "urlLabel": "URL de l'Image",
+    "altLabel": "Texte alternatif (optionnel)",
+    "insert": "Insérer l'Image"
+  },
+  "errors": {
+    "fillFields": "Veuillez remplir tous les champs obligatoires",
+    "banned": "Votre compte est banni.",
+    "loginRequired": "Veuillez vous connecter pour continuer",
+    "waitMoment": "Veuillez patienter un moment...",
+    "threadNotFound": "Sujet non trouvé !",
+    "commentsUnavailable": "Commentaires indisponibles.",
+    "loadCommentsError": "Erreur lors du chargement des commentaires.",
+    "loadPostsError": "Erreur lors du chargement des publications",
+    "createError": "Erreur lors de la création",
+    "updateError": "Erreur lors de la mise à jour"
+  }
+}
