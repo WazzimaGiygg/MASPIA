@@ -1,0 +1,52 @@
+{
+  "meta": {
+    "title": "Maspia Forum - Comunidad",
+    "description": "Comunidad y discusión"
+  },
+  "header": {
+    "forum": "Foro",
+    "login": "Iniciar sesión",
+    "logout": "Cerrar sesión",
+    "visitante": "Visitante",
+    "aguarde": "espere",
+    "carregando": "Cargando..."
+  },
+  "footer": {
+    "donation": "💝 Donación",
+    "desktop": "🖥️ Escritorio",
+    "lgpd": "🔒 Privacidad",
+    "marcoCivil": "📜 Derechos Civiles",
+    "ticket": "🎫 Soporte",
+    "products": "🛍️ Productos",
+    "account": "👤 Tu Cuenta",
+    "copyright": "© 2026 WazzimaGiygg Foro - Comunidad y Discusión"
+  },
+  "cookie": {
+    "title": "🍪 Usamos cookies",
+    "description": "Este sitio utiliza cookies para mejorar su experiencia, analizar el tráfico y mostrar anuncios personalizados. Al continuar navegando, acepta nuestra",
+    "privacyPolicy": "Política de Privacidad",
+    "essential": "🔒 Esenciales (obligatorios)",
+    "analytics": "📊 Análisis de datos",
+    "advertising": "🎯 Publicidad personalizada",
+    "acceptAll": "✅ Aceptar todo",
+    "rejectAll": "❌ Rechazar todo",
+    "customize": "⚙️ Personalizar"
+  },
+  "login": {
+    "title": "Iniciar sesión en el Foro",
+    "subtitle": "Inicia sesión para participar en el foro",
+    "google": "Iniciar con Google",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "submit": "Iniciar con correo",
+    "createAccount": "Crear nueva cuenta",
+    "or": "o"
+  },
+  "banned": {
+    "title": "⚠️ Cuenta Baneada",
+    "description": "Tu cuenta ha sido baneada permanentemente del foro.",
+    "reason": "Motivo: Violación de las políticas de uso",
+    "appeal": "Si crees que esto es un error, contacta al soporte.",
+    "logout": "🚪 Cerrar sesión"
+  }
+}
