@@ -1,0 +1,142 @@
+{
+  "meta": {
+    "title": "Maspia Forum - Community",
+    "description": "Community and Discussion"
+  },
+  "header": {
+    "forum": "Forum",
+    "login": "Login",
+    "logout": "Logout",
+    "visitante": "Guest",
+    "aguarde": "wait",
+    "carregando": "Loading..."
+  },
+  "footer": {
+    "donation": "💝 Donate",
+    "desktop": "🖥️ Desktop",
+    "lgpd": "🔒 Privacy",
+    "marcoCivil": "📜 Civil Rights",
+    "ticket": "🎫 Support",
+    "products": "🛍️ Products",
+    "account": "👤 Your Account",
+    "copyright": "© 2026 WazzimaGiygg Forum - Community and Discussion",
+    "allRights": "All rights reserved"
+  },
+  "cookie": {
+    "title": "🍪 We use cookies",
+    "description": "This site uses cookies to improve your experience, analyze traffic, and display personalized ads. By continuing to browse, you agree to our",
+    "privacyPolicy": "Privacy Policy",
+    "essential": "🔒 Essential (required)",
+    "analytics": "📊 Analytics",
+    "advertising": "🎯 Personalized advertising",
+    "acceptAll": "✅ Accept All",
+    "rejectAll": "❌ Reject All",
+    "customize": "⚙️ Customize"
+  },
+  "login": {
+    "title": "Login to Forum",
+    "subtitle": "Login to participate in the forum",
+    "google": "Sign in with Google",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Sign in with email",
+    "createAccount": "Create new account",
+    "or": "or"
+  },
+  "banned": {
+    "title": "⚠️ Banned Account",
+    "description": "Your account has been permanently banned from the forum.",
+    "reason": "Reason: Violation of usage policies",
+    "appeal": "If you believe this is a mistake, please contact support.",
+    "logout": "🚪 Logout"
+  },
+  "categories": {
+    "title": "Categories",
+    "noCategories": "No categories created yet",
+    "createFirst": "Click the button below to create your first category",
+    "createCategory": "Create Category",
+    "createSubcategory": "Create Subcategory",
+    "subcategories": "Subcategories",
+    "topics": "Topics",
+    "posts": "Posts"
+  },
+  "threads": {
+    "title": "Threads",
+    "noThreads": "No threads yet. Be the first to create one!",
+    "createThread": "Create New Thread",
+    "by": "By",
+    "replies": "Replies",
+    "totalReplies": "Total replies",
+    "lastActivity": "Last activity"
+  },
+  "posts": {
+    "title": "Posts",
+    "noPosts": "No posts found",
+    "createdBy": "Created by",
+    "anonymous": "Anonymous",
+    "reply": "Reply",
+    "edit": "Edit",
+    "delete": "Delete",
+    "copyLink": "Copy link",
+    "confirmDelete": "Are you sure you want to delete this post?",
+    "copied": "Link copied!",
+    "showing": "Showing",
+    "of": "of",
+    "totalPosts": "posts",
+    "page": "Page"
+  },
+  "pagination": {
+    "first": "« First",
+    "last": "Last »",
+    "previous": "‹ Previous",
+    "next": "Next ›"
+  },
+  "comments": {
+    "title": "Comments",
+    "noComments": "No comments yet.",
+    "writeComment": "Write your comment...",
+    "submit": "Submit Comment",
+    "placeholder": "Type your comment here..."
+  },
+  "editor": {
+    "placeholder": "Type your reply here... Use formatting tools!",
+    "threadPlaceholder": "Type your thread content here..."
+  },
+  "admin": {
+    "title": "Admin Panel",
+    "createCategory": "Create Category",
+    "createSubcategory": "Create Subcategory",
+    "stats": "View Stats",
+    "categories": "Categories",
+    "subcategories": "Subcategories",
+    "threads": "Threads",
+    "posts": "Posts",
+    "name": "Category Name",
+    "description": "Description",
+    "icon": "Icon (emoji)",
+    "order": "Order"
+  },
+  "notifications": {
+    "title": "🔔 Notifications",
+    "noNotifications": "No notifications",
+    "markAllRead": "Mark all as read"
+  },
+  "imageModal": {
+    "title": "Insert Image",
+    "urlLabel": "Image URL",
+    "altLabel": "Alt text (optional)",
+    "insert": "Insert Image"
+  },
+  "errors": {
+    "fillFields": "Please fill all required fields",
+    "banned": "Your account is banned.",
+    "loginRequired": "Please login to continue",
+    "waitMoment": "Please wait a moment...",
+    "threadNotFound": "Thread not found!",
+    "commentsUnavailable": "Comments unavailable.",
+    "loadCommentsError": "Error loading comments.",
+    "loadPostsError": "Error loading posts",
+    "createError": "Error creating",
+    "updateError": "Error updating"
+  }
+}
