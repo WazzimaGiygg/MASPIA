@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Maspia Forum - Comunidade</title>
+    <meta name="description" content="Comunidade e discussão Maspia">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Lato:wght@300;400;700;900&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
     <link rel="icon" href="https://gspotfverwazzimagiygg.wazzimagiygg.com/forum/Favicom.png" type="image/x-icon">
@@ -19,29 +20,30 @@
 <div id="cookieConsent" class="cookie-consent">
     <div class="cookie-content">
         <div class="cookie-text">
-            <h3>🍪 Nós usamos cookies</h3>
-            <p>Este site utiliza cookies para melhorar sua experiência, analisar tráfego e exibir anúncios personalizados. 
-               Ao continuar navegando, você concorda com nossa 
-               <a href="https://wazzimagiygg.com/LGPD" target="_blank" style="color: #4a9eff; text-decoration: underline;">Política de Privacidade</a>.</p>
+            <h3 data-i18n="cookie.title">🍪 Nós usamos cookies</h3>
+            <p>
+                <span data-i18n="cookie.description">Este site utiliza cookies para melhorar sua experiência, analisar tráfego e exibir anúncios personalizados. Ao continuar navegando, você concorda com nossa</span>
+                <a href="https://wazzimagiygg.com/LGPD" target="_blank" style="color: #4a9eff; text-decoration: underline;" data-i18n="cookie.privacyPolicy">Política de Privacidade</a>.
+            </p>
             <div class="cookie-options">
                 <label>
                     <input type="checkbox" id="cookieEssential" checked disabled> 
-                    <span>🔒 Essenciais (obrigatórios)</span>
+                    <span data-i18n="cookie.essential">🔒 Essenciais (obrigatórios)</span>
                 </label>
                 <label>
                     <input type="checkbox" id="cookieAnalytics" checked> 
-                    <span>📊 Análise de dados</span>
+                    <span data-i18n="cookie.analytics">📊 Análise de dados</span>
                 </label>
                 <label>
                     <input type="checkbox" id="cookieAdvertising" checked> 
-                    <span>🎯 Publicidade personalizada</span>
+                    <span data-i18n="cookie.advertising">🎯 Publicidade personalizada</span>
                 </label>
             </div>
         </div>
         <div class="cookie-buttons">
-            <button id="cookieAcceptAll" class="cookie-btn accept">✅ Aceitar Todos</button>
-            <button id="cookieRejectAll" class="cookie-btn reject">❌ Recusar Todos</button>
-            <button id="cookieCustomize" class="cookie-btn customize">⚙️ Personalizar</button>
+            <button id="cookieAcceptAll" class="cookie-btn accept" data-i18n="cookie.acceptAll">✅ Aceitar Todos</button>
+            <button id="cookieRejectAll" class="cookie-btn reject" data-i18n="cookie.rejectAll">❌ Recusar Todos</button>
+            <button id="cookieCustomize" class="cookie-btn customize" data-i18n="cookie.customize">⚙️ Personalizar</button>
         </div>
     </div>
 </div>
@@ -50,11 +52,11 @@
 <div id="bannedOverlay" class="banned-overlay">
     <div class="banned-box">
         <div class="icon">🚫</div>
-        <h2>⚠️ Conta Banida</h2>
-        <p>Sua conta foi banida permanentemente do fórum.</p>
-        <div id="banDetails" class="ban-details">Motivo: Violação das políticas de uso</div>
-        <p style="font-size: 14px; color: #666;">Se você acredita que isso é um erro, entre em contato com o suporte.</p>
-        <button class="btn-logout-banned" onclick="logoutBanned()">🚪 Sair da conta</button>
+        <h2 data-i18n="banned.title">⚠️ Conta Banida</h2>
+        <p data-i18n="banned.description">Sua conta foi banida permanentemente do fórum.</p>
+        <div id="banDetails" class="ban-details" data-i18n="banned.reason">Motivo: Violação das políticas de uso</div>
+        <p style="font-size: 14px; color: #666;" data-i18n="banned.appeal">Se você acredita que isso é um erro, entre em contato com o suporte.</p>
+        <button class="btn-logout-banned" onclick="logoutBanned()" data-i18n="banned.logout">🚪 Sair da conta</button>
     </div>
 </div>
 
@@ -65,14 +67,14 @@
             <img src="https://wazzimagiygg.com/favicom.png" alt="Logo">
             <div>
                 <h1>WazzimaGiygg</h1>
-                <small>Forum</small>
+                <small data-i18n="header.forum">Forum</small>
             </div>
         </div>
         <div class="user-info-header" id="userInfo">
             <div class="user-avatar" id="userAvatar">👤</div>
             <div>
-                <div class="user-name" id="userName">Carregando...</div>
-                <div class="user-email" id="userEmail">aguarde</div>
+                <div class="user-name" id="userName" data-i18n="header.carregando">Carregando...</div>
+                <div class="user-email" id="userEmail" data-i18n="header.aguarde">aguarde</div>
             </div>
             <span id="userBadge"></span>
             
@@ -82,21 +84,22 @@
                 <span class="notification-badge" id="notifBadge" style="display:none;">0</span>
                 <div class="notification-dropdown" id="notifDropdown">
                     <div class="notification-dropdown-header">
-                        <h3>🔔 Notificações</h3>
-                        <button onclick="markAllAsRead(event)">Marcar todas como lidas</button>
+                        <h3 data-i18n="notifications.title">🔔 Notificações</h3>
+                        <button onclick="markAllAsRead(event)" data-i18n="notifications.markAllRead">Marcar todas como lidas</button>
                     </div>
                     <div id="notificationList">
                         <div class="notification-empty">
                             <span class="material-icons">notifications_off</span>
-                            <p>Nenhuma notificação</p>
+                            <p data-i18n="notifications.noNotifications">Nenhuma notificação</p>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <button class="btn-logout" id="btnLogout" style="display:none;" onclick="logout()">Sair</button>
+            <button class="btn-logout" id="btnLogout" style="display:none;" onclick="logout()" data-i18n="header.logout">Sair</button>
             <button class="btn-login" id="btnLogin" onclick="showLoginModal()">
-                <span class="material-icons" style="font-size:16px;">person</span> Entrar
+                <span class="material-icons" style="font-size:16px;">person</span> 
+                <span data-i18n="header.login">Entrar</span>
             </button>
         </div>
     </div>
@@ -104,28 +107,28 @@
 
 <!-- ===== MAIN CONTAINER ===== -->
 <div class="main-container" id="main-container">
-    <div class="loading">Carregando fórum...</div>
+    <div class="loading" data-i18n="header.carregando">Carregando fórum...</div>
 </div>
 
 <!-- ===== FOOTER PADRONIZADO ===== -->
 <footer class="site-footer">
     <div class="footer-content">
         <div class="footer-links">
-            <a href="https://wazzimagiygg.com/donate/" class="footer-link" target="_blank">💝 Doação</a>
+            <a href="https://wazzimagiygg.com/donate/" class="footer-link" target="_blank" data-i18n="footer.donation">💝 Doação</a>
             <span class="footer-divider">|</span>
-            <a href="https://wazzimagiygg.com/desktop.html" class="footer-link" target="_blank">🖥️ Desktop</a>
+            <a href="https://wazzimagiygg.com/desktop.html" class="footer-link" target="_blank" data-i18n="footer.desktop">🖥️ Desktop</a>
             <span class="footer-divider">|</span>
-            <a href="https://wazzimagiygg.com/LGPD" class="footer-link" target="_blank">🔒 LGPD</a>
+            <a href="https://wazzimagiygg.com/LGPD" class="footer-link" target="_blank" data-i18n="footer.lgpd">🔒 LGPD</a>
             <span class="footer-divider">|</span>
-            <a href="https://wazzimagiygg.com/MarcoCivil" class="footer-link" target="_blank">📜 Marco Civil</a>
+            <a href="https://wazzimagiygg.com/MarcoCivil" class="footer-link" target="_blank" data-i18n="footer.marcoCivil">📜 Marco Civil</a>
             <span class="footer-divider">|</span>
-            <a href="https://support.wazzimagiygg.com/" class="footer-link" target="_blank">🎫 Ticket</a>
+            <a href="https://support.wazzimagiygg.com/" class="footer-link" target="_blank" data-i18n="footer.ticket">🎫 Ticket</a>
             <span class="footer-divider">|</span>
-            <a href="https://wazzimagiygg.com/produtos" class="footer-link highlight" target="_blank">🛍️ Produtos</a>
+            <a href="https://wazzimagiygg.com/produtos" class="footer-link highlight" target="_blank" data-i18n="footer.products">🛍️ Produtos</a>
             <span class="footer-divider">|</span>
-            <a href="https://painel.wazzimagiygg.com/" class="footer-link highlight" target="_blank">👤 Sua conta</a>
+            <a href="https://painel.wazzimagiygg.com/" class="footer-link highlight" target="_blank" data-i18n="footer.account">👤 Sua conta</a>
         </div>
-        <div class="footer-copyright">© 2026 WazzimaGiygg Forum - Comunidade e Discussão</div>
+        <div class="footer-copyright" data-i18n="footer.copyright">© 2026 WazzimaGiygg Forum - Comunidade e Discussão</div>
     </div>
 </footer>
 
@@ -133,25 +136,25 @@
 <div id="login-modal" class="modal">
     <div class="modal-content" style="max-width: 400px;">
         <div class="modal-header">
-            <h3><i class="material-icons">login</i> Entrar no Fórum</h3>
+            <h3><i class="material-icons">login</i> <span data-i18n="login.title">Entrar no Fórum</span></h3>
             <button class="close-modal" onclick="closeModal('login-modal')">&times;</button>
         </div>
         <div class="modal-body">
-            <p style="margin-bottom: 20px;">Faça login para participar do fórum</p>
+            <p style="margin-bottom: 20px;" data-i18n="login.subtitle">Faça login para participar do fórum</p>
             <button id="google-login-btn" class="btn-primary" style="width:100%; margin-bottom:10px; display:flex; align-items:center; justify-content:center; gap:10px;">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style="width:20px; height:20px;">
-                Entrar com Google
+                <span data-i18n="login.google">Entrar com Google</span>
             </button>
             
-            <div style="text-align:center; margin:20px 0; color:#999;">ou</div>
+            <div style="text-align:center; margin:20px 0; color:#999;" data-i18n="login.or">ou</div>
             
             <form id="login-form-modal">
                 <input type="email" id="modal-email" style="width:100%; padding:12px; border:1px solid #ddd; border-radius:8px; margin-bottom:10px;" placeholder="E-mail" required>
                 <input type="password" id="modal-password" style="width:100%; padding:12px; border:1px solid #ddd; border-radius:8px; margin-bottom:10px;" placeholder="Senha" required>
-                <button type="submit" class="btn-primary" style="width:100%;">Entrar com e-mail</button>
+                <button type="submit" class="btn-primary" style="width:100%;" data-i18n="login.submit">Entrar com e-mail</button>
             </form>
             <div style="text-align:center; margin-top:16px;">
-                <a href="#" onclick="showRegister()" style="color: #e94560; text-decoration:none;">Criar nova conta</a>
+                <a href="#" onclick="showRegister()" style="color: #e94560; text-decoration:none;" data-i18n="login.createAccount">Criar nova conta</a>
             </div>
         </div>
     </div>
@@ -161,7 +164,7 @@
 <div id="post-modal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h3 id="post-modal-title">Criar Novo Tópico</h3>
+            <h3 id="post-modal-title" data-i18n="threads.createThread">Criar Novo Tópico</h3>
             <button class="close-modal" onclick="closeModal('post-modal')">&times;</button>
         </div>
         <div class="modal-body">
@@ -174,26 +177,32 @@
 <div id="image-modal" class="modal">
     <div class="modal-content" style="max-width: 500px;">
         <div class="modal-header">
-            <h3><i class="material-icons">image</i> Inserir Imagem</h3>
+            <h3><i class="material-icons">image</i> <span data-i18n="imageModal.title">Inserir Imagem</span></h3>
             <button class="close-modal" onclick="closeModal('image-modal')">&times;</button>
         </div>
         <div class="modal-body">
             <div class="form-group">
-                <label>URL da Imagem</label>
+                <label data-i18n="imageModal.urlLabel">URL da Imagem</label>
                 <input type="text" id="image-url" placeholder="https://exemplo.com/imagem.jpg">
             </div>
             <div class="form-group">
-                <label>Texto alternativo (opcional)</label>
+                <label data-i18n="imageModal.altLabel">Texto alternativo (opcional)</label>
                 <input type="text" id="image-alt" placeholder="Descrição da imagem">
             </div>
-            <button class="btn-primary" onclick="insertImageToEditor()" style="width:100%;">Inserir Imagem</button>
+            <button class="btn-primary" onclick="insertImageToEditor()" style="width:100%;" data-i18n="imageModal.insert">Inserir Imagem</button>
         </div>
     </div>
 </div>
 
+<!-- ===== SCRIPTS ===== -->
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+<!-- I18n - Carregar primeiro -->
+<script src="https://gspotfverwazzimagiygg.wazzimagiygg.com/forum/i18n.js"></script>
+
+<!-- Script principal -->
 <script src="https://gspotfverwazzimagiygg.wazzimagiygg.com/forum/script.js"></script>
 
 <script src="https://gspotfverwazzimagiygg.wazzimagiygg.com/D6FefD0De/EfdFeF1ExcE0C/De0Var6H6f/QXdv0/dddcefb.js"></script>
